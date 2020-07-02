@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+    username: nhis
+    password: 123456
+    driver-class-name: oracle.jdbc.OracleDriver
+
+
+# mybatis
+#swagger公共信息
+swagger:
+  title: NHIS 接口文档系统
+  description: NHIS 接口文档系统
+  version: 2.5.1.RELEASE
+  license: Powered By NHIS
+  license-url: http://www.zebone.cn
+  terms-of-service-url: http://www.zebone.cn
+  contact:
+    name: lijin
+    email: lijin77555@gmail.com
+    url: https://github.com/S-117-John

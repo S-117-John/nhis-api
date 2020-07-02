@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zebone.modules.test.dao.BdOuUserDao">
+  <resultMap id="BaseResultMap" type="com.zebone.modules.test.entity.BdOuUser">
+    <id column="PK_USER" jdbcType="CHAR" property="pkUser" />
+    <result column="PK_ORG" jdbcType="CHAR" property="pkOrg" />
+    <result column="CODE_USER" jdbcType="VARCHAR" property="codeUser" />
+    <result column="NAME_USER" jdbcType="VARCHAR" property="nameUser" />
+    <result column="PK_USRGRP" jdbcType="CHAR" property="pkUsrgrp" />
+    <result column="PK_EMP" jdbcType="CHAR" property="pkEmp" />
+    <result column="PWD" jdbcType="VARCHAR" property="pwd" />
+    <result column="FLAG_ACTIVE" jdbcType="CHAR" property="flagActive" />
+    <result column="IS_LOCK" jdbcType="CHAR" property="isLock" />
+    <result column="CAID" jdbcType="VARCHAR" property="caid" />
+    <result column="CREATOR" jdbcType="CHAR" property="creator" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="NAME_EMP" jdbcType="VARCHAR" property="nameEmp" />
+    <result column="EU_CERTTYPE" jdbcType="VARCHAR" property="euCerttype" />
+    <result column="EU_USERTYPE" jdbcType="VARCHAR" property="euUsertype" />
+    <result column="TS" jdbcType="TIMESTAMP" property="ts" />
+    <result column="DAYS_VALID" jdbcType="DECIMAL" property="daysValid" />
+    <result column="CNT_LOCK" jdbcType="DECIMAL" property="cntLock" />
+    <result column="DATE_LOCKED" jdbcType="TIMESTAMP" property="dateLocked" />
+    <result column="DATE_PMD" jdbcType="TIMESTAMP" property="datePmd" />
+    <result column="SPCODE" jdbcType="VARCHAR" property="spcode" />
+    <result column="D_CODE" jdbcType="VARCHAR" property="dCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    PK_USER, PK_ORG, CODE_USER, NAME_USER, PK_USRGRP, PK_EMP, PWD, FLAG_ACTIVE, IS_LOCK, 
+    CAID, CREATOR, CREATE_TIME, NAME_EMP, EU_CERTTYPE, EU_USERTYPE, TS, DAYS_VALID, CNT_LOCK, 
+    DATE_LOCKED, DATE_PMD, SPCODE, D_CODE
+  </sql>
+  <select id="get" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from BD_OU_USER
+    where PK_USER = #{id,jdbcType=CHAR}
+  </select>
+
+</mapper>
