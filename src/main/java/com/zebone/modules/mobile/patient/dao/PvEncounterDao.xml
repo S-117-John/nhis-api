@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zebone.modules.mobile.patient.dao.PvEncounterDao">
+  <resultMap id="BaseResultMap" type="com.zebone.common.entity.pv.PvEncounter">
+    <id column="PK_PV" jdbcType="CHAR" property="pkPv" />
+    <result column="PK_ORG" jdbcType="CHAR" property="pkOrg" />
+    <result column="PK_PI" jdbcType="CHAR" property="pkPi" />
+    <result column="CODE_PV" jdbcType="VARCHAR" property="codePv" />
+    <result column="EU_PVTYPE" jdbcType="VARCHAR" property="euPvtype" />
+    <result column="DATE_BEGIN" jdbcType="TIMESTAMP" property="dateBegin" />
+    <result column="DATE_END" jdbcType="TIMESTAMP" property="dateEnd" />
+    <result column="EU_STATUS" jdbcType="VARCHAR" property="euStatus" />
+    <result column="FLAG_IN" jdbcType="CHAR" property="flagIn" />
+    <result column="FLAG_SETTLE" jdbcType="CHAR" property="flagSettle" />
+    <result column="NAME_PI" jdbcType="VARCHAR" property="namePi" />
+    <result column="DT_SEX" jdbcType="VARCHAR" property="dtSex" />
+    <result column="AGE_PV" jdbcType="VARCHAR" property="agePv" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="DT_MARRY" jdbcType="VARCHAR" property="dtMarry" />
+    <result column="PK_DEPT" jdbcType="CHAR" property="pkDept" />
+    <result column="PK_DEPT_NS" jdbcType="CHAR" property="pkDeptNs" />
+    <result column="DATE_CLINIC" jdbcType="TIMESTAMP" property="dateClinic" />
+    <result column="DATE_ADMIT" jdbcType="TIMESTAMP" property="dateAdmit" />
+    <result column="PK_WG" jdbcType="CHAR" property="pkWg" />
+    <result column="BED_NO" jdbcType="VARCHAR" property="bedNo" />
+    <result column="PK_EMP_TRE" jdbcType="CHAR" property="pkEmpTre" />
+    <result column="NAME_EMP_TRE" jdbcType="VARCHAR" property="nameEmpTre" />
+    <result column="PK_EMP_PHY" jdbcType="CHAR" property="pkEmpPhy" />
+    <result column="NAME_EMP_PHY" jdbcType="VARCHAR" property="nameEmpPhy" />
+    <result column="PK_EMP_NS" jdbcType="CHAR" property="pkEmpNs" />
+    <result column="NAME_EMP_NS" jdbcType="VARCHAR" property="nameEmpNs" />
+    <result column="PK_INSU" jdbcType="CHAR" property="pkInsu" />
+    <result column="PK_PICATE" jdbcType="CHAR" property="pkPicate" />
+    <result column="PK_EMP_REG" jdbcType="CHAR" property="pkEmpReg" />
+    <result column="NAME_EMP_REG" jdbcType="VARCHAR" property="nameEmpReg" />
+    <result column="DATE_REG" jdbcType="TIMESTAMP" property="dateReg" />
+    <result column="FLAG_CANCEL" jdbcType="CHAR" property="flagCancel" />
+    <result column="PK_EMP_CANCEL" jdbcType="CHAR" property="pkEmpCancel" />
+    <result column="NAME_EMP_CANCEL" jdbcType="VARCHAR" property="nameEmpCancel" />
+    <result column="DATE_CANCEL" jdbcType="TIMESTAMP" property="dateCancel" />
+    <result column="EU_STATUS_FP" jdbcType="VARCHAR" property="euStatusFp" />
+    <result column="CREATOR" jdbcType="CHAR" property="creator" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFIER" jdbcType="CHAR" property="modifier" />
+    <result column="MODITY_TIME" jdbcType="TIMESTAMP" property="modityTime" />
+    <result column="DEL_FLAG" jdbcType="CHAR" property="delFlag" />
+    <result column="HEIGHT" jdbcType="DECIMAL" property="height" />
+    <result column="WEIGHT" jdbcType="DECIMAL" property="weight" />
+    <result column="TS" jdbcType="TIMESTAMP" property="ts" />
+    <result column="ADDRCODE_REGI" jdbcType="VARCHAR" property="addrcodeRegi" />
+    <result column="ADDR_REGI" jdbcType="VARCHAR" property="addrRegi" />
+    <result column="ADDR_REGI_DT" jdbcType="VARCHAR" property="addrRegiDt" />
+    <result column="POSTCODE_REGI" jdbcType="VARCHAR" property="postcodeRegi" />
+    <result column="ADDRCODE_CUR" jdbcType="VARCHAR" property="addrcodeCur" />
+    <result column="ADDR_CUR" jdbcType="VARCHAR" property="addrCur" />
+    <result column="ADDR_CUR_DT" jdbcType="VARCHAR" property="addrCurDt" />
+    <result column="POSTCODE_CUR" jdbcType="VARCHAR" property="postcodeCur" />
+    <result column="UNIT_WORK" jdbcType="VARCHAR" property="unitWork" />
+    <result column="TEL_WORK" jdbcType="VARCHAR" property="telWork" />
+    <result column="POSTCODE_WORK" jdbcType="VARCHAR" property="postcodeWork" />
+    <result column="NAME_REL" jdbcType="VARCHAR" property="nameRel" />
+    <result column="DT_RALATION" jdbcType="VARCHAR" property="dtRalation" />
+    <result column="TEL_REL" jdbcType="VARCHAR" property="telRel" />
+    <result column="ADDR_REL" jdbcType="VARCHAR" property="addrRel" />
+    <result column="DT_PVSOURCE" jdbcType="VARCHAR" property="dtPvsource" />
+    <result column="EU_PVMODE" jdbcType="VARCHAR" property="euPvmode" />
+    <result column="DT_HPREALTYPE" jdbcType="VARCHAR" property="dtHprealtype" />
+    <result column="DT_SPECUNIT" jdbcType="VARCHAR" property="dtSpecunit" />
+    <result column="FLAG_SPEC" jdbcType="CHAR" property="flagSpec" />
+    <result column="EU_LOCKED" jdbcType="VARCHAR" property="euLocked" />
+    <result column="NOTE" jdbcType="VARCHAR" property="note" />
+    <result column="EU_DISETYPE" jdbcType="VARCHAR" property="euDisetype" />
+    <result column="DT_IDTYPE_REL" jdbcType="VARCHAR" property="dtIdtypeRel" />
+    <result column="IDNO_REL" jdbcType="VARCHAR" property="idnoRel" />
+    <result column="FLAG_MI" jdbcType="CHAR" property="flagMi" />
+    <result column="NAME_SPOUSE" jdbcType="VARCHAR" property="nameSpouse" />
+    <result column="IDNO_SPOUSE" jdbcType="VARCHAR" property="idnoSpouse" />
+    <result column="DESC_SYMP" jdbcType="VARCHAR" property="descSymp" />
+    <result column="DESC_EPID" jdbcType="VARCHAR" property="descEpid" />
+    <result column="DESC_TREAT" jdbcType="VARCHAR" property="descTreat" />
+    <result column="PK_DEPT_DIST" jdbcType="CHAR" property="pkDeptDist" />
+    <result column="DT_SPCDTYPE" jdbcType="VARCHAR" property="dtSpcdtype" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    PK_PV, PK_ORG, PK_PI, CODE_PV, EU_PVTYPE, DATE_BEGIN, DATE_END, EU_STATUS, FLAG_IN, 
+    FLAG_SETTLE, NAME_PI, DT_SEX, AGE_PV, ADDRESS, DT_MARRY, PK_DEPT, PK_DEPT_NS, DATE_CLINIC, 
+    DATE_ADMIT, PK_WG, BED_NO, PK_EMP_TRE, NAME_EMP_TRE, PK_EMP_PHY, NAME_EMP_PHY, PK_EMP_NS, 
+    NAME_EMP_NS, PK_INSU, PK_PICATE, PK_EMP_REG, NAME_EMP_REG, DATE_REG, FLAG_CANCEL, 
+    PK_EMP_CANCEL, NAME_EMP_CANCEL, DATE_CANCEL, EU_STATUS_FP, CREATOR, CREATE_TIME, 
+    MODIFIER, MODITY_TIME, DEL_FLAG, HEIGHT, WEIGHT, TS, ADDRCODE_REGI, ADDR_REGI, ADDR_REGI_DT, 
+    POSTCODE_REGI, ADDRCODE_CUR, ADDR_CUR, ADDR_CUR_DT, POSTCODE_CUR, UNIT_WORK, TEL_WORK, 
+    POSTCODE_WORK, NAME_REL, DT_RALATION, TEL_REL, ADDR_REL, DT_PVSOURCE, EU_PVMODE, 
+    DT_HPREALTYPE, DT_SPECUNIT, FLAG_SPEC, EU_LOCKED, NOTE, EU_DISETYPE, DT_IDTYPE_REL, 
+    IDNO_REL, FLAG_MI, NAME_SPOUSE, IDNO_SPOUSE, DESC_SYMP, DESC_EPID, DESC_TREAT, PK_DEPT_DIST, 
+    DT_SPCDTYPE
+  </sql>
+
+  <select id="getPvEncounter" resultMap="getPvEncounterResultMap">
+select hpec.name_pi,
+       hpec.bed_no,
+       hpec.dt_sex,
+       hpec.age_pv,
+       hpmt.code_ip
+from pv_ip hpip,
+     pv_encounter hpec,
+     pi_master hpmt
+where hpip.pk_pv = hpec.PK_PV
+  and hpec.pk_pi = hpmt.pk_pi
+  and hpip.pk_pv = #{pkPv,jdbcType=CHAR}
+  </select>
+
+  <resultMap type="com.zebone.modules.mobile.patient.vo.PvEncounterVO" id="getPvEncounterResultMap">
+    <id column="PK_PV" jdbcType="CHAR" property="pkPv" />
+    <result column="NAME_PI" jdbcType="VARCHAR" property="namePi" />
+    <result column="BED_NO" jdbcType="VARCHAR" property="bedNo" />
+    <result column="DT_SEX" jdbcType="VARCHAR" property="dtSex" />
+    <result column="AGE_PV" jdbcType="VARCHAR" property="agePv" />
+    <association property="piMaster" javaType="com.zebone.modules.mobile.patient.vo.PiMasterVO">
+      <id column="PK_PI" jdbcType="CHAR" property="pkPi" />
+      <result column="CODE_IP" jdbcType="VARCHAR" property="codeIp" />
+    </association>
+  </resultMap>
+
+
+</mapper>
