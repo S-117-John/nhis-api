@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zebone.modules.mobile.order.dao.CnOrderDao">
+  <resultMap id="BaseResultMap" type="com.zebone.modules.mobile.order.vo.CnOrderVO">
+    <id column="PK_CNORD" jdbcType="CHAR" property="pkCnord" />
+    <result column="PK_ORG" jdbcType="CHAR" property="pkOrg" />
+    <result column="EU_PVTYPE" jdbcType="VARCHAR" property="euPvtype" />
+    <result column="PK_PV" jdbcType="CHAR" property="pkPv" />
+    <result column="PK_PI" jdbcType="CHAR" property="pkPi" />
+    <result column="DATE_EFFE" jdbcType="TIMESTAMP" property="dateEffe" />
+    <result column="CODE_ORDTYPE" jdbcType="VARCHAR" property="codeOrdtype" />
+    <result column="EU_ALWAYS" jdbcType="VARCHAR" property="euAlways" />
+    <result column="ORDSN" jdbcType="DECIMAL" property="ordsn" />
+    <result column="ORDSN_PARENT" jdbcType="DECIMAL" property="ordsnParent" />
+    <result column="PK_ORD" jdbcType="CHAR" property="pkOrd" />
+    <result column="CODE_ORD" jdbcType="VARCHAR" property="codeOrd" />
+    <result column="PK_PRES" jdbcType="CHAR" property="pkPres" />
+    <result column="NAME_ORD" jdbcType="VARCHAR" property="nameOrd" />
+    <result column="DESC_ORD" jdbcType="VARCHAR" property="descOrd" />
+    <result column="CODE_APPLY" jdbcType="VARCHAR" property="codeApply" />
+    <result column="CODE_FREQ" jdbcType="VARCHAR" property="codeFreq" />
+    <result column="SPEC" jdbcType="VARCHAR" property="spec" />
+    <result column="DOSAGE" jdbcType="DECIMAL" property="dosage" />
+    <result column="PK_UNIT_DOS" jdbcType="CHAR" property="pkUnitDos" />
+    <result column="QUAN" jdbcType="DECIMAL" property="quan" />
+    <result column="PK_UNIT" jdbcType="CHAR" property="pkUnit" />
+    <result column="CODE_SUPPLY" jdbcType="VARCHAR" property="codeSupply" />
+    <result column="QUAN_CG" jdbcType="DECIMAL" property="quanCg" />
+    <result column="PK_UNIT_CG" jdbcType="CHAR" property="pkUnitCg" />
+    <result column="PACK_SIZE" jdbcType="DECIMAL" property="packSize" />
+    <result column="PRICE_CG" jdbcType="DECIMAL" property="priceCg" />
+    <result column="NOTE_SUPPLY" jdbcType="VARCHAR" property="noteSupply" />
+    <result column="DAYS" jdbcType="DECIMAL" property="days" />
+    <result column="DRIP_SPEED" jdbcType="DECIMAL" property="dripSpeed" />
+    <result column="ORDS" jdbcType="DECIMAL" property="ords" />
+    <result column="FLAG_FIRST" jdbcType="CHAR" property="flagFirst" />
+    <result column="LAST_NUM" jdbcType="DECIMAL" property="lastNum" />
+    <result column="PK_ORG_EXEC" jdbcType="CHAR" property="pkOrgExec" />
+    <result column="PK_DEPT_EXEC" jdbcType="CHAR" property="pkDeptExec" />
+    <result column="EU_STATUS_ORD" jdbcType="VARCHAR" property="euStatusOrd" />
+    <result column="DATE_ENTER" jdbcType="TIMESTAMP" property="dateEnter" />
+    <result column="DATE_START" jdbcType="TIMESTAMP" property="dateStart" />
+    <result column="FLAG_DURG" jdbcType="CHAR" property="flagDurg" />
+    <result column="FLAG_SELF" jdbcType="CHAR" property="flagSelf" />
+    <result column="FLAG_NOTE" jdbcType="CHAR" property="flagNote" />
+    <result column="FLAG_BASE" jdbcType="CHAR" property="flagBase" />
+    <result column="FLAG_BL" jdbcType="CHAR" property="flagBl" />
+    <result column="PK_DEPT" jdbcType="CHAR" property="pkDept" />
+    <result column="PK_DEPT_NS" jdbcType="CHAR" property="pkDeptNs" />
+    <result column="PK_WG" jdbcType="CHAR" property="pkWg" />
+    <result column="PK_EMP_INPUT" jdbcType="CHAR" property="pkEmpInput" />
+    <result column="NAME_EMP_INPUT" jdbcType="VARCHAR" property="nameEmpInput" />
+    <result column="PK_EMP_ORD" jdbcType="CHAR" property="pkEmpOrd" />
+    <result column="NAME_EMP_ORD" jdbcType="VARCHAR" property="nameEmpOrd" />
+    <result column="DATE_SIGN" jdbcType="TIMESTAMP" property="dateSign" />
+    <result column="PK_EMP_CHK" jdbcType="CHAR" property="pkEmpChk" />
+    <result column="NAME_EMP_CHK" jdbcType="VARCHAR" property="nameEmpChk" />
+    <result column="DATE_CHK" jdbcType="TIMESTAMP" property="dateChk" />
+    <result column="DATE_LAST_EX" jdbcType="TIMESTAMP" property="dateLastEx" />
+    <result column="DATE_PLAN_EX" jdbcType="TIMESTAMP" property="datePlanEx" />
+    <result column="DATE_STOP" jdbcType="TIMESTAMP" property="dateStop" />
+    <result column="PK_EMP_STOP" jdbcType="CHAR" property="pkEmpStop" />
+    <result column="NAME_EMP_STOP" jdbcType="VARCHAR" property="nameEmpStop" />
+    <result column="FLAG_STOP" jdbcType="CHAR" property="flagStop" />
+    <result column="DATE_STOP_CHK" jdbcType="TIMESTAMP" property="dateStopChk" />
+    <result column="PK_EMP_STOP_CHK" jdbcType="CHAR" property="pkEmpStopChk" />
+    <result column="NAME_EMP_STOP_CHK" jdbcType="VARCHAR" property="nameEmpStopChk" />
+    <result column="FLAG_STOP_CHK" jdbcType="CHAR" property="flagStopChk" />
+    <result column="DATE_ERASE" jdbcType="TIMESTAMP" property="dateErase" />
+    <result column="PK_EMP_ERASE" jdbcType="CHAR" property="pkEmpErase" />
+    <result column="NAME_EMP_ERASE" jdbcType="VARCHAR" property="nameEmpErase" />
+    <result column="FLAG_ERASE" jdbcType="VARCHAR" property="flagErase" />
+    <result column="DATE_ERASE_CHK" jdbcType="TIMESTAMP" property="dateEraseChk" />
+    <result column="PK_EMP_ERASE_CHK" jdbcType="CHAR" property="pkEmpEraseChk" />
+    <result column="NAME_ERASE_CHK" jdbcType="VARCHAR" property="nameEraseChk" />
+    <result column="FLAG_ERASE_CHK" jdbcType="CHAR" property="flagEraseChk" />
+    <result column="FLAG_CP" jdbcType="CHAR" property="flagCp" />
+    <result column="FLAG_DOCTOR" jdbcType="CHAR" property="flagDoctor" />
+    <result column="INFANT_NO" jdbcType="DECIMAL" property="infantNo" />
+    <result column="PK_EVENT" jdbcType="CHAR" property="pkEvent" />
+    <result column="FLAG_PRINT" jdbcType="CHAR" property="flagPrint" />
+    <result column="FLAG_MEDOUT" jdbcType="CHAR" property="flagMedout" />
+    <result column="EU_EXCTYPE" jdbcType="VARCHAR" property="euExctype" />
+    <result column="PK_ORD_EXC" jdbcType="CHAR" property="pkOrdExc" />
+    <result column="FLAG_EMER" jdbcType="CHAR" property="flagEmer" />
+    <result column="FLAG_THERA" jdbcType="CHAR" property="flagThera" />
+    <result column="FLAG_PREV" jdbcType="CHAR" property="flagPrev" />
+    <result column="FLAG_FIT" jdbcType="CHAR" property="flagFit" />
+    <result column="QUAN_BED" jdbcType="DECIMAL" property="quanBed" />
+    <result column="NOTE_ORD" jdbcType="VARCHAR" property="noteOrd" />
+    <result column="CREATOR" jdbcType="CHAR" property="creator" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFIER" jdbcType="CHAR" property="modifier" />
+    <result column="MODITY_TIME" jdbcType="TIMESTAMP" property="modityTime" />
+    <result column="DEL_FLAG" jdbcType="CHAR" property="delFlag" />
+    <result column="FLAG_SIGN" jdbcType="CHAR" property="flagSign" />
+    <result column="SORT_IV" jdbcType="DECIMAL" property="sortIv" />
+    <result column="TS" jdbcType="TIMESTAMP" property="ts" />
+    <result column="FLAG_ITC" jdbcType="CHAR" property="flagItc" />
+    <result column="EU_INTERN" jdbcType="VARCHAR" property="euIntern" />
+    <result column="EU_ST" jdbcType="VARCHAR" property="euSt" />
+    <result column="DT_USAGENOTE" jdbcType="VARCHAR" property="dtUsagenote" />
+    <result column="FIRST_NUM" jdbcType="DECIMAL" property="firstNum" />
+    <result column="FLAG_PIVAS" jdbcType="CHAR" property="flagPivas" />
+    <result column="DT_HERBUSAGE" jdbcType="VARCHAR" property="dtHerbusage" />
+    <result column="PK_CNORD_RL" jdbcType="CHAR" property="pkCnordRl" />
+    <result column="GROUPNO" jdbcType="DECIMAL" property="groupno" />
+    <result column="QUAN_DISP" jdbcType="DECIMAL" property="quanDisp" />
+    <result column="RATIO_HP" jdbcType="DECIMAL" property="ratioHp" />
+    <result column="DESC_FIT" jdbcType="VARCHAR" property="descFit" />
+    <result column="PK_EMP_EX" jdbcType="CHAR" property="pkEmpEx" />
+    <result column="NAME_EMP_EX" jdbcType="VARCHAR" property="nameEmpEx" />
+    <result column="ORDSN_CHK" jdbcType="DECIMAL" property="ordsnChk" />
+    <result column="CODE_SUPPLY_ADD" jdbcType="VARCHAR" property="codeSupplyAdd" />
+    <result column="EU_ORDTYPE" jdbcType="VARCHAR" property="euOrdtype" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    PK_CNORD, PK_ORG, EU_PVTYPE, PK_PV, PK_PI, DATE_EFFE, CODE_ORDTYPE, EU_ALWAYS, ORDSN, 
+    ORDSN_PARENT, PK_ORD, CODE_ORD, PK_PRES, NAME_ORD, DESC_ORD, CODE_APPLY, CODE_FREQ, 
+    SPEC, DOSAGE, PK_UNIT_DOS, QUAN, PK_UNIT, CODE_SUPPLY, QUAN_CG, PK_UNIT_CG, PACK_SIZE, 
+    PRICE_CG, NOTE_SUPPLY, "DAYS", DRIP_SPEED, ORDS, FLAG_FIRST, LAST_NUM, PK_ORG_EXEC, 
+    PK_DEPT_EXEC, EU_STATUS_ORD, DATE_ENTER, DATE_START, FLAG_DURG, FLAG_SELF, FLAG_NOTE, 
+    FLAG_BASE, FLAG_BL, PK_DEPT, PK_DEPT_NS, PK_WG, PK_EMP_INPUT, NAME_EMP_INPUT, PK_EMP_ORD, 
+    NAME_EMP_ORD, DATE_SIGN, PK_EMP_CHK, NAME_EMP_CHK, DATE_CHK, DATE_LAST_EX, DATE_PLAN_EX, 
+    DATE_STOP, PK_EMP_STOP, NAME_EMP_STOP, FLAG_STOP, DATE_STOP_CHK, PK_EMP_STOP_CHK, 
+    NAME_EMP_STOP_CHK, FLAG_STOP_CHK, DATE_ERASE, PK_EMP_ERASE, NAME_EMP_ERASE, FLAG_ERASE, 
+    DATE_ERASE_CHK, PK_EMP_ERASE_CHK, NAME_ERASE_CHK, FLAG_ERASE_CHK, FLAG_CP, FLAG_DOCTOR, 
+    INFANT_NO, PK_EVENT, FLAG_PRINT, FLAG_MEDOUT, EU_EXCTYPE, PK_ORD_EXC, FLAG_EMER, 
+    FLAG_THERA, FLAG_PREV, FLAG_FIT, QUAN_BED, NOTE_ORD, CREATOR, CREATE_TIME, MODIFIER, 
+    MODITY_TIME, DEL_FLAG, FLAG_SIGN, SORT_IV, TS, FLAG_ITC, EU_INTERN, EU_ST, DT_USAGENOTE, 
+    FIRST_NUM, FLAG_PIVAS, DT_HERBUSAGE, PK_CNORD_RL, GROUPNO, QUAN_DISP, RATIO_HP, DESC_FIT, 
+    PK_EMP_EX, NAME_EMP_EX, ORDSN_CHK, CODE_SUPPLY_ADD, EU_ORDTYPE
+  </sql>
+
+  <select id="listPatientOrder" resultMap="listPatientOrderResultMap">
+    select ord.pk_ord,     --医嘱PK
+       ord.code_ord,   --医嘱编码
+       ord.name_ord,   --医嘱名称
+       ord.spec,       --规格
+       ord.dosage,     --剂量
+       ord.pk_unit_dos, --剂量单位
+       ord.code_supply, --用法
+       ord.code_freq,   --频次
+       ord.pk_emp_ord,  --医生
+       ord.name_emp_ord,--医生姓名
+       ord.pk_dept,     --科室
+       ord.code_ordtype,--医嘱类型
+       ord.date_start,  --开始时间
+       ord.eu_always,   --长期临时
+       ord.pk_dept_exec, --执行科室
+       ord.note_ord,     --医嘱备注
+       ord.flag_self,    --自备
+       ord.flag_bl,      --记费标志
+       ord.flag_note,    --嘱托
+       ris.dt_type,      --检查类型
+       ris.dt_body,      --部位
+       ris.desc_att,     --检查注意事项
+       lab.dt_colltype,  --采集方法
+       lab.dt_contype,   --试管类型
+       lab.note,         --检验注意事项
+       lab.dt_samptype   --标本类型
+  from cn_order ord
+       left outer join bd_ord_ris ris on ord.pk_ord=ris.pk_ord
+       left outer join bd_ord_lab lab on ord.pk_ord=lab.pk_ord
+ where ord.pk_pv=#{pkPv,jdbcType=CHAR} and
+       ord.flag_erase='0'
+  </select>
+  <resultMap id="listPatientOrderResultMap" type="com.zebone.modules.mobile.order.vo.CnOrderVO">
+    <id column="PK_CNORD" jdbcType="CHAR" property="pkCnord" />
+    <result column="PK_ORD" jdbcType="CHAR" property="pkOrd" />
+    <result column="CODE_ORD" jdbcType="VARCHAR" property="codeOrd" />
+    <result column="NAME_ORD" jdbcType="VARCHAR" property="nameOrd" />
+    <result column="SPEC" jdbcType="VARCHAR" property="spec" />
+    <result column="DOSAGE" jdbcType="DECIMAL" property="dosage" />
+    <result column="PK_UNIT_DOS" jdbcType="CHAR" property="pkUnitDos" />
+    <result column="CODE_SUPPLY" jdbcType="VARCHAR" property="codeSupply" />
+    <result column="CODE_FREQ" jdbcType="VARCHAR" property="codeFreq" />
+    <result column="PK_EMP_ORD" jdbcType="CHAR" property="pkEmpOrd" />
+    <result column="NAME_EMP_ORD" jdbcType="VARCHAR" property="nameEmpOrd" />
+    <result column="PK_DEPT" jdbcType="CHAR" property="pkDept" />
+    <result column="CODE_ORDTYPE" jdbcType="VARCHAR" property="codeOrdtype" />
+    <result column="DATE_START" jdbcType="TIMESTAMP" property="dateStart" />
+    <result column="EU_ALWAYS" jdbcType="VARCHAR" property="euAlways" />
+    <result column="PK_DEPT_EXEC" jdbcType="CHAR" property="pkDeptExec" />
+    <result column="NOTE_ORD" jdbcType="VARCHAR" property="noteOrd" />
+    <result column="FLAG_SELF" jdbcType="CHAR" property="flagSelf" />
+    <result column="FLAG_BL" jdbcType="CHAR" property="flagBl" />
+    <result column="FLAG_NOTE" jdbcType="CHAR" property="flagNote" />
+    <association property="bdOrdRis" javaType="com.zebone.common.entity.bd.ord.BdOrdRis">
+      <id column="PK_ORDRIS" jdbcType="CHAR" property="pkOrdris" />
+      <result column="DT_TYPE" jdbcType="VARCHAR" property="dtType" />
+      <result column="DT_BODY" jdbcType="VARCHAR" property="dtBody" />
+      <result column="DESC_ATT" jdbcType="VARCHAR" property="descAtt" />
+    </association>
+    <association property="bdOrdLab" javaType="com.zebone.common.entity.bd.ord.BdOrdLab">
+      <id column="PK_ORDLAB" jdbcType="CHAR" property="pkOrdlab" />
+      <result column="DT_CONTYPE" jdbcType="VARCHAR" property="dtContype" />
+      <result column="DT_COLLTYPE" jdbcType="VARCHAR" property="dtColltype" />
+      <result column="NOTE" jdbcType="VARCHAR" property="note" />
+      <result column="DT_SAMPTYPE" jdbcType="VARCHAR" property="dtSamptype" />
+    </association>
+  </resultMap>
+</mapper>

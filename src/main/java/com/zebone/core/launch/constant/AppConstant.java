@@ -25,5 +25,6 @@ public interface AppConstant {
     String PROD_CODE = "prod";
     String TEST_CODE = "test";
     String OS_NAME_LINUX = "LINUX";
-    String APPLICATION_MOBILE_PATIENT = "nhis-mobile-patient";
+    String APPLICATION_MOBILE_PATIENT = "nhis/mobile/patient";
+    String APPLICATION_MOBILE_ORD = "nhis/mobile/ord";
 }
