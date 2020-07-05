@@ -170,20 +170,36 @@ let data = [
 ];
 
 
+
 class Index extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: ""
+            name: "",
+            gender: "",
+            bed: "",
+            age: "",
         };
     }
 
     componentDidMount() {
         this.serverRequest = $.get(global.patientInfo+"/nhis-mobile-patient?pkPv="+document.getElementById('id').innerText, function (result) {
             console.log(result);
-            this.setState({
-                name: result.data.namePi
-            });
+            if(result.code==400){
+                antd.notification.open({
+                    message: '提示',
+                    description: result.msg,
+                });
+            }
+            if(result.code==200){
+                this.setState({
+                    name: result.data.namePi,
+                    gender: result.data.dtSex,
+                    bed: result.data.bedNo,
+                    age: result.data.agePv,
+                });
+            }
+
         }.bind(this));
     }
 
@@ -197,9 +213,9 @@ class Index extends React.Component {
                 <div>
                     <antd.Row>
                         <antd.Col span={6}><h1>{this.state.name}</h1></antd.Col>
-                        <antd.Col span={6}><h3>31</h3></antd.Col>
-                        <antd.Col span={6}> <h3>男</h3></antd.Col>
-                        <antd.Col span={6}> <h3>3岁</h3></antd.Col>
+                        <antd.Col span={6}><h3>{this.state.bed}</h3></antd.Col>
+                        <antd.Col span={6}> <h3>{this.state.gender}</h3></antd.Col>
+                        <antd.Col span={6}> <h3>{this.state.age}</h3></antd.Col>
                     </antd.Row>
                     <h3>住院号：13423  身份：灵璧医保  入院：2020-5-30 12:23   诊断： 肺炎</h3>
                 </div>
