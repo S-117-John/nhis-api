@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zebone.modules.mobile.order.dao.CnOrderDao">
-  <resultMap id="BaseResultMap" type="com.zebone.modules.mobile.order.vo.CnOrderVO">
+<mapper namespace="com.zebone.modules.mobile.cn.dao.CnOrderDao">
+  <resultMap id="BaseResultMap" type="com.zebone.modules.mobile.cn.vo.CnOrderVO">
     <id column="PK_CNORD" jdbcType="CHAR" property="pkCnord" />
     <result column="PK_ORG" jdbcType="CHAR" property="pkOrg" />
     <result column="EU_PVTYPE" jdbcType="VARCHAR" property="euPvtype" />
@@ -165,7 +165,7 @@
  where ord.pk_pv=#{pkPv,jdbcType=CHAR} and
        ord.flag_erase='0'
   </select>
-  <resultMap id="listPatientOrderResultMap" type="com.zebone.modules.mobile.order.vo.CnOrderVO">
+  <resultMap id="listPatientOrderResultMap" type="com.zebone.modules.mobile.cn.vo.CnOrderVO">
     <id column="PK_CNORD" jdbcType="CHAR" property="pkCnord" />
     <result column="PK_ORD" jdbcType="CHAR" property="pkOrd" />
     <result column="CODE_ORD" jdbcType="VARCHAR" property="codeOrd" />

@@ -31,6 +31,11 @@ public class SwaggerConfiguration {
         return docket("测试模块", Collections.singletonList(AppConstant.BASE_PACKAGES + ".modules.test"));
     }
 
+    @Bean
+    public Docket mobileDocket() {
+        return docket("移动医嘱模块", Collections.singletonList(AppConstant.BASE_PACKAGES + ".modules.mobile"));
+    }
+
     private Docket docket(String groupName, List<String> basePackages) {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName(groupName)

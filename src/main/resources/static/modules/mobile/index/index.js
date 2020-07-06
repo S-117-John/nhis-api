@@ -1,4 +1,4 @@
-let columns = [
+const columns = [
     {
         title: '组',
         dataIndex: 'group',
@@ -16,21 +16,23 @@ let columns = [
     },
     {
         title: '医嘱',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'nameOrd',
+        key: 'nameOrd',
         render: text => <a>{text}</a>,
-        width: 150,
+        width: 200,
         fixed: 'left',
     },
     {
         title: '长',
-        key: 'tags',
-        dataIndex: 'tags',
+        key: 'euAlways',
+        dataIndex: 'euAlways',
         render: text => {
-            let color = text == "长"  ? 'geekblue' : 'green';
-            // if (tag === 'loser') {
-            //     color = 'volcano';
-            // }
+            let color = text == "0"  ? 'geekblue' : 'green';
+            if (text === '0') {
+                text = '长期';
+            }else if(text === '1'){
+                text = '临时';
+            }
             return (
                 <antd.Tag color={color} key={text}>
                     {text}
@@ -40,62 +42,63 @@ let columns = [
     },
     {
         title: '开始时间',
-        key: 'startTime',
-        dataIndex: 'startTime',
+        key: 'dateStart',
+        dataIndex: 'dateStart',
+        width: 200,
     },
 
     {
         title: '用量',
-        dataIndex: 'dosage',
-        key: 'dosage',
+        dataIndex: 'quan',
+        key: 'quan',
         render: text => <a>{text}</a>,
     },
     {
         title: '用法',
-        dataIndex: 'usage',
-        key: 'usage',
+        dataIndex: 'codeSupply',
+        key: 'codeSupply',
         render: text => <a>{text}</a>,
     },
     {
         title: '频次',
-        dataIndex: 'frequency',
-        key: 'frequency',
+        dataIndex: 'codeFreq',
+        key: 'codeFreq',
         render: text => <a>{text}</a>,
     },
     {
         title: '首',
-        dataIndex: 'first',
-        key: 'first',
+        dataIndex: 'firstNum',
+        key: 'firstNum',
         render: text => <a>{text}</a>,
     },
     {
         title: '停止时间',
-        dataIndex: 'endTime',
-        key: 'endTime',
+        dataIndex: 'dateStop',
+        key: 'dateStop',
         render: text => <a>{text}</a>,
     },
     {
         title: '末',
-        dataIndex: 'last',
-        key: 'last',
+        dataIndex: 'lastNum',
+        key: 'lastNum',
         render: text => <a>{text}</a>,
     },
     {
         title: '开立人',
-        dataIndex: 'creator',
-        key: 'creator',
+        dataIndex: 'nameEmpOrd',
+        key: 'nameEmpOrd',
         render: text => <a>{text}</a>,
     },
     {
         title: '签署',
-        dataIndex: 'sign',
-        key: 'sign',
+        dataIndex: 'nameEmpOrd',
+        key: 'nameEmpOrd',
         render: text => <a>{text}</a>,
     },
     {
         title: '停嘱',
-        dataIndex: 'stop',
-        key: 'stop',
+        dataIndex: 'nameEmpStop',
+        key: 'nameEmpStop',
         render: text => <a>{text}</a>,
     },
     {
@@ -184,7 +187,7 @@ class Index extends React.Component {
     }
 
     componentDidMount() {
-        this.serverRequest = $.get(global.patientInfo+"/nhis/mobile/patient?pkPv="+document.getElementById('id').innerText, function (result) {
+        this.serverRequest = $.get(global.patientInfo+"nhis/mobile/patient?pkPv="+document.getElementById('id').innerText, function (result) {
             console.log(result);
             if(result.code==400){
                 antd.notification.open({
@@ -195,34 +198,49 @@ class Index extends React.Component {
             if(result.code==200){
                 this.setState({
                     name: result.data.namePi,
-                    gender: result.data.dtSex,
+                    gender: result.data.gender,
                     bed: result.data.bedNo,
                     age: result.data.agePv,
                 });
             }
 
         }.bind(this));
+        this.listPatientOrder();
     }
 
     componentWillUnmount() {
         this.serverRequest.abort();
     }
 
+    listPatientOrder(){
+        this.serverRequest = $.get(global.patientInfo+"/nhis/mobile/ord?pkPv="+document.getElementById('id').innerText, function (result) {
+            console.log(result);
+            if(result.code==400){
+                antd.notification.open({
+                    message: '提示',
+                    description: result.msg,
+                });
+            }
+            if(result.code==200){
+                this.setState({
+                    tableData: result.data
+                });
+            }
+
+        }.bind(this));
+    }
+
+    // 跳转到医嘱界面
+    toMedicalAdvice(){
+        window.location.href= global.patientInfo+"/mobile/advice?id="+document.getElementById('id').innerText;
+    }
+
     render() {
         return (
-            <div>
+            <div style={{margin: 20}}>
                 <div>
                     <antd.Row>
-                        <antd.Col span={6}><h1>{this.state.name}</h1></antd.Col>
-                        <antd.Col span={6}><h3>{this.state.bed}</h3></antd.Col>
-                        <antd.Col span={6}> <h3>{this.state.gender}</h3></antd.Col>
-                        <antd.Col span={6}> <h3>{this.state.age}</h3></antd.Col>
-                    </antd.Row>
-                    <h3>住院号：13423  身份：灵璧医保  入院：2020-5-30 12:23   诊断： 肺炎</h3>
-                </div>
-                <div>
-                    <antd.Row>
-                        <antd.Col span={12}>
+                        <antd.Col span={6}>
                             <div>
                                 <antd.Radio.Group defaultValue="a" buttonStyle="solid">
                                     <antd.Radio.Button value="a">全部</antd.Radio.Button>
@@ -231,20 +249,31 @@ class Index extends React.Component {
                                 </antd.Radio.Group>
                             </div>
                         </antd.Col>
+
+                        <antd.Col span={6}>
+                            <div>
+                                <antd.Radio.Group defaultValue="a" buttonStyle="solid">
+                                    <antd.Radio.Button value="a">全部</antd.Radio.Button>
+                                    <antd.Radio.Button value="b">当前</antd.Radio.Button>
+                                </antd.Radio.Group>
+                            </div>
+                        </antd.Col>
+
                         <antd.Col span={12}>
                             <div>
-                                <antd.Button type="primary">停嘱</antd.Button>
-                                <antd.Button>签署</antd.Button>
-                                <antd.Button type="dashed">删除</antd.Button>
+                                <antd.Button type="primary" style={{marginLeft:20}} onClick={this.toMedicalAdvice}>新医嘱</antd.Button>
+                                <antd.Button type="primary" style={{marginLeft:20}}>停嘱</antd.Button>
+                                <antd.Button type="primary" style={{marginLeft:20}}>签署</antd.Button>
+                                <antd.Button type="primary" style={{marginLeft:20}}>删除</antd.Button>
                             </div>
 
                         </antd.Col>
                     </antd.Row>
-                    <div>
+                    <div style={{marginTop: 20}}>
                         <antd.Table
                             columns={columns}
                             dataSource={this.state.tableData}
-                            scroll={{ x: 1500 }}
+                            scroll={{ x: 1500,y: 500 }}
                             pagination={ false }
                             bordered />
                     </div>

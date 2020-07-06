@@ -3,7 +3,10 @@ package com.zebone.common.entity.cn;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * CN_ORDER
@@ -25,6 +28,11 @@ public class CnOrder implements Serializable {
 
     private String codeOrdtype;
 
+    /**
+     * 医嘱重复类型
+     * 1：临时
+     * 0：长期
+     */
     private String euAlways;
 
     private BigDecimal ordsn;
@@ -43,6 +51,9 @@ public class CnOrder implements Serializable {
 
     private String codeApply;
 
+    /**
+     * 频次
+     */
     private String codeFreq;
 
     private String spec;
@@ -51,10 +62,16 @@ public class CnOrder implements Serializable {
 
     private String pkUnitDos;
 
+    /**
+     * 用量
+     */
     private BigDecimal quan;
 
     private String pkUnit;
 
+    /**
+     * 用法
+     */
     private String codeSupply;
 
     private BigDecimal quanCg;
@@ -75,6 +92,9 @@ public class CnOrder implements Serializable {
 
     private String flagFirst;
 
+    /**
+     * 末日次数
+     */
     private Integer lastNum;
 
     private String pkOrgExec;
@@ -85,6 +105,8 @@ public class CnOrder implements Serializable {
 
     private Date dateEnter;
 
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date dateStart;
 
     private String flagDurg;
@@ -109,6 +131,9 @@ public class CnOrder implements Serializable {
 
     private String pkEmpOrd;
 
+    /**
+     * 开立医生名称
+     */
     private String nameEmpOrd;
 
     private Date dateSign;
@@ -123,10 +148,18 @@ public class CnOrder implements Serializable {
 
     private Date datePlanEx;
 
+    /**
+     * 停止时间
+     */
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date dateStop;
 
     private String pkEmpStop;
 
+    /**
+     * 停止医生姓名
+     */
     private String nameEmpStop;
 
     private String flagStop;
@@ -207,6 +240,9 @@ public class CnOrder implements Serializable {
 
     private String dtUsagenote;
 
+    /**
+     * 首日次数
+     */
     private Integer firstNum;
 
     private String flagPivas;

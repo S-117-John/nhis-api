@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zebone.modules.mobile.bd.dao.BdOrdSetDao">
+  <resultMap id="BaseResultMap" type="com.zebone.modules.mobile.bd.vo.BdOrdSetVO">
+    <id column="PK_ORDSET" jdbcType="CHAR" property="pkOrdset" />
+    <result column="PK_ORG" jdbcType="CHAR" property="pkOrg" />
+    <result column="CODE" jdbcType="VARCHAR" property="code" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="EU_RIGHT" jdbcType="VARCHAR" property="euRight" />
+    <result column="PK_DEPT" jdbcType="CHAR" property="pkDept" />
+    <result column="PK_EMP" jdbcType="CHAR" property="pkEmp" />
+    <result column="PK_DIAG" jdbcType="CHAR" property="pkDiag" />
+    <result column="PK_PARENT" jdbcType="CHAR" property="pkParent" />
+    <result column="SPCODE" jdbcType="VARCHAR" property="spcode" />
+    <result column="D_CODE" jdbcType="VARCHAR" property="dCode" />
+    <result column="CREATOR" jdbcType="CHAR" property="creator" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFIER" jdbcType="CHAR" property="modifier" />
+    <result column="DEL_FLAG" jdbcType="CHAR" property="delFlag" />
+    <result column="TS" jdbcType="TIMESTAMP" property="ts" />
+    <result column="EU_ORDTYPE" jdbcType="VARCHAR" property="euOrdtype" />
+    <result column="FLAG_IP" jdbcType="CHAR" property="flagIp" />
+    <result column="FLAG_OP" jdbcType="CHAR" property="flagOp" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    PK_ORDSET, PK_ORG, CODE, "NAME", EU_RIGHT, PK_DEPT, PK_EMP, PK_DIAG, PK_PARENT, SPCODE, 
+    D_CODE, CREATOR, CREATE_TIME, MODIFIER, DEL_FLAG, TS, EU_ORDTYPE, FLAG_IP, FLAG_OP
+  </sql>
+  <select id="listEmpBdOrdSet" resultMap="BaseResultMap">
+    select
+        <include refid="Base_Column_List" />
+    from bd_ord_set
+    where  eu_ordtype!='2'
+      and eu_right='2' and  pk_emp=#{pkEmp,jdbcType=CHAR}
+      and del_flag='0'
+      and Flag_ip='1'
+    order by code
+  </select>
+
+</mapper>

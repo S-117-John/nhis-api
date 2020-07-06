@@ -1,7 +1,8 @@
-package com.zebone.modules.mobile.order.dao;
+package com.zebone.modules.mobile.cn.dao;
 
 
-import com.zebone.modules.mobile.order.vo.CnOrderVO;
+
+import com.zebone.modules.mobile.cn.vo.CnOrderVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

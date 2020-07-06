@@ -4,6 +4,7 @@ import com.zebone.common.entity.pv.PvEncounter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 @Data
 @AllArgsConstructor
@@ -11,4 +12,21 @@ import lombok.NoArgsConstructor;
 public class PvEncounterVO extends PvEncounter {
 
     private PiMasterVO piMaster;
+
+    /**
+     * 性别
+     */
+    public String gender;
+
+    public String getGender() {
+        String type = getDtSex();
+        if(!StringUtils.isEmpty(type)){
+            if("02".equals(type)){
+                return "男";
+            }else if("01".equals(type)){
+                return "女";
+            }
+        }
+        return gender;
+    }
 }

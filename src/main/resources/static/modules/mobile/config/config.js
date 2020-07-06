@@ -1,3 +1,3 @@
 var global = {
-    patientInfo:'http://127.0.0.1:8080/',
+    patientInfo:'http://192.168.191.1:8080/',
 };
