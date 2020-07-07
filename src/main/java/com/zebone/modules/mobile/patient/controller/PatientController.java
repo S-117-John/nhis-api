@@ -27,8 +27,11 @@ public class PatientController {
         if(StringUtils.isEmpty(pkPv)){
             return R.fail("患者主键为空");
         }
-
-        return R.data(patientService.getPatientInfo(pkPv));
+        PvEncounterVO pvEncounterVO = patientService.getPatientInfo(pkPv);
+        if(pvEncounterVO==null){
+            return R.fail("患者信息不存在");
+        }
+        return R.data(pvEncounterVO);
     }
 
 }
