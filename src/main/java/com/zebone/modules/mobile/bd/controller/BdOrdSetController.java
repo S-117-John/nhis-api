@@ -23,7 +23,7 @@ public class BdOrdSetController {
     @Autowired
     private BdOrdSetService bdOrdSetService;
 
-    @ApiOperation(value = "获取操作员信息", notes = "传入id")
+    @ApiOperation(value = "获取个人医嘱模板", notes = "传入pkEmp")
     @GetMapping("emp")
     public R<List<BdOrdSetVO>> listEmpOrd(String pkEmp){
         List<BdOrdSetVO> list = bdOrdSetService.listEmpBdOrdSet(pkEmp);

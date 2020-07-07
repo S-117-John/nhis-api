@@ -28,4 +28,5 @@ public interface AppConstant {
     String APPLICATION_MOBILE_PATIENT = "nhis/mobile/patient";
     String APPLICATION_MOBILE_ORD = "nhis/mobile/ord";
     String APPLICATION_MOBILE_ORD_SET = "nhis/mobile/ord/set";
+    String APPLICATION_MOBILE_ORD_PD = "nhis/mobile/ord/pd";
 }

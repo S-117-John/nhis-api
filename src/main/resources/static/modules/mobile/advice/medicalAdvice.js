@@ -100,21 +100,6 @@ class Ord extends React.Component{
 
     // 获取个人模板
     listEmpOrd(){
-        // this.serverRequest = $.get(global.patientInfo+"/nhis/mobile/ord/set/emp?pkEmp=74f80fd350154f278c291828c7853ead", function (result) {
-        //     if(result.code==400){
-        //         antd.notification.open({
-        //             message: '提示',
-        //             description: result.msg,
-        //         });
-        //     }
-        //     if(result.code==200){
-        //         this.setState({
-        //             ordData: result.data,
-        //         });
-        //     }
-        //
-        // }.bind(this));
-        console.log(123);
             $.ajax({
                 url: global.patientInfo+"/nhis/mobile/ord/set/emp?pkEmp=74f80fd350154f278c291828c7853ead",
                 dataType: 'json',
@@ -125,36 +110,15 @@ class Ord extends React.Component{
             });
     }
 
-    onLoadData(){
-        console.log(123);
-        return new Promise(function() {
-
-            resolve();
-            $.ajax({
-                url: global.patientInfo+"nhis/mobile/ord/set/emp?pkEmp=74f80fd350154f278c291828c7853ead",
-                dataType: 'json',
-                cache: false,
-                success: function(data) {
-                    this.setState({treeData: data.data});   // 注意这里
-                }.bind(this),
-            });
-        });
-
-    }
-
-
-
-
     onSelect (selectedKeys, info){
-
 
         console.log(selectedKeys);
     };
 
     render(){
+        // 跳转医嘱搜索页面
         function toAdviceSearch(value) {
-            console.log(value);
-            window.location.href = global.patientInfo+"mobile/advice/search?value="+value;
+            window.location.href = "/mobile/advice/search?value="+value;
         }
 
         return(
@@ -172,12 +136,6 @@ class Ord extends React.Component{
                                 </antd.Radio.Group>
                             </div>
                            <div>
-                               {/*<antd.Tree*/}
-                               {/*    onSelect={this.onSelect.bind(this)}*/}
-                               {/*    treeData={treeData}*/}
-                               {/*    defaultExpandedKeys={['0-0']}*/}
-                               {/*    loadData={this.listEmpOrd}*/}
-                               {/*/>*/}
                                <antd.Table
                                    columns={ordColumns}
                                    dataSource={this.state.ordData}

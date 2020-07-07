@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zebone.modules.mobile.bd.dao.OrdPdDao">
+  <resultMap id="BaseResultMap" type="com.zebone.modules.mobile.bd.vo.OrdPdVO">
+    <id column="ID" jdbcType="CHAR" property="key" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="SPEC" jdbcType="VARCHAR" property="spec" />
+    <result column="UNIT" jdbcType="VARCHAR" property="unit" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="PRICE" jdbcType="DECIMAL" property="price" />
+    <result column="AMOUNT" jdbcType="DECIMAL" property="amount" />
+    <result column="MEDICARE_TYPE" jdbcType="VARCHAR" property="medicareType" />
+  </resultMap>
+
+  <select id="listOrd" resultMap="BaseResultMap">
+    select * from (
+    select
+    distinct
+    ord.PK_ORD id,
+    alias.alias name,
+    ord.spec,
+    org.PRICE
+from bd_ord ord
+         inner join bd_ord_alias alias
+                    on alias.pk_ord = ord.pk_ord and alias.del_flag = '0'
+        inner join BD_ORD_ORG org on ord.PK_ORD = org.PK_ORD
+where ord.del_flag = '0'
+  and ord.flag_active = '1'
+  and ord.flag_ip = '1'
+  and alias.spcode like '%${spCode}%'
+
+    ) WHERE ROWNUM &lt;= 10
+  </select>
+
+  <select id="listPd" resultMap="BaseResultMap">
+select * from (
+    SELECT pd.pk_pd id,
+       pd.SPEC,
+       pd.note  description,
+       pd.PRICE,
+       als.alias  name
+FROM bd_pd pd
+         INNER join bd_pd_as als ON pd.pk_pd = als.pk_pd AND als.del_flag = '0'
+where pd.flag_rm = '0'
+  and pd.flag_reag = '0'
+  and als.spcode like '%${spCode}%'
+  ) WHERE ROWNUM &lt;= 10
+  </select>
+
+
+</mapper>

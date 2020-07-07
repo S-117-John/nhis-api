@@ -27,6 +27,15 @@ class MedicalAdviceSearch extends React.Component{
 
 }
 
+function confirm(e) {
+    console.log(e);
+    window.location.href = "/mobile/drug/index"
+}
+
+function cancel(e) {
+    console.log(e);
+
+}
 const treeData = [];
 
 const data = [];
@@ -35,49 +44,55 @@ const columns = [
         title: '医嘱名称',
         dataIndex: 'name',
         key: 'name',
+        render: text => <antd.Popconfirm
+            title={text}
+            onConfirm={confirm}
+            onCancel={cancel}
+            okText="选中药品"
+            cancelText="选中非药品"
+            >
+            <a href="#">{text}</a>
+        </antd.Popconfirm>,
+    },
+    {
+        title: '规格',
+        dataIndex: 'spec',
+        key: 'spec',
         render: text => <a>{text}</a>,
     },
     {
-        title: '用量',
-        dataIndex: 'dosage',
-        key: 'dosage',
-        render: text => <a>{text}</a>,
-    },
-    {
-        title: '单位',
+        title: '包装单位',
         dataIndex: 'unit',
         key: 'unit',
         render: text => <a>{text}</a>,
     },
     {
-        title: '用法',
-        dataIndex: 'usage',
-        key: 'usage',
+        title: '描述',
+        dataIndex: 'desc',
+        key: 'desc',
         render: text => <a>{text}</a>,
     },
     {
-        title: '频次',
-        dataIndex: 'frequency',
-        key: 'frequency',
+        title: '参考价格',
+        dataIndex: 'price',
+        key: 'price',
         render: text => <a>{text}</a>,
     },
     {
-        title: '执行科室',
-        dataIndex: 'exeDept',
-        key: 'exeDept',
+        title: '库存量',
+        dataIndex: 'amount',
+        key: 'amount',
+        render: text => <a>{text}</a>,
+    },
+    {
+        title: '医保类型',
+        dataIndex: 'medicareType',
+        key: 'medicareType',
         render: text => <a>{text}</a>,
     },
 
 ];
 
-const ordColumns = [
-    {
-        title: '模板',
-        dataIndex: 'name',
-        key: 'name',
-        render: text => <a>{text}</a>,
-    },
-];
 const ordData = [];
 
 class Ord extends React.Component{
@@ -85,101 +100,70 @@ class Ord extends React.Component{
         super(props);
         this.state = {
             data: data,
-            ordData:ordData
+            ordData:ordData,
+            searchValue: "",
         }
     }
 
     componentDidMount() {
+        this.listOrd($("#value").text())
 
-        this.listEmpOrd();
     }
 
     componentWillUnmount() {
         this.serverRequest.abort();
     }
 
-    // 获取个人模板
-    listEmpOrd(){
-        // this.serverRequest = $.get(global.patientInfo+"/nhis/mobile/ord/set/emp?pkEmp=74f80fd350154f278c291828c7853ead", function (result) {
-        //     if(result.code==400){
-        //         antd.notification.open({
-        //             message: '提示',
-        //             description: result.msg,
-        //         });
-        //     }
-        //     if(result.code==200){
-        //         this.setState({
-        //             ordData: result.data,
-        //         });
-        //     }
-        //
-        // }.bind(this));
-        console.log(123);
-            $.ajax({
-                url: global.patientInfo+"/nhis/mobile/ord/set/emp?pkEmp=74f80fd350154f278c291828c7853ead",
-                dataType: 'json',
-                cache: false,
-                success: function(data) {
-                    this.setState({ordData: data.data});   // 注意这里
-                }.bind(this)
-            });
-    }
-
-    onLoadData(){
-        console.log(123);
-        return new Promise(function() {
-
-            resolve();
-            $.ajax({
-                url: global.patientInfo+"/nhis/mobile/ord/set/emp?pkEmp=74f80fd350154f278c291828c7853ead",
-                dataType: 'json',
-                cache: false,
-                success: function(data) {
-                    this.setState({treeData: data.data});   // 注意这里
-                }.bind(this),
-            });
-        });
-
-    }
-
-
-
-
     onSelect (selectedKeys, info){
-
-
         console.log(selectedKeys);
     };
+
+    listOrd(value){
+        console.log(value);
+        if(value!=""){
+            $.ajax({
+                url: "/nhis/mobile/ord/pd/list?spCode="+value,
+                dataType: 'json',
+                cache: false,
+                success: function(data) {
+                    this.setState({
+                        ordData: data.data,
+                    });
+
+                }.bind(this)
+            });
+        }
+
+    }
 
     render(){
         return(
             <div>
-                <div style={{width:500}}>
-                    <Search placeholder="input search text"  enterButton />
+                <div style={{width:800}}>
+                    <antd.Row>
+                        <antd.Col span={12}>
+                            <antd.Input id="search" placeholder="Basic usage" />
+                        </antd.Col>
+                        <antd.Col span={4}>
+                            <antd.Button type="primary"  onClick={()=>this.listOrd($("#search").val())}>搜索</antd.Button>
+                        </antd.Col>
+                        <antd.Col span={1}></antd.Col>
+                        <antd.Col span={4}>
+                            <antd.Button type="primary">取消</antd.Button>
+                        </antd.Col>
+                    </antd.Row>
+
+
                 </div>
                 <div style={{marginTop:20}}>
                     <div>
                         <antd.Table
                             bordered
                             columns={columns}
-                            dataSource={this.state.data}
+                            dataSource={this.state.ordData}
                             pagination={false}
                             scroll={{y: 300 }}
                         />
-                    </div>
-                    <div style={{marginTop:20}}>
-                        <antd.Row>
-                            <antd.Col span={12}>
-                                <antd.Radio.Group defaultValue="a" buttonStyle="solid">
-                                    <antd.Radio.Button value="a">长期</antd.Radio.Button>
-                                    <antd.Radio.Button value="b">临时</antd.Radio.Button>
-                                </antd.Radio.Group>
-                            </antd.Col>
-                            <antd.Col span={12}>
-                                <antd.Button type="primary">确定</antd.Button>
-                                <antd.Button type="primary">取消</antd.Button>
-                            </antd.Col>
-                        </antd.Row>
                     </div>
                 </div>
             </div>

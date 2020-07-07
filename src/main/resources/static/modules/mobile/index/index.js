@@ -115,62 +115,7 @@ const columns = [
     },
 ];
 
-let tableData = [
-    // {
-    //     key: '1',
-    //     name: '5%葡萄糖注射液/250ml/袋',
-    //     group: 1,
-    //     classification: '西药',
-    //     tags: "长",
-    //     startTime: '05-30 12:00',
-    //     dosage: '250ml',
-    //     usage: '输液(免费)',
-    //     frequency: 'qd',
-    //     first: '1',
-    //     endTime: '05-30 12:00',
-    //     last: '1',
-    //     creator: '陆丞燕',
-    //     sign: '陆丞燕',
-    //     stop: '陆丞燕',
-    //
-    // },
-    // {
-    //     key: '2',
-    //     name: '5%葡萄糖注射液/250ml/袋',
-    //     group: 2,
-    //     classification: '西药',
-    //     tags: "长",
-    //     startTime: '05-30 12:00',
-    //     dosage: '250ml',
-    //     usage: '输液(免费)',
-    //     frequency: 'qd',
-    //     first: '1',
-    //     endTime: '05-30 12:00',
-    //     last: '1',
-    //     creator: '陆丞燕',
-    //     sign: '陆丞燕',
-    //     stop: '陆丞燕',
-    //
-    // },
-    // {
-    //     key: '3',
-    //     name: '5%葡萄糖注射液/250ml/袋',
-    //     group: 3,
-    //     classification: '西药',
-    //     tags: "长",
-    //     startTime: '05-30 12:00',
-    //     dosage: '250ml',
-    //     usage: '输液(免费)',
-    //     frequency: 'qd',
-    //     first: '1',
-    //     endTime: '05-30 12:00',
-    //     last: '1',
-    //     creator: '陆丞燕',
-    //     sign: '陆丞燕',
-    //     stop: '陆丞燕',
-    //
-    // },
-];
+let tableData = [];
 
 
 
@@ -232,7 +177,8 @@ class Index extends React.Component {
 
     // 跳转到医嘱界面
     toMedicalAdvice(){
-        window.location.href= global.patientInfo+"/mobile/advice?id="+document.getElementById('id').innerText;
+        // global.patientInfo+
+        window.location.href= "/mobile/advice?id="+document.getElementById('id').innerText;
     }
 
     render() {

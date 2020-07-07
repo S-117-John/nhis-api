@@ -10,21 +10,20 @@ import javax.servlet.http.HttpSession;
 
 @ApiIgnore
 @Controller
-@RequestMapping("mobile/index")
-public class IndexController {
+@RequestMapping("mobile/drug")
+public class DrugController {
 
     /**
-     * 首页
-     * @param id
+     * 进入药品录入页面
      * @param model
      * @param request
      * @return
      */
-    @RequestMapping("")
-    public String index(String id, Model model, HttpServletRequest request){
+    @RequestMapping("index")
+    public String index(Model model, HttpServletRequest request){
         HttpSession session = request.getSession();
-        session.setAttribute("pkPv",id);
-        model.addAttribute("id",id);
-        return "modules/mobile/index";
+        String pkPv= (String) session.getAttribute("pkPv");
+        model.addAttribute("pkPv",pkPv);
+        return "modules/mobile/drugIndex";
     }
 }
