@@ -2,6 +2,8 @@ package com.zebone.common.entity.pi;
 
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,19 +12,31 @@ import java.util.Date;
  * @author 
  */
 @Data
+@Entity
 public class PiMaster implements Serializable {
+
+    @Id
     private String pkPi;
 
     private String pkOrg;
 
+    /**
+     * 患者编码
+     */
     private String codePi;
 
     private String codeOp;
 
+    /**
+     * 住院号
+     */
     private String codeIp;
 
     private String barcode;
 
+    /**
+     * 患者分类
+     */
     private String pkPicate;
 
     private String namePi;

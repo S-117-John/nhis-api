@@ -1,8 +1,8 @@
-package com.zebone.modules.mobile.bd.service.impl;
+package com.zebone.modules.mobile.bd.ord.service.impl;
 
-import com.zebone.modules.mobile.bd.dao.BdOrdSetDao;
-import com.zebone.modules.mobile.bd.service.BdOrdSetService;
-import com.zebone.modules.mobile.bd.vo.BdOrdSetVO;
+import com.zebone.modules.mobile.bd.ord.dao.BdOrdSetDao;
+import com.zebone.modules.mobile.bd.ord.service.BdOrdSetService;
+import com.zebone.modules.mobile.bd.ord.vo.BdOrdSetVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

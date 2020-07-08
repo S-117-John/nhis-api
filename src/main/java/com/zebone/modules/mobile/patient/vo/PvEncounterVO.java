@@ -29,4 +29,9 @@ public class PvEncounterVO extends PvEncounter {
         }
         return gender;
     }
+
+    /**
+     * 诊断名称
+     */
+    public String diagName;
 }

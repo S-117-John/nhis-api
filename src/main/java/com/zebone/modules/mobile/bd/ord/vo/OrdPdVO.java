@@ -1,4 +1,4 @@
-package com.zebone.modules.mobile.bd.vo;
+package com.zebone.modules.mobile.bd.ord.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

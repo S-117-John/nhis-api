@@ -1,9 +1,9 @@
-package com.zebone.modules.mobile.bd.controller;
+package com.zebone.modules.mobile.bd.ord.controller;
 
 import com.zebone.core.launch.constant.AppConstant;
 import com.zebone.core.tool.api.R;
-import com.zebone.modules.mobile.bd.service.OrdPdService;
-import com.zebone.modules.mobile.bd.vo.OrdPdVO;
+import com.zebone.modules.mobile.bd.ord.service.OrdPdService;
+import com.zebone.modules.mobile.bd.ord.vo.OrdPdVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
-package com.zebone.modules.mobile.bd.wrapper;
+package com.zebone.modules.mobile.bd.ord.wrapper;
 
-import com.zebone.modules.mobile.bd.vo.BdOrdSetVO;
+import com.zebone.modules.mobile.bd.ord.vo.BdOrdSetVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

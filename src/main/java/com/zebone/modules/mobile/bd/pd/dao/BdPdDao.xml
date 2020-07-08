@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zebone.modules.mobile.bd.pd.dao.BdPdDao">
+  <resultMap id="BaseResultMap" type="com.zebone.modules.mobile.bd.pd.vo.BdPdVO">
+    <id column="PK_PD" jdbcType="CHAR" property="pkPd" />
+    <result column="CODE" jdbcType="VARCHAR" property="code" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="SPEC" jdbcType="VARCHAR" property="spec" />
+    <result column="SHORT_NAME" jdbcType="VARCHAR" property="shortName" />
+    <result column="BARCODE" jdbcType="VARCHAR" property="barcode" />
+    <result column="SPCODE" jdbcType="VARCHAR" property="spcode" />
+    <result column="CONCENT" jdbcType="DECIMAL" property="concent" />
+    <result column="WEIGHT" jdbcType="DECIMAL" property="weight" />
+    <result column="PK_UNIT_WT" jdbcType="CHAR" property="pkUnitWt" />
+    <result column="VOL" jdbcType="DECIMAL" property="vol" />
+    <result column="PK_UNIT_VOL" jdbcType="CHAR" property="pkUnitVol" />
+    <result column="PK_UNIT_MIN" jdbcType="CHAR" property="pkUnitMin" />
+    <result column="PACK_SIZE" jdbcType="DECIMAL" property="packSize" />
+    <result column="PK_UNIT_PACK" jdbcType="CHAR" property="pkUnitPack" />
+    <result column="EU_MUPUTYPE" jdbcType="VARCHAR" property="euMuputype" />
+    <result column="EU_PDTYPE" jdbcType="VARCHAR" property="euPdtype" />
+    <result column="EU_DRUGTYPE" jdbcType="VARCHAR" property="euDrugtype" />
+    <result column="NAME_CHEM" jdbcType="VARCHAR" property="nameChem" />
+    <result column="PK_FACTORY" jdbcType="CHAR" property="pkFactory" />
+    <result column="APPR_NO" jdbcType="VARCHAR" property="apprNo" />
+    <result column="EU_PDPRICE" jdbcType="VARCHAR" property="euPdprice" />
+    <result column="EU_PAP" jdbcType="VARCHAR" property="euPap" />
+    <result column="AMT_PAP" jdbcType="DECIMAL" property="amtPap" />
+    <result column="PAP_RATE" jdbcType="DECIMAL" property="papRate" />
+    <result column="DT_ABRD" jdbcType="VARCHAR" property="dtAbrd" />
+    <result column="DT_MADE" jdbcType="VARCHAR" property="dtMade" />
+    <result column="DT_DOSAGE" jdbcType="VARCHAR" property="dtDosage" />
+    <result column="DT_PHARM" jdbcType="VARCHAR" property="dtPharm" />
+    <result column="DT_POIS" jdbcType="VARCHAR" property="dtPois" />
+    <result column="DT_ANTI" jdbcType="VARCHAR" property="dtAnti" />
+    <result column="FLAG_PRECIOUS" jdbcType="CHAR" property="flagPrecious" />
+    <result column="EU_USECATE" jdbcType="VARCHAR" property="euUsecate" />
+    <result column="DT_STORETYPE" jdbcType="VARCHAR" property="dtStoretype" />
+    <result column="DT_BASE" jdbcType="VARCHAR" property="dtBase" />
+    <result column="FLAG_RM" jdbcType="CHAR" property="flagRm" />
+    <result column="FLAG_REAG" jdbcType="CHAR" property="flagReag" />
+    <result column="FLAG_VACC" jdbcType="CHAR" property="flagVacc" />
+    <result column="FLAG_ST" jdbcType="CHAR" property="flagSt" />
+    <result column="FLAG_GMP" jdbcType="CHAR" property="flagGmp" />
+    <result column="FLAG_TPN" jdbcType="CHAR" property="flagTpn" />
+    <result column="FLAG_PED" jdbcType="CHAR" property="flagPed" />
+    <result column="NOTE" jdbcType="VARCHAR" property="note" />
+    <result column="DOSAGE_DEF" jdbcType="DECIMAL" property="dosageDef" />
+    <result column="PK_UNIT_DEF" jdbcType="CHAR" property="pkUnitDef" />
+    <result column="CODE_SUPPLY" jdbcType="VARCHAR" property="codeSupply" />
+    <result column="CODE_FREQ" jdbcType="VARCHAR" property="codeFreq" />
+    <result column="DT_CHCATE" jdbcType="VARCHAR" property="dtChcate" />
+    <result column="PK_ITEMCATE" jdbcType="CHAR" property="pkItemcate" />
+    <result column="PK_ORDTYPE" jdbcType="CHAR" property="pkOrdtype" />
+    <result column="CREATOR" jdbcType="CHAR" property="creator" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFIER" jdbcType="CHAR" property="modifier" />
+    <result column="DEL_FLAG" jdbcType="CHAR" property="delFlag" />
+    <result column="PK_ORG" jdbcType="CHAR" property="pkOrg" />
+    <result column="PRICE" jdbcType="DECIMAL" property="price" />
+    <result column="VALID_CNT" jdbcType="DECIMAL" property="validCnt" />
+    <result column="EU_VALID_UNIT" jdbcType="VARCHAR" property="euValidUnit" />
+    <result column="FLAG_STOP" jdbcType="CHAR" property="flagStop" />
+    <result column="EU_SOURCE" jdbcType="VARCHAR" property="euSource" />
+    <result column="TS" jdbcType="TIMESTAMP" property="ts" />
+    <result column="PK_PDIND" jdbcType="CHAR" property="pkPdind" />
+    <result column="PK_PDCATE" jdbcType="CHAR" property="pkPdcate" />
+    <result column="REG_NO" jdbcType="VARCHAR" property="regNo" />
+    <result column="DATE_VALID_REG" jdbcType="TIMESTAMP" property="dateValidReg" />
+    <result column="EU_STOCKMODE" jdbcType="VARCHAR" property="euStockmode" />
+    <result column="CODE_COSTITEM" jdbcType="VARCHAR" property="codeCostitem" />
+    <result column="PK_ITEM" jdbcType="VARCHAR" property="pkItem" />
+    <result column="FLAG_SINGLE" jdbcType="CHAR" property="flagSingle" />
+    <result column="FLAG_IMP" jdbcType="CHAR" property="flagImp" />
+    <result column="FLAG_USE" jdbcType="CHAR" property="flagUse" />
+    <result column="PK_PDGN" jdbcType="VARCHAR" property="pkPdgn" />
+    <result column="DT_PDTYPE" jdbcType="VARCHAR" property="dtPdtype" />
+    <result column="PACK_SIZE_MAX" jdbcType="DECIMAL" property="packSizeMax" />
+    <result column="DT_USAGENOTE" jdbcType="VARCHAR" property="dtUsagenote" />
+    <result column="DT_INJTYPE" jdbcType="VARCHAR" property="dtInjtype" />
+    <result column="FLAG_CHRT" jdbcType="CHAR" property="flagChrt" />
+    <result column="EU_HERBTYPE" jdbcType="VARCHAR" property="euHerbtype" />
+    <result column="OLD_YB_ID" jdbcType="VARCHAR" property="oldYbId" />
+    <result column="OLD_ID" jdbcType="VARCHAR" property="oldId" />
+    <result column="AGE_MIN" jdbcType="DECIMAL" property="ageMin" />
+    <result column="AGE_MAX" jdbcType="DECIMAL" property="ageMax" />
+    <result column="EU_SEX" jdbcType="VARCHAR" property="euSex" />
+    <result column="OLD_CODE" jdbcType="VARCHAR" property="oldCode" />
+    <result column="QUOTA_DOS" jdbcType="DECIMAL" property="quotaDos" />
+    <result column="EU_HPTYPE" jdbcType="VARCHAR" property="euHptype" />
+    <result column="CODE_HP" jdbcType="VARCHAR" property="codeHp" />
+    <result column="CODE_STD" jdbcType="VARCHAR" property="codeStd" />
+    <result column="NAME_GEN" jdbcType="VARCHAR" property="nameGen" />
+    <result column="EU_LABELTYPE" jdbcType="VARCHAR" property="euLabeltype" />
+    <result column="PK_AUDIT" jdbcType="CHAR" property="pkAudit" />
+    <result column="CODE_EXT" jdbcType="VARCHAR" property="codeExt" />
+    <result column="VAL_DDD" jdbcType="DECIMAL" property="valDdd" />
+    <result column="DT_DRUGEFFECT" jdbcType="VARCHAR" property="dtDrugeffect" />
+    <result column="EU_MUPUTYPE_OP" jdbcType="VARCHAR" property="euMuputypeOp" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    PK_PD, CODE, "NAME", SPEC, SHORT_NAME, BARCODE, SPCODE, CONCENT, WEIGHT, PK_UNIT_WT, 
+    VOL, PK_UNIT_VOL, PK_UNIT_MIN, PACK_SIZE, PK_UNIT_PACK, EU_MUPUTYPE, EU_PDTYPE, EU_DRUGTYPE, 
+    NAME_CHEM, PK_FACTORY, APPR_NO, EU_PDPRICE, EU_PAP, AMT_PAP, PAP_RATE, DT_ABRD, DT_MADE, 
+    DT_DOSAGE, DT_PHARM, DT_POIS, DT_ANTI, FLAG_PRECIOUS, EU_USECATE, DT_STORETYPE, DT_BASE, 
+    FLAG_RM, FLAG_REAG, FLAG_VACC, FLAG_ST, FLAG_GMP, FLAG_TPN, FLAG_PED, NOTE, DOSAGE_DEF, 
+    PK_UNIT_DEF, CODE_SUPPLY, CODE_FREQ, DT_CHCATE, PK_ITEMCATE, PK_ORDTYPE, CREATOR, 
+    CREATE_TIME, MODIFIER, DEL_FLAG, PK_ORG, PRICE, VALID_CNT, EU_VALID_UNIT, FLAG_STOP, 
+    EU_SOURCE, TS, PK_PDIND, PK_PDCATE, REG_NO, DATE_VALID_REG, EU_STOCKMODE, CODE_COSTITEM, 
+    PK_ITEM, FLAG_SINGLE, FLAG_IMP, FLAG_USE, PK_PDGN, DT_PDTYPE, PACK_SIZE_MAX, DT_USAGENOTE, 
+    DT_INJTYPE, FLAG_CHRT, EU_HERBTYPE, OLD_YB_ID, OLD_ID, AGE_MIN, AGE_MAX, EU_SEX, 
+    OLD_CODE, QUOTA_DOS, EU_HPTYPE, CODE_HP, CODE_STD, NAME_GEN, EU_LABELTYPE, PK_AUDIT, 
+    CODE_EXT, VAL_DDD, DT_DRUGEFFECT, EU_MUPUTYPE_OP, REMARK
+  </sql>
+  <select id="getBdPd" resultMap="getBdPdResultMap">
+    select
+    PK_PD,
+    NAME,
+    SPEC,
+    PRICE
+    from BD_PD
+    where PK_PD=#{pkPd,jdbcType=VARCHAR}
+  </select>
+
+  <resultMap id="getBdPdResultMap" type="com.zebone.modules.mobile.bd.pd.vo.BdPdVO">
+    <id column="PK_PD" jdbcType="CHAR" property="pkPd" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="SPEC" jdbcType="VARCHAR" property="spec" />
+  </resultMap>
+
+</mapper>

@@ -100,7 +100,10 @@ select hpec.name_pi,
        hpec.bed_no,
        hpec.dt_sex,
        hpec.age_pv,
-       hpmt.code_ip
+       hpmt.code_ip,
+       hpmt.code_pi,
+       hpmt.PK_PI,
+       hpmt.PK_PICATE
 from pv_ip hpip,
      pv_encounter hpec,
      pi_master hpmt
@@ -117,7 +120,8 @@ where hpip.pk_pv = hpec.PK_PV
     <result column="AGE_PV" jdbcType="VARCHAR" property="agePv" />
     <association property="piMaster" javaType="com.zebone.modules.mobile.patient.vo.PiMasterVO">
       <id column="PK_PI" jdbcType="CHAR" property="pkPi" />
-      <result column="CODE_IP" jdbcType="VARCHAR" property="codeIp" />
+      <result column="CODE_PI" jdbcType="VARCHAR" property="codePi" />
+      <result column="PK_PICATE" jdbcType="VARCHAR" property="pkPicate" />
     </association>
   </resultMap>
 

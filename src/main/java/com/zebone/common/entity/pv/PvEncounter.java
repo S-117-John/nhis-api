@@ -1,17 +1,25 @@
 package com.zebone.common.entity.pv;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * PV_ENCOUNTER
+ * 就诊信息
  * @author 
  */
 @Data
+@Entity
 public class PvEncounter implements Serializable {
+
+    @Id
     private String pkPv;
 
     private String pkOrg;
@@ -120,6 +128,11 @@ public class PvEncounter implements Serializable {
 
     private String nameEmpReg;
 
+    /**
+     * 登记日期
+     */
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "GMT+8")
     private Date dateReg;
 
     /**

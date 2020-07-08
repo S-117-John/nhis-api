@@ -1,7 +1,7 @@
-package com.zebone.modules.mobile.bd.service;
+package com.zebone.modules.mobile.bd.ord.service;
 
 
-import com.zebone.modules.mobile.bd.vo.BdOrdSetVO;
+import com.zebone.modules.mobile.bd.ord.vo.BdOrdSetVO;
 
 import java.util.List;
 

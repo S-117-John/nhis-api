@@ -1,4 +1,4 @@
-package com.zebone.modules.mobile.bd.vo;
+package com.zebone.modules.mobile.bd.ord.vo;
 
 import com.zebone.common.entity.bd.ord.BdOrdSet;
 import lombok.Data;

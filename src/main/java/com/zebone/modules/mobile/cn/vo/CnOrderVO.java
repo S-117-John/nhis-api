@@ -2,9 +2,11 @@ package com.zebone.modules.mobile.cn.vo;
 
 import com.zebone.common.entity.bd.ord.BdOrdLab;
 import com.zebone.common.entity.bd.ord.BdOrdRis;
+import com.zebone.common.entity.bd.ord.BdOrdType;
 import com.zebone.common.entity.cn.CnOrder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
@@ -18,6 +20,7 @@ public class CnOrderVO extends CnOrder {
 
     private BdOrdLab bdOrdLab;
 
+    private BdOrdType bdOrdType;
 
     /**
      * 页面table需要唯一值
@@ -28,5 +31,9 @@ public class CnOrderVO extends CnOrder {
         return getPkCnord();
     }
 
+    public String bdOrdTypeName;
 
+    public String getBdOrdTypeName() {
+        return bdOrdType.getName();
+    }
 }
