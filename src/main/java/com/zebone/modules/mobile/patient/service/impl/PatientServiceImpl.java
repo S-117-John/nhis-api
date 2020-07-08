@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,9 +44,12 @@ public class PatientServiceImpl implements PatientService {
     public PvEncounterVO getPatientInfo(String pkPv) {
 
         //获取就诊信息
-        PvEncounter pvEncounter = pvEncounterRepository.getOne(pkPv);
+        Optional<PvEncounter> pvEncounter = pvEncounterRepository.findById(pkPv);
+        if(!pvEncounter.isPresent()){
+            return null;
+        }
         PvEncounterVO pvEncounterVO = new PvEncounterVO();
-        BeanUtils.copyProperties(pvEncounter,pvEncounterVO);
+        BeanUtils.copyProperties(pvEncounter.get(),pvEncounterVO);
 
         //获取患者基本信息
         PiMaster piMaster = piMasterRepository.getOne(pvEncounterVO.getPkPi());
