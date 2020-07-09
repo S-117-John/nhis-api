@@ -15,4 +15,6 @@ public interface BdOrdTypeService {
     @CacheRefresh(refresh = 1800, stopRefreshAfterLastAccess = 3600, timeUnit = TimeUnit.SECONDS)
     @CachePenetrationProtect
     List<BdOrdType> listBdOrdType();
+
+    BdOrdType getBdOrdType(String id);
 }

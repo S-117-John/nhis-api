@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BdOrdTypeServiceImpl implements BdOrdTypeService {
@@ -17,5 +18,11 @@ public class BdOrdTypeServiceImpl implements BdOrdTypeService {
     @Override
     public List<BdOrdType> listBdOrdType() {
         return bdOrdTypeRepository.findAll();
+    }
+
+    @Override
+    public BdOrdType getBdOrdType(String id) {
+        Optional<BdOrdType> optional = bdOrdTypeRepository.findById(id);
+        return optional.isPresent()?optional.get():null;
     }
 }

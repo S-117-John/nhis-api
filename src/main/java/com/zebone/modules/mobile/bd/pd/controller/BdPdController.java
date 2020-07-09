@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 @Api(value = "药品信息", tags = "药品信息")
 @RestController
@@ -26,5 +29,13 @@ public class BdPdController {
     public R<BdPdVO> getBdPd(String pkPd){
         BdPdVO bdPdVO = bdPdService.getBdPd(pkPd);
         return R.data(bdPdVO);
+    }
+
+    @GetMapping("list")
+    @ApiOperation(value = "批量查询药品信息", notes = "药品主键集合")
+    public R<List<BdPd>> listBdPd(String ids){
+
+        List<BdPd> bdPdList = bdPdService.listBdPs(Arrays.asList(ids.split(",")));
+        return R.data(bdPdList);
     }
 }

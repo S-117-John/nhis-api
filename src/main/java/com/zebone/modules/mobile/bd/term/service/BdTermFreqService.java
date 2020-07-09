@@ -1,25 +1,18 @@
-package com.zebone.modules.mobile.bd.pd.service;
+package com.zebone.modules.mobile.bd.term.service;
 
 import com.alicp.jetcache.anno.CachePenetrationProtect;
 import com.alicp.jetcache.anno.CacheRefresh;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
-import com.zebone.common.entity.bd.pd.BdPd;
-import com.zebone.modules.mobile.bd.pd.vo.BdPdVO;
+import com.zebone.common.entity.bd.term.BdTermFreq;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public interface BdPdService {
-
-    /**
-     * 检索药品信息
-     * @param pkPd
-     * @return
-     */
-    BdPdVO getBdPd(String pkPd);
+public interface BdTermFreqService {
 
     @Cached(expire = 3600, cacheType = CacheType.REMOTE)
+    @CacheRefresh(refresh = 1800, stopRefreshAfterLastAccess = 3600, timeUnit = TimeUnit.SECONDS)
     @CachePenetrationProtect
-    List<BdPd> listBdPs(List<String> ids);
+    List<BdTermFreq> list();
 }

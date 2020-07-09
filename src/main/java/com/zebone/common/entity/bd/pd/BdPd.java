@@ -7,15 +7,20 @@ import java.util.Date;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /**
  * BD_PD
  * @author 
  */
 @ApiModel(value = "药品信息",description = "药品信息表对应实体类")
 @Data
+@Entity
 public class BdPd implements Serializable {
 
 
+    @Id
     private String pkPd;
 
     private String code;
@@ -50,6 +55,10 @@ public class BdPd implements Serializable {
 
     private String euPdtype;
 
+    /**
+     * 药品类别
+     * 0西药，1成药，2草药
+     */
     private String euDrugtype;
 
     private String nameChem;
@@ -114,6 +123,9 @@ public class BdPd implements Serializable {
 
     private String pkItemcate;
 
+    /**
+     * 对应医嘱类型
+     */
     private String pkOrdtype;
 
     private String creator;

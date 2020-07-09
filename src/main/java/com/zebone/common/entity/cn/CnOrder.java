@@ -6,26 +6,55 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * CN_ORDER
+ * 医嘱
  * @author 
  */
 @Data
+@Entity
 public class CnOrder implements Serializable {
+
+    @Id
+    @GeneratedValue(generator="system_uuid")
+    @GenericGenerator(name="system_uuid",strategy="uuid")
     private String pkCnord;
 
+    /**
+     * 所属机构
+     */
     private String pkOrg;
 
+    /**
+     * 就诊类型编码
+     */
     private String euPvtype;
 
+    /**
+     * 就诊主键
+     */
     private String pkPv;
 
+    /**
+     *患者主键
+     */
     private String pkPi;
 
+    /**
+     * 医嘱有效日期
+     */
     private Date dateEffe;
 
+    /**
+     * 医嘱类型编码
+     */
     private String codeOrdtype;
 
     /**
@@ -35,18 +64,39 @@ public class CnOrder implements Serializable {
      */
     private String euAlways;
 
+    /**
+     * 医嘱序号
+     */
     private BigDecimal ordsn;
 
+    /**
+     * 父医嘱序号
+     */
     private BigDecimal ordsnParent;
 
+    /**
+     * 医嘱编码主键
+     */
     private String pkOrd;
 
+    /**
+     * 医嘱编码
+     */
     private String codeOrd;
 
+    /**
+     * 处方编码
+     */
     private String pkPres;
 
+    /**
+     * 医嘱名称
+     */
     private String nameOrd;
 
+    /**
+     * 医嘱描述
+     */
     private String descOrd;
 
     private String codeApply;

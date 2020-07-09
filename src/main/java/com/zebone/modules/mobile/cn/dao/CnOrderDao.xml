@@ -133,7 +133,8 @@
   </sql>
 
   <select id="listPatientOrder" resultMap="listPatientOrderResultMap">
-    select ord.pk_ord,     --医嘱PK
+    select ord.PK_CNORD,
+       ord.pk_ord,     --医嘱PK
        ord.code_ord,   --医嘱编码
        ord.name_ord,   --医嘱名称
        ord.spec,       --规格
