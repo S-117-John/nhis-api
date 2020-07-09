@@ -27,9 +27,6 @@ public class CnOrderVO extends CnOrder {
      */
     private String key;
 
-    public String getKey() {
-        return getPkCnord();
-    }
 
     public String bdOrdTypeName;
 

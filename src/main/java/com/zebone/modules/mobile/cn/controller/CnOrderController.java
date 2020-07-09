@@ -50,6 +50,7 @@ public class CnOrderController {
                     a.setBdOrdType(b);
                 }
             });
+            a.setKey(a.getPkCnord());
         });
         return R.data(list);
     }
