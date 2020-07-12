@@ -9,6 +9,7 @@ import com.zebone.modules.mobile.cn.vo.CnOrderVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -28,6 +29,10 @@ public class CnOrdServiceImpl implements CnOrdService {
 
     @Override
     public void save(List<CnOrder> cnOrders) {
+        cnOrders.forEach(cnOrder -> {
+            cnOrder.setCreateTime(new Date());
+            cnOrder.setFlagErase("0");
+        });
         cnOrderRepository.saveAll(cnOrders);
     }
 }

@@ -2,13 +2,16 @@ package com.zebone.modules.mobile.cn.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.zebone.common.entity.bd.ord.BdOrdSetDt;
 import com.zebone.common.entity.bd.ord.BdOrdType;
 import com.zebone.common.entity.bd.pd.BdPd;
 import com.zebone.common.entity.cn.CnOrder;
 import com.zebone.core.launch.constant.AppConstant;
 import com.zebone.core.tool.api.R;
 
+import com.zebone.modules.mobile.bd.ord.repository.BdOrdSetDtRepository;
 import com.zebone.modules.mobile.bd.ord.repository.BdOrdTypeRepository;
+import com.zebone.modules.mobile.bd.ord.service.BdOrdSetService;
 import com.zebone.modules.mobile.bd.ord.service.BdOrdTypeService;
 import com.zebone.modules.mobile.bd.pd.service.BdPdService;
 import com.zebone.modules.mobile.cn.service.CnOrdService;
@@ -38,6 +41,8 @@ public class CnOrderController {
     @Autowired
     private BdPdService bdPdService;
 
+    @Autowired
+    private BdOrdSetService bdOrdSetService;
 
     @ApiOperation(value = "查询患者医嘱", notes = "传入pkPv")
     @GetMapping("")
@@ -85,5 +90,12 @@ public class CnOrderController {
         });
 
         cnOrdService.save(cnOrders);
+    }
+
+    @ApiOperation(value = "获取医嘱模板明细", notes = "传入医嘱模板pk")
+    @GetMapping("temp/detail")
+    public R<List<BdOrdSetDt>> ListOrderTemplateDetails(String pkOrdSet){
+        List<BdOrdSetDt> list = bdOrdSetService.listBdOrdSetDt(pkOrdSet);
+        return R.data(list);
     }
 }
