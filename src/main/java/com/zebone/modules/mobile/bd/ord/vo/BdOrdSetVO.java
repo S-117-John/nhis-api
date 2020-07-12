@@ -1,5 +1,6 @@
 package com.zebone.modules.mobile.bd.ord.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zebone.common.entity.bd.ord.BdOrdSet;
 import lombok.Data;
 
@@ -10,11 +11,7 @@ public class BdOrdSetVO extends BdOrdSet {
 
     private String key;
 
-    public String getTitle() {
-        return getName();
-    }
+    @JsonProperty("isLeaf")
+    private boolean leaf;
 
-    public String getKey() {
-        return getCode();
-    }
 }

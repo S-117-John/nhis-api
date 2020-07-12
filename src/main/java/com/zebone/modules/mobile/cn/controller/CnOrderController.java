@@ -77,6 +77,8 @@ public class CnOrderController {
                     a.setCodeOrd(bdPd.getCode());
                     //设置医嘱名称
                     a.setNameOrd(bdPd.getName());
+                    //规格
+                    a.setSpec(bdPd.getSpec());
 
                 }
             });

@@ -108,8 +108,14 @@ public class CnOrder implements Serializable {
 
     private String spec;
 
+    /**
+     * 剂量
+     */
     private BigDecimal dosage;
 
+    /**
+     * 剂量单位
+     */
     private String pkUnitDos;
 
     /**
