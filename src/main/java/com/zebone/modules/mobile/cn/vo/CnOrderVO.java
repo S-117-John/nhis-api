@@ -30,7 +30,4 @@ public class CnOrderVO extends CnOrder {
 
     public String bdOrdTypeName;
 
-    public String getBdOrdTypeName() {
-        return bdOrdType.getName();
-    }
 }

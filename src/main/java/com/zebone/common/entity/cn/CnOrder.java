@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,6 +22,7 @@ import javax.persistence.Id;
  */
 @Data
 @Entity
+@ApiModel(value = "医嘱信息",description = "医嘱信息表对应实体类")
 public class CnOrder implements Serializable {
 
     @Id
@@ -30,31 +33,37 @@ public class CnOrder implements Serializable {
     /**
      * 所属机构
      */
+    @ApiModelProperty("所属机构")
     private String pkOrg;
 
     /**
      * 就诊类型编码
      */
+    @ApiModelProperty("就诊类型编码")
     private String euPvtype;
 
     /**
      * 就诊主键
      */
+    @ApiModelProperty("就诊主键")
     private String pkPv;
 
     /**
      *患者主键
      */
+    @ApiModelProperty("患者主键")
     private String pkPi;
 
     /**
      * 医嘱有效日期
      */
+    @ApiModelProperty("医嘱有效日期")
     private Date dateEffe;
 
     /**
      * 医嘱类型编码
      */
+    @ApiModelProperty("医嘱类型编码")
     private String codeOrdtype;
 
     /**
@@ -62,48 +71,58 @@ public class CnOrder implements Serializable {
      * 1：临时
      * 0：长期
      */
+    @ApiModelProperty("医嘱重复类型")
     private String euAlways;
 
     /**
      * 医嘱序号
      */
+    @ApiModelProperty("医嘱序号")
     private BigDecimal ordsn;
 
     /**
      * 父医嘱序号
      */
+    @ApiModelProperty("父医嘱序号")
     private BigDecimal ordsnParent;
 
     /**
      * 医嘱编码主键
      */
+    @ApiModelProperty("医嘱编码主键")
     private String pkOrd;
 
     /**
      * 医嘱编码
      */
+    @ApiModelProperty("医嘱编码")
     private String codeOrd;
 
     /**
      * 处方编码
      */
+    @ApiModelProperty("处方编码")
     private String pkPres;
 
     /**
      * 医嘱名称
      */
+    @ApiModelProperty("医嘱名称")
     private String nameOrd;
 
     /**
      * 医嘱描述
      */
+    @ApiModelProperty("医嘱描述")
     private String descOrd;
+
 
     private String codeApply;
 
     /**
      * 频次
      */
+    @ApiModelProperty("频次")
     private String codeFreq;
 
     private String spec;
@@ -111,16 +130,19 @@ public class CnOrder implements Serializable {
     /**
      * 剂量
      */
+    @ApiModelProperty("剂量")
     private BigDecimal dosage;
 
     /**
      * 剂量单位
      */
+    @ApiModelProperty("剂量单位")
     private String pkUnitDos;
 
     /**
      * 用量
      */
+    @ApiModelProperty("用量")
     private BigDecimal quan;
 
     private String pkUnit;
@@ -128,6 +150,7 @@ public class CnOrder implements Serializable {
     /**
      * 用法
      */
+    @ApiModelProperty("用法")
     private String codeSupply;
 
     private BigDecimal quanCg;

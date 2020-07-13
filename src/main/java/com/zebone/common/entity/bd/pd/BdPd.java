@@ -7,8 +7,7 @@ import java.util.Date;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * BD_PD
@@ -17,10 +16,12 @@ import javax.persistence.Id;
 @ApiModel(value = "药品信息",description = "药品信息表对应实体类")
 @Data
 @Entity
+@Table(name = "BD_PD")
 public class BdPd implements Serializable {
 
 
     @Id
+    @Column(name = "PK_PD")
     private String pkPd;
 
     private String code;
@@ -222,6 +223,10 @@ public class BdPd implements Serializable {
     private String euMuputypeOp;
 
     private String remark;
+
+
+//    @OneToOne(mappedBy = "bdPd")
+//    private BdPdAs bdPdAs;
 
     private static final long serialVersionUID = 1L;
 }

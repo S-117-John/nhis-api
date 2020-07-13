@@ -1,10 +1,12 @@
 package com.zebone.modules.mobile.cn.controller;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zebone.common.entity.bd.ord.BdOrdSetDt;
 import com.zebone.common.entity.bd.ord.BdOrdType;
 import com.zebone.common.entity.bd.pd.BdPd;
+import com.zebone.common.entity.bd.pd.BdPdAs;
 import com.zebone.common.entity.cn.CnOrder;
 import com.zebone.core.launch.constant.AppConstant;
 import com.zebone.core.tool.api.R;
@@ -13,11 +15,13 @@ import com.zebone.modules.mobile.bd.ord.repository.BdOrdSetDtRepository;
 import com.zebone.modules.mobile.bd.ord.repository.BdOrdTypeRepository;
 import com.zebone.modules.mobile.bd.ord.service.BdOrdSetService;
 import com.zebone.modules.mobile.bd.ord.service.BdOrdTypeService;
+import com.zebone.modules.mobile.bd.ord.vo.BdOrdTypeVO;
 import com.zebone.modules.mobile.bd.pd.service.BdPdService;
 import com.zebone.modules.mobile.cn.service.CnOrdService;
 import com.zebone.modules.mobile.cn.vo.CnOrderVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,9 +57,11 @@ public class CnOrderController {
             bdOrdTypeList.forEach(b->{
                 if(a.getCodeOrdtype().equals(b.getCode())){
                     a.setBdOrdType(b);
+                    a.setBdOrdTypeName(b.getName());
                 }
             });
             a.setKey(a.getPkCnord());
+
         });
         return R.data(list);
     }
@@ -97,5 +103,40 @@ public class CnOrderController {
     public R<List<BdOrdSetDt>> ListOrderTemplateDetails(String pkOrdSet){
         List<BdOrdSetDt> list = bdOrdSetService.listBdOrdSetDt(pkOrdSet);
         return R.data(list);
+    }
+
+    @ApiOperation(value = "获取检查项目", notes = "获取检查项目")
+    @GetMapping("ris/temp")
+    public R<List<BdOrdTypeVO>> listRisTemp(){
+        List<BdOrdType> list = bdOrdTypeService.listRis();
+        List<BdOrdTypeVO> result = Lists.newArrayList();
+        list.forEach(bdOrdType -> {
+            BdOrdTypeVO bdOrdTypeVO = new BdOrdTypeVO();
+            BeanUtils.copyProperties(bdOrdType,bdOrdTypeVO);
+            bdOrdTypeVO.setTitle(bdOrdType.getName());
+            bdOrdTypeVO.setKey(bdOrdType.getPkOrdtype());
+            bdOrdTypeVO.setLeaf(true);
+            result.add(bdOrdTypeVO);
+        });
+
+        return R.data(result);
+    }
+
+    @ApiOperation(value = "获取医嘱明细", notes = "传入医嘱主键")
+    @GetMapping("detail")
+    public R<CnOrderVO> getCnOrdDetail(String pkCnOrd){
+
+        CnOrderVO cnOrderVO = cnOrdService.getCnOrderDetail(pkCnOrd);
+        if(cnOrderVO==null){
+            return R.fail("未查询到医嘱明细");
+        }
+        return R.data(cnOrderVO);
+    }
+
+    @ApiOperation(value = "检索医嘱", notes = "传入拼音")
+    @GetMapping("search")
+    public R<List<BdPdAs>> search(String spCode){
+        List<BdPdAs> bdPdList = bdPdService.search(spCode.toUpperCase());
+        return R.data(bdPdList);
     }
 }

@@ -1,14 +1,19 @@
 package com.zebone.modules.mobile.bd.pd.service.impl;
 
 import com.zebone.common.entity.bd.pd.BdPd;
+import com.zebone.common.entity.bd.pd.BdPdAs;
 import com.zebone.modules.mobile.bd.pd.dao.BdPdDao;
+import com.zebone.modules.mobile.bd.pd.repository.BdPdAsRepository;
 import com.zebone.modules.mobile.bd.pd.repository.BdPdRepository;
 import com.zebone.modules.mobile.bd.pd.service.BdPdService;
 import com.zebone.modules.mobile.bd.pd.vo.BdPdVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +25,9 @@ public class BdPdServiceImpl implements BdPdService {
 
     @Autowired
     private BdPdRepository bdPdRepository;
+
+    @Autowired
+    private BdPdAsRepository bdPdAsRepository;
 
     @Override
     public BdPdVO getBdPd(String pkPd) {
@@ -39,5 +47,28 @@ public class BdPdServiceImpl implements BdPdService {
         List<BdPd> bdPdList = bdPdRepository.findAllById(ids);
 
         return bdPdList;
+    }
+
+    /**
+     * 检索药品信息
+     * @param spCode
+     * @return
+     */
+    @Override
+    public List<BdPdAs> search(String spCode) {
+
+        Specification specification = new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                Join<BdPdAs,BdPd> join = root.join("bdPd",JoinType.INNER);
+                predicates.add(criteriaBuilder.equal(join.get("flagRm"),"0"));
+                predicates.add(criteriaBuilder.equal(join.get("flagReag"),"0"));
+                predicates.add(criteriaBuilder.like(root.get("spcode"),"%"+spCode+"%"));
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<BdPdAs> list = bdPdAsRepository.findAll(specification);
+        return list;
     }
 }

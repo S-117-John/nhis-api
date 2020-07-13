@@ -17,4 +17,10 @@ public interface BdOrdTypeService {
     List<BdOrdType> listBdOrdType();
 
     BdOrdType getBdOrdType(String id);
+
+    /**
+     * 获取检查项目
+     * @return
+     */
+    List<BdOrdType> listRis();
 }
