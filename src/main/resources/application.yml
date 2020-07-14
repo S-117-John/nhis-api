@@ -12,7 +12,6 @@ spring:
     mode: HTML  #严格的HTML语法模式
     suffix: .html  #后缀名
 
-
 # mybatis
 
 #nhis配置
@@ -94,7 +93,7 @@ swagger:
     email: lijin77555@gmail.com
     url: https://github.com/S-117-John
 
-
+#缓存
 jetcache:
   statIntervalMinutes: 15
   areaInCacheName: false

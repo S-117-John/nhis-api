@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.zebone</groupId>
-	<artifactId>nhis</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>nhis-api</artifactId>
+	<version>1.0.0</version>
 	<name>nhis</name>
 	<description>nhis api project for Spring Boot</description>
 

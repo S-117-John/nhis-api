@@ -5,12 +5,22 @@ import java.math.BigDecimal;
 import java.util.Date;
 import lombok.Data;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * BD_ORD
  * @author 
  */
 @Data
+@Entity
+@Table(name = "BD_ORD")
 public class BdOrd implements Serializable {
+
+    @Id
+    @Column(name = "PK_ORD")
     private String pkOrd;
 
     private String pkOrdtype;

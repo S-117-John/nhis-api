@@ -71,4 +71,6 @@ public class BdPdServiceImpl implements BdPdService {
         List<BdPdAs> list = bdPdAsRepository.findAll(specification);
         return list;
     }
+
+
 }
