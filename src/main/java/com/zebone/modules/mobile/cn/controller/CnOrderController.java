@@ -135,8 +135,10 @@ public class CnOrderController {
 
     @ApiOperation(value = "检索医嘱", notes = "传入拼音")
     @GetMapping("search")
-    public R<List<BdPdAs>> search(String spCode){
-        List<BdPdAs> bdPdList = bdPdService.search(spCode.toUpperCase());
-        return R.data(bdPdList);
+    public R<List<CnOrderVO>> search(String spCode){
+
+        List<CnOrderVO> list = cnOrdService.search(spCode.toUpperCase());
+
+        return R.data(list);
     }
 }

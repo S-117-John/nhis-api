@@ -188,6 +188,7 @@ public class CnOrder implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date dateStart;
 
+    @ApiModelProperty("药品标志")
     private String flagDurg;
 
     private String flagSelf;

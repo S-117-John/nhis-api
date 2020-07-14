@@ -1,7 +1,14 @@
 package com.zebone.modules.mobile.cn.service.impl;
 
 
+import com.google.common.collect.Lists;
+import com.zebone.common.entity.bd.ord.BdOrd;
+import com.zebone.common.entity.bd.ord.BdOrdAlias;
+import com.zebone.common.entity.bd.pd.BdPd;
+import com.zebone.common.entity.bd.pd.BdPdAs;
 import com.zebone.common.entity.cn.CnOrder;
+import com.zebone.modules.mobile.bd.ord.repository.BdOrdAliasRepository;
+import com.zebone.modules.mobile.bd.pd.repository.BdPdAsRepository;
 import com.zebone.modules.mobile.cn.dao.CnOrderDao;
 import com.zebone.modules.mobile.cn.repository.CnOrderRepository;
 import com.zebone.modules.mobile.cn.service.CnOrdService;
@@ -9,8 +16,11 @@ import com.zebone.modules.mobile.cn.vo.CnOrderVO;
 import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +33,13 @@ public class CnOrdServiceImpl implements CnOrdService {
     private CnOrderDao cnOrderDao;
 
     @Autowired
+    private BdPdAsRepository bdPdAsRepository;
+
+    @Autowired
     private CnOrderRepository cnOrderRepository;
+
+    @Autowired
+    private BdOrdAliasRepository bdOrdAliasRepository;
 
     /**
      * 查询已开立医嘱
@@ -74,8 +90,52 @@ public class CnOrdServiceImpl implements CnOrdService {
     @Override
     public List<CnOrderVO> search(String spCode) {
         //1、查询药品
-
+        Specification specificationPd = new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                Join<BdPdAs, BdPd> join = root.join("bdPd",JoinType.INNER);
+                predicates.add(criteriaBuilder.equal(join.get("flagRm"),"0"));
+                predicates.add(criteriaBuilder.equal(join.get("flagReag"),"0"));
+                predicates.add(criteriaBuilder.like(root.get("spcode"),"%"+spCode+"%"));
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<BdPdAs> listPd = bdPdAsRepository.findAll(specificationPd);
         //2、查询非药品
-        return null;
+        Specification specificationOrd = new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                Join<BdOrdAlias, BdOrd> join = root.join("bdOrd",JoinType.INNER);
+                predicates.add(criteriaBuilder.equal(join.get("delFlag"),"0"));
+                predicates.add(criteriaBuilder.equal(join.get("flagActive"),"0"));
+                predicates.add(criteriaBuilder.equal(join.get("flagIp"),"1"));
+                predicates.add(criteriaBuilder.like(root.get("spcode"),"%"+spCode+"%"));
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        List<BdOrdAlias> listOrd = bdOrdAliasRepository.findAll(specificationOrd);
+
+        //3、创建视图类
+        List<CnOrderVO> cnOrderVOList = Lists.newArrayList();
+        //4、克隆药品属性
+        listPd.forEach(bdPdAs -> {
+            CnOrderVO cnOrderVO = new CnOrderVO();
+            cnOrderVO.setNameOrd(bdPdAs.getAlias());
+            cnOrderVO.setKey(bdPdAs.getBdPd().getPkPd());
+            cnOrderVO.setFlagDurg("1");
+            cnOrderVOList.add(cnOrderVO);
+        });
+        //5、克隆非药品属性
+        listOrd.forEach(bdOrdAlias -> {
+            CnOrderVO cnOrderVO = new CnOrderVO();
+            cnOrderVO.setNameOrd(bdOrdAlias.getAlias());
+            cnOrderVO.setKey(bdOrdAlias.getBdOrd().getPkOrd());
+            cnOrderVOList.add(cnOrderVO);
+        });
+
+
+        return cnOrderVOList;
     }
 }
