@@ -20,14 +20,14 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
-    @ApiOperation(value = "查询患者信息", notes = "传入pkPv")
+    @ApiOperation(value = "查询患者信息", notes = "传入住院号")
     @GetMapping("")
-    private R<PvEncounterVO> getPatientInfo(String pkPv){
+    private R<PvEncounterVO> getPatientInfo(String code){
 
-        if(StringUtils.isEmpty(pkPv)){
+        if(StringUtils.isEmpty(code)){
             return R.fail("患者主键为空");
         }
-        PvEncounterVO pvEncounterVO = patientService.getPatientInfo(pkPv);
+        PvEncounterVO pvEncounterVO = patientService.getPatientInfo(code);
         if(pvEncounterVO==null){
             return R.fail("患者信息不存在");
         }

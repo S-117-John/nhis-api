@@ -30,4 +30,18 @@ public class CnOrderVO extends CnOrder {
 
     public String bdOrdTypeName;
 
+    /**
+     * 包装单位
+     */
+    private String unit;
+
+    /**
+     * 参考价格
+     */
+    private String price;
+
+    /**
+     * 医嘱类型编码
+     */
+    private String codeOrdType;
 }

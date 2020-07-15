@@ -13,18 +13,18 @@ import com.zebone.modules.mobile.cn.dao.CnOrderDao;
 import com.zebone.modules.mobile.cn.repository.CnOrderRepository;
 import com.zebone.modules.mobile.cn.service.CnOrdService;
 import com.zebone.modules.mobile.cn.vo.CnOrderVO;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import static java.util.Comparator.comparing;
+import static java.util.Comparator.comparingLong;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 
 @Service
 public class CnOrdServiceImpl implements CnOrdService {
@@ -125,6 +125,11 @@ public class CnOrdServiceImpl implements CnOrdService {
             cnOrderVO.setNameOrd(bdPdAs.getAlias());
             cnOrderVO.setKey(bdPdAs.getBdPd().getPkPd());
             cnOrderVO.setFlagDurg("1");
+            //规格
+            cnOrderVO.setSpec(bdPdAs.getBdPd().getSpec());
+            cnOrderVO.setPkUnit(bdPdAs.getBdPd().getPkUnitPack());
+            //价格
+            cnOrderVO.setPrice(bdPdAs.getBdPd().getPrice().stripTrailingZeros().toString());
             cnOrderVOList.add(cnOrderVO);
         });
         //5、克隆非药品属性
@@ -132,10 +137,19 @@ public class CnOrdServiceImpl implements CnOrdService {
             CnOrderVO cnOrderVO = new CnOrderVO();
             cnOrderVO.setNameOrd(bdOrdAlias.getAlias());
             cnOrderVO.setKey(bdOrdAlias.getBdOrd().getPkOrd());
+            cnOrderVO.setSpec(bdOrdAlias.getBdOrd().getSpec());
+            cnOrderVO.setPkUnit(bdOrdAlias.getBdOrd().getPkUnit());
+            cnOrderVO.setCodeOrdType(bdOrdAlias.getBdOrd().getCodeOrdtype());
             cnOrderVOList.add(cnOrderVO);
         });
 
 
-        return cnOrderVOList;
+        //6、属性去重复
+        List<CnOrderVO> result = cnOrderVOList.stream().collect(
+                collectingAndThen(
+                        toCollection(() -> new TreeSet<>(comparing(n->n.getKey()))),ArrayList::new)
+        );
+
+        return result;
     }
 }

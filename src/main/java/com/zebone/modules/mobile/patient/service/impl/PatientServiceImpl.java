@@ -41,41 +41,44 @@ public class PatientServiceImpl implements PatientService {
     private PvDiagRepository pvDiagRepository;
 
     @Override
-    public PvEncounterVO getPatientInfo(String pkPv) {
-
-        //获取就诊信息
-        Optional<PvEncounter> pvEncounter = pvEncounterRepository.findById(pkPv);
-        if(!pvEncounter.isPresent()){
-            return null;
-        }
-        PvEncounterVO pvEncounterVO = new PvEncounterVO();
-        BeanUtils.copyProperties(pvEncounter.get(),pvEncounterVO);
+    public PvEncounterVO getPatientInfo(String code) {
 
         //获取患者基本信息
-        PiMaster piMaster = piMasterRepository.getOne(pvEncounterVO.getPkPi());
-        PiMasterVO piMasterVO = new PiMasterVO();
-        BeanUtils.copyProperties(piMaster,piMasterVO);
+        List<PiMaster> piMasters = piMasterRepository.findByCodeIp(code);
+        if(piMasters.size()>0){
+            PiMasterVO piMasterVO = new PiMasterVO();
+            BeanUtils.copyProperties(piMasters.get(0),piMasterVO);
 
-        pvEncounterVO.setPiMaster(piMasterVO);
+            //获取就诊信息
+            List<PvEncounter> pvEncounters = pvEncounterRepository.findByPkPi(piMasterVO.getPkPi());
+            if(pvEncounters.size()>0){
+                PvEncounterVO pvEncounterVO = new PvEncounterVO();
+                BeanUtils.copyProperties(pvEncounters.get(0),pvEncounterVO);
 
-        //获取患者类型
-        PiCate piCate = piCateRepository.getOne(piMasterVO.getPkPicate());
-        PiCateVO piCateVO = new PiCateVO();
-        BeanUtils.copyProperties(piCate,piCateVO);
-        piMasterVO.setPiCate(piCateVO);
+                pvEncounterVO.setPiMaster(piMasterVO);
 
-        //获取诊断记录
-        List<PvDiag> pvDiagList = pvDiagRepository.findByPkPvOrderByDateDiagDesc(pkPv);
-        if(pvDiagList.size()>0){
-            //筛选主诊断记录
-            List<PvDiag> diagList = pvDiagList.stream().filter(a->"1".equals(a.getFlagMaj())).collect(Collectors.toList());
-            if(diagList.size()>0){
-                pvEncounterVO.setDiagName(diagList.get(0).getNameDiag());
-            }else{
-                pvEncounterVO.setDiagName(pvDiagList.get(0).getNameDiag());
+                //获取患者类型
+                PiCate piCate = piCateRepository.getOne(piMasterVO.getPkPicate());
+                PiCateVO piCateVO = new PiCateVO();
+                BeanUtils.copyProperties(piCate,piCateVO);
+                piMasterVO.setPiCate(piCateVO);
+
+                //获取诊断记录
+                List<PvDiag> pvDiagList = pvDiagRepository.findByPkPvOrderByDateDiagDesc(pvEncounterVO.getPkPv());
+                if(pvDiagList.size()>0){
+                    //筛选主诊断记录
+                    List<PvDiag> diagList = pvDiagList.stream().filter(a->"1".equals(a.getFlagMaj())).collect(Collectors.toList());
+                    if(diagList.size()>0){
+                        pvEncounterVO.setDiagName(diagList.get(0).getNameDiag());
+                    }else{
+                        pvEncounterVO.setDiagName(pvDiagList.get(0).getNameDiag());
+                    }
+                }
+
+                return pvEncounterVO;
             }
         }
 
-        return pvEncounterVO;
+        return null;
     }
 }

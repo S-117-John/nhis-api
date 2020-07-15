@@ -7,6 +7,7 @@ import com.zebone.common.entity.bd.ord.BdOrdSetDt;
 import com.zebone.common.entity.bd.ord.BdOrdType;
 import com.zebone.common.entity.bd.pd.BdPd;
 import com.zebone.common.entity.bd.pd.BdPdAs;
+import com.zebone.common.entity.bd.unit.BdUnit;
 import com.zebone.common.entity.cn.CnOrder;
 import com.zebone.core.launch.constant.AppConstant;
 import com.zebone.core.tool.api.R;
@@ -19,6 +20,9 @@ import com.zebone.modules.mobile.bd.ord.vo.BdOrdTypeVO;
 import com.zebone.modules.mobile.bd.pd.service.BdPdService;
 import com.zebone.modules.mobile.cn.service.CnOrdService;
 import com.zebone.modules.mobile.cn.vo.CnOrderVO;
+import com.zebone.modules.mobile.common.constant.CnOrdConstant;
+import com.zebone.modules.mobile.patient.service.PatientService;
+import com.zebone.modules.mobile.patient.vo.PvEncounterVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -30,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Api(value = "医嘱信息", tags = "医嘱信息")
 @RestController
@@ -48,10 +53,18 @@ public class CnOrderController {
     @Autowired
     private BdOrdSetService bdOrdSetService;
 
+    @Autowired
+    private PatientService patientService;
+
+
     @ApiOperation(value = "查询患者医嘱", notes = "传入pkPv")
     @GetMapping("")
     public R<List<CnOrderVO>> list(String pkPv){
-        List<CnOrderVO> list = cnOrdService.listPatientOrder(pkPv);
+        PvEncounterVO pvEncounterVO = patientService.getPatientInfo(pkPv);
+        if(pvEncounterVO==null){
+            return R.fail("未查询到患者信息");
+        }
+        List<CnOrderVO> list = cnOrdService.listPatientOrder(pvEncounterVO.getPkPv());
         List<BdOrdType> bdOrdTypeList = bdOrdTypeService.listBdOrdType();
         list.forEach(a->{
             bdOrdTypeList.forEach(b->{
@@ -138,7 +151,14 @@ public class CnOrderController {
     public R<List<CnOrderVO>> search(String spCode){
 
         List<CnOrderVO> list = cnOrdService.search(spCode.toUpperCase());
-
+        list.forEach(cnOrderVO -> {
+            List<BdUnit> unitList = CnOrdConstant.listBdUnit.stream()
+                    .filter(item -> item.getPkUnit().equals(cnOrderVO.getPkUnit()))
+                    .collect(Collectors.toList());
+            if(unitList.size()>0){
+                cnOrderVO.setUnit(unitList.get(0).getName());
+            }
+        });
         return R.data(list);
     }
 }
