@@ -3,6 +3,7 @@ package com.zebone.modules.mobile.bd.ord.service;
 import com.zebone.modules.mobile.bd.ord.vo.OrdPdVO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrdPdService {
 
@@ -19,4 +20,11 @@ public interface OrdPdService {
      * @return
      */
     List<OrdPdVO> listPd(String spCode);
+    /**
+     * 获取检查检验详情和执行科室
+     * @param pkOrd
+     * @return
+     */
+    @SuppressWarnings("rawtypes")
+	Map<String, List> getLisOrRisDetail(String pkOrd,String LisOrRis);
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -43,8 +44,9 @@ public class BdPdServiceImpl implements BdPdService {
     }
 
     @Override
-    public List<BdPd> listBdPs(List<String> ids) {
-        List<BdPd> bdPdList = bdPdRepository.findAllById(ids);
+    public List<BdPdVO> listBdPs(List<String> ids) {
+        //List<BdPd> bdPdList = bdPdRepository.findAllById(ids);
+        List<BdPdVO> bdPdList = bdPdDao.getBdPdByPkPd(ids);
 
         return bdPdList;
     }
@@ -70,6 +72,12 @@ public class BdPdServiceImpl implements BdPdService {
         };
         List<BdPdAs> list = bdPdAsRepository.findAll(specification);
         return list;
+    }
+
+    @Override
+    public List <Map<String,Object>> getBdPdAndBdOrdByPkPd(List<String> bdPds) {
+        List<Map<String,Object>>  bdPdList = bdPdDao.getBdPdAndBdOrdByPkPd(bdPds);
+        return bdPdList;
     }
 
 

@@ -78,13 +78,13 @@ public class CnOrder implements Serializable {
      * 医嘱序号
      */
     @ApiModelProperty("医嘱序号")
-    private BigDecimal ordsn;
+    private Integer ordsn;
 
     /**
      * 父医嘱序号
      */
     @ApiModelProperty("父医嘱序号")
-    private BigDecimal ordsnParent;
+    private Integer ordsnParent;
 
     /**
      * 医嘱编码主键
@@ -131,7 +131,7 @@ public class CnOrder implements Serializable {
      * 剂量
      */
     @ApiModelProperty("剂量")
-    private BigDecimal dosage;
+    private Double dosage;
 
     /**
      * 剂量单位
@@ -143,7 +143,7 @@ public class CnOrder implements Serializable {
      * 用量
      */
     @ApiModelProperty("用量")
-    private BigDecimal quan;
+    private Double quan;
 
     private String pkUnit;
 
@@ -153,13 +153,13 @@ public class CnOrder implements Serializable {
     @ApiModelProperty("用法")
     private String codeSupply;
 
-    private BigDecimal quanCg;
+    private Double quanCg;
 
     private String pkUnitCg;
 
-    private BigDecimal packSize;
+    private Double packSize;
 
-    private BigDecimal priceCg;
+    private Double priceCg;
 
     private String noteSupply;
 
@@ -181,9 +181,11 @@ public class CnOrder implements Serializable {
     private String pkDeptExec;
 
     private String euStatusOrd;
-
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date dateEnter;
 
+    @ApiModelProperty("开始时间")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date dateStart;
@@ -191,6 +193,7 @@ public class CnOrder implements Serializable {
     @ApiModelProperty("药品标志")
     private String flagDurg;
 
+    @ApiModelProperty("自备药标志")
     private String flagSelf;
 
     private String flagNote;
@@ -221,11 +224,14 @@ public class CnOrder implements Serializable {
     private String pkEmpChk;
 
     private String nameEmpChk;
-
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date dateChk;
-
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date dateLastEx;
-
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date datePlanEx;
 
     /**
@@ -257,6 +263,8 @@ public class CnOrder implements Serializable {
     private String pkEmpErase;
 
     private String nameEmpErase;
+
+    private String pkOrdanti;
 
     private String flagErase;
 
@@ -294,6 +302,7 @@ public class CnOrder implements Serializable {
 
     private BigDecimal quanBed;
 
+    @ApiModelProperty("医嘱备注")
     private String noteOrd;
 
     private String creator;
@@ -316,6 +325,7 @@ public class CnOrder implements Serializable {
 
     private String euIntern;
 
+    @ApiModelProperty("皮试标志")
     private String euSt;
 
     private String dtUsagenote;
@@ -323,6 +333,7 @@ public class CnOrder implements Serializable {
     /**
      * 首日次数
      */
+    @ApiModelProperty("首日次数")
     private Integer firstNum;
 
     private String flagPivas;
@@ -343,11 +354,15 @@ public class CnOrder implements Serializable {
 
     private String nameEmpEx;
 
-    private BigDecimal ordsnChk;
+    private Integer ordsnChk;
 
     private String codeSupplyAdd;
 
     private String euOrdtype;
+
+    //监测类型
+    private String euMonitorType;
+
 
     private static final long serialVersionUID = 1L;
 }

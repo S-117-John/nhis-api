@@ -33,9 +33,10 @@ public class BdPdController {
 
     @GetMapping("list")
     @ApiOperation(value = "批量查询药品信息", notes = "药品主键集合")
-    public R<List<BdPd>> listBdPd(String ids){
+    public R<List<BdPdVO>> listBdPd(String ids){
 
-        List<BdPd> bdPdList = bdPdService.listBdPs(Arrays.asList(ids.split(",")));
+        List<BdPdVO> bdPdList = bdPdService.listBdPs(Arrays.asList(ids.split(",")));
         return R.data(bdPdList);
     }
+
 }

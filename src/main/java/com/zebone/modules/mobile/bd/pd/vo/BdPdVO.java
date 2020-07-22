@@ -5,4 +5,6 @@ import lombok.Data;
 
 @Data
 public class BdPdVO extends BdPd {
+    private String unitPackName;
+    private String codeOrdtype;
 }

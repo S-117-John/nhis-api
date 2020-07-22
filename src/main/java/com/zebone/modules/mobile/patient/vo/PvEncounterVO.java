@@ -34,4 +34,9 @@ public class PvEncounterVO extends PvEncounter {
      * 诊断名称
      */
     public String diagName;
+
+    /**
+     * 科室
+     */
+    private String deptName;
 }

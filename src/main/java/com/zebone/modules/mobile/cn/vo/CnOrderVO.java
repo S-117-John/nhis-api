@@ -21,6 +21,15 @@ public class CnOrderVO extends CnOrder {
     private BdOrdLab bdOrdLab;
 
     private BdOrdType bdOrdType;
+    /**
+     * 用法名称
+     */
+    private String nameSupply;
+    
+    /**
+     * 频次
+     */
+    private String nameFreq;
 
     /**
      * 页面table需要唯一值
@@ -44,4 +53,8 @@ public class CnOrderVO extends CnOrder {
      * 医嘱类型编码
      */
     private String codeOrdType;
+    /**
+     * 是否当前
+     */
+    private String isnow;
 }

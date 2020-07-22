@@ -1,10 +1,12 @@
 package com.zebone.modules.mobile.patient.service.impl;
 
+import com.zebone.common.entity.bd.ou.BdOuDept;
 import com.zebone.common.entity.pi.PiCate;
 import com.zebone.common.entity.pi.PiMaster;
 import com.zebone.common.entity.pv.PvDiag;
 import com.zebone.common.entity.pv.PvEncounter;
 import com.zebone.core.tool.api.R;
+import com.zebone.modules.mobile.bd.ou.repository.BdOuDeptRepository;
 import com.zebone.modules.mobile.patient.dao.PvEncounterDao;
 import com.zebone.modules.mobile.patient.repository.PiCateRepository;
 import com.zebone.modules.mobile.patient.repository.PiMasterRepository;
@@ -17,6 +19,7 @@ import com.zebone.modules.mobile.patient.vo.PvEncounterVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +42,9 @@ public class PatientServiceImpl implements PatientService {
 
     @Autowired
     private PvDiagRepository pvDiagRepository;
+
+    @Autowired
+    private BdOuDeptRepository bdOuDeptRepository;
 
     @Override
     public PvEncounterVO getPatientInfo(String code) {
@@ -74,6 +80,14 @@ public class PatientServiceImpl implements PatientService {
                         pvEncounterVO.setDiagName(pvDiagList.get(0).getNameDiag());
                     }
                 }
+
+                if(!StringUtils.isEmpty(pvEncounterVO.getPkDept())){
+                    Optional<BdOuDept> optional = bdOuDeptRepository.findById(pvEncounterVO.getPkDept());
+                    if(optional.isPresent()){
+                        pvEncounterVO.setDeptName(optional.get().getNameDept());
+                    }
+                }
+
 
                 return pvEncounterVO;
             }

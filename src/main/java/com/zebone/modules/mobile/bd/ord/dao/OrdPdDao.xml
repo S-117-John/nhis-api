@@ -47,5 +47,82 @@ where pd.flag_rm = '0'
   ) WHERE ROWNUM &lt;= 10
   </select>
 
-
+  <select id="getLisOrRisDetailByPk" resultType="java.util.HashMap">
+		 select  
+			 item.*,item.price_chd pricestr 
+			  from ( select   srv.pk_ord ,
+			           srv.pk_ordtype ,
+			           srv.code_ordtype,
+			           srv.code,
+			           alias.alias as name,
+			           alias.spcode as py_code,
+			           alias.d_code,
+			           srv.name as srvname,
+			           srv.flag_pd ,
+			           srv.flag_cg ,
+			           srv.flag_active ,
+			           srv.note as descord,
+			           srv.flag_noc,
+			           so.pk_org ,
+			           so.code_freq ,
+			           so.quan_def ,
+			           alias.spcode as mnecode,
+			           doc.name as desc_body, 
+			           ris.dt_type,
+			           ris.desc_att,
+			           lab.dt_colltype,
+			           lab.dt_contype,
+			           lab.dt_samptype,
+			           srv.eu_sex,
+			           srv.age_min,
+			           srv.age_max,
+			           p.price as price_ori,
+			           p.price_vip,
+			           p.price_chd,
+			           srv.flag_emr,
+			           srv.flag_hm as flag_emer ,
+			           bdc.name name_samptype
+			           ,bdc1.name name_type
+			      from bd_ord srv 
+			      inner join bd_ord_org so  on srv.pk_ord = so.pk_ord  and so.del_flag = '0' 
+			      inner join bd_ord_alias alias on so.pk_ord = alias.pk_ord and so.pk_org = alias.pk_org and alias.del_flag='0' 
+				  left outer join 
+							(select oi.pk_ord,
+								sum(case when oi.flag_pd='0' then (case when item.price=null then 0 else item.price end) * (case when oi.quan is null then 1 else oi.quan end) else (case when pd.price=null then 0 else pd.price end)/pd.pack_size*(case when oi.quan is null then 1 else oi.quan end) end) price,
+								(sum(case when oi.flag_pd='0' then (case when item.price=null then 0 else item.price*(1+nvl(sp.ratio_spec,0)) end) * (case when oi.quan is null then 1 else oi.quan end) else (case when pd.price=null then 0 else pd.price end)/pd.pack_size*(case when oi.quan is null then 1 else oi.quan end) end)) as price_vip,
+			                    (sum(case when oi.flag_pd='0' then (case when item.price=null then 0 else item.price*(1+nvl(sp.ratio_children,0)) end) * (case when oi.quan is null then 1 else oi.quan end) else (case when pd.price=null then 0 else pd.price end)/pd.pack_size*(case when oi.quan is null then 1 else oi.quan end) end)) as price_chd
+								from bd_ord_item oi
+								left outer join bd_item item on oi.pk_item=item.pk_item and oi.flag_pd='0' and item.del_flag='0'
+								left outer join bd_pd pd on oi.pk_item=pd.pk_pd and oi.flag_pd='1' and pd.del_flag='0'
+								LEFT OUTER JOIN bd_item_sp sp ON item.pk_item = sp.pk_item AND sp.eu_pvtype = '3'
+								where oi.del_flag='0'
+								group by oi.pk_ord
+							) p
+			       on so.pk_ord = p.pk_ord  
+			       left join bd_ord_ris ris on srv.pk_ord = ris.pk_ord and ris.del_flag='0' 
+			       left join bd_ord_lab lab on srv.pk_ord = lab.pk_ord and lab.del_flag='0' 
+			       left join bd_defdoc doc on ris.dt_body = doc.code and doc.del_flag='0' and doc.code_defdoclist = '030101'  
+			       left outer join bd_ord_atd atd on srv.pk_ord=atd.pk_ord  
+			       left join BD_DEFDOC bdc on bdc.code=lab.dt_samptype and bdc.CODE_DEFDOCLIST='030200'
+			       left join BD_DEFDOC bdc1 on bdc1.code=ris.dt_type and bdc1.CODE_DEFDOCLIST='030100'
+			      where srv.del_flag='0' 
+			         and srv.flag_pd='0'  
+			         <!-- and srv.flag_active = '1'  -->
+						   and srv.PK_ORD=#{pkOrd}			 
+			       )item 
+			      where 1=1  
+  </select>
+  <select id="getOrdExDeptByPk" resultType="java.util.HashMap">
+		 SELECT
+			dept.flag_def,dp.*
+		FROM
+			bd_ord ord
+		INNER JOIN bd_ord_org org ON ord.pk_ord = org.pk_ord AND ord.del_flag = '0'
+		INNER JOIN bd_ord_dept dept ON org.pk_ordorg = dept.pk_ordorg AND dept.del_flag = '0'
+		INNER JOIN bd_ou_dept dp ON dept.pk_dept = dp.pk_dept
+		WHERE ord.pk_ord=#{pkOrd,jdbcType=VARCHAR}
+  </select>
+  <select id="getLisOrRisTypeByCode" resultType="java.util.HashMap">
+		select * from BD_DEFDOC where CODE_DEFDOCLIST=#{code,jdbcType=VARCHAR}
+  </select>
 </mapper>

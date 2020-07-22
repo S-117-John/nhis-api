@@ -123,10 +123,265 @@
     where PK_PD=#{pkPd,jdbcType=VARCHAR}
   </select>
 
+  <select id="getBdPdByPkPd" parameterType="java.util.List" resultMap="getBdPdResultMap">
+    select
+    pd.*,
+    unit.NAME unit_pack_name
+    from BD_PD pd
+    LEFT JOIN  bd_unit unit  on pd.pk_unit_pack = unit.pk_unit
+    where PK_PD in
+    <foreach collection="list" item="pkPd" open="(" separator="," close=")">
+      #{pkPd,jdbcType=VARCHAR}
+    </foreach>
+  </select>
+
+  <select id="getBdPdAndBdOrdByPkPd" parameterType ="java.util.List" resultType = "java.util.Map">
+          SELECT item.*
+          FROM
+            (
+             select  DISTINCT  ''                       pk_pd,
+             srv.pk_ord,
+             srv.code,
+             srv.name                 srvname,
+             srv.spec                 spec,
+             srv.note                 descord,
+             ''                       unit,
+             so.spcode             py_code,
+             case
+                 when '2' = '1' and  so.PRICE_VIP is not null then so.PRICE_VIP
+                 when '2' = '3' and so.PRICE_CHD is not null then so.PRICE_CHD
+                 else so.PRICE end as price,
+             0                        quan_pack,
+            srv.name              name,
+             so.d_code,
+             dept.PK_DEPT             pk_dept_exec,
+             srv.CODE_ORDTYPE,
+             '0'                      flag_base,
+             srv.FLAG_PD,
+             ''                       eu_usecate,
+             ''                       dt_pois,
+             ''                       dt_anti,
+             srv.EU_SEX,
+             srv.AGE_MIN,
+             srv.AGE_MAX,
+             ''                       code_supply,
+             so.CODE_FREQ,
+             fqed.CNT,
+             fqed.EU_ALWAYS,
+             null                  AS eu_source,
+             srv.flag_cg           as flag_bl,
+             so.QUAN_DEF,
+             null                     dt_injtype,
+             ''                       flag_pivas,
+             ''                       pk_unit_def,
+             ''                       pk_unit_vol,
+             0                        vol,
+             '0'                      flag_st,
+             ''                       eu_muputype,
+             0                        quan_min,
+             ''                       pk_unit_min,
+             ''                       pk_unit_wt,
+             0                        weight,
+             srv.FLAG_UNIT,
+             srv.PK_UNIT              srv_pk_unit,
+             srv.EU_EXCLUDE           flagctlsrv,
+             0                        pack_size,
+             ''                       pk_unit,
+             so.spcode,
+             srv.eu_ordtype,
+             '' as eu_hptype,'' as pk_store ,
+             ''as spec_show,
+             0 as pack_size_con
+             from bd_ord srv
+               inner join bd_ord_org so on srv.pk_ord = so.pk_ord and so.del_flag = '0'
+               left outer join bd_ord_dept dept
+                               on so.pk_ordorg = dept.pk_ordorg and dept.flag_def = '1' and dept.del_flag = '0'
+               left join bd_term_freq fqed on fqed.code = so.code_freq and fqed.del_flag = '0'
+               inner join bd_ordtype type
+                          on srv.PK_ORDTYPE = type.PK_ORDTYPE and type.DEL_FLAG = '0' and type.EU_CPOETYPE = '0'
+                 INNER JOIN BD_ORD_ALIAS alias ON srv.PK_ORD = alias.PK_ORD AND so.PK_ORG = alias.PK_ORG and alias.DEL_FLAG = '0'
+      where srv.del_flag = '0'
+        and srv.flag_active = '1'
+        and srv.flag_ip = '1'
+        and srv.pk_ord in
+        <foreach collection="list" item="pkPd" open="(" separator="," close=")">
+          #{pkPd,jdbcType=VARCHAR}
+        </foreach>
+      union all
+      SELECT DISTINCT  pd.pk_pd,
+             pd.pk_pd                                                             pk_ord,
+             pd.code,
+             pd.name                                                              srvname,
+             pd.SPEC,
+             pd.note                                                              descord,
+             minu.NAME                                                            unit,
+             pd.spcode                                                           py_code,
+             pd.PRICE,
+             stk.quan_min / con.pack_size                                         quan_pack,
+             pd.NAME_CHEM                                                            name,
+             '' D_CODE,
+             pds.PK_DEPT                                                          pk_dept_exec,
+             ordtype.code                                                         code_ordtype,
+             case when bas.pk_pd is null then '0' else '1' end                    flag_base,
+             '1'                                                                  flag_pd,
+             pd.EU_USECATE,
+             pd.dt_pois,
+             pd.dt_anti,
+             pd.EU_SEX,
+             pd.AGE_MIN,
+             pd.AGE_MAX,
+             pd.CODE_SUPPLY,
+             pd.CODE_FREQ,
+             fqed.CNT,
+             fqed.EU_ALWAYS,
+             pd.EU_SOURCE,
+             '1'                                                                  flag_bl,
+             pd.DOSAGE_DEF AS                                                     quan_def,
+             pd.DT_INJTYPE,
+             sup.FLAG_PIVAS,
+             pd.PK_UNIT_DEF,
+             pd.PK_UNIT_VOL,
+             pd.VOL,
+             pd.FLAG_ST,
+             pd.EU_MUPUTYPE,
+             stk.quan_min,
+             pd.PK_UNIT_MIN,
+             pd.PK_UNIT_WT,
+             pd.WEIGHT,
+             '1'                                                                  flag_unit,
+             ''                                                                   srv_pk_unit,
+             '0'                                                                  flagctlsrv,
+             case when bas.pk_pd is null then con.pack_size else 1 end            pack_size,
+             CASE WHEN bas.pk_pd IS NULL THEN con.pk_unit ELSE PD.pk_unit_min END pk_unit,
+             pd.spcode,
+             ''                                                                   eu_ordtype,
+             pd.eu_hptype,stk.pk_store,
+               BPC.SPEC as spec_show ,
+               BPC.PACK_SIZE as pack_size_con
+      FROM bd_pd pd
+      left join bd_pd_store pds on pds.pk_pd = pd.PK_PD and pds.flag_stop = '0'
+      INNER join bd_ordtype ordtype
+      ON ordtype.pk_ordtype = pd.pk_ordtype AND ordtype.del_flag = '0' and ordtype.EU_CPOETYPE = '0'
+          left join bd_pd_base bas on pd.pk_pd = bas.pk_pd and bas.del_flag = '0'
+          left join (select sum (quan_min - quan_prep) quan_min,pk_pd,pk_store from pd_stock where del_flag = '0'  and flag_stop = '0' group by pk_pd,pk_store) stk on pds.pk_pd = stk.pk_pd and pds.pk_store=stk.pk_store
+          left join bd_pd_convert con on con.pk_pdconvert = pds.pk_pdconvert and con.del_flag = '0'
+          left join bd_term_freq fqed ON fqed.code = pd.code_freq AND fqed.del_flag = '0'
+          left join bd_supply sup ON sup.code = pd.code_supply AND sup.del_flag = '0'
+          left join  BD_PD_STORE_PACK BPSP on BPSP.PK_PDSTORE=pds.PK_PDSTORE
+          LEFT  join  BD_PD_CONVERT BPC   on BPC.pk_pdconvert = BPSP.pk_pdconvert
+          inner JOIN bd_unit minu ON BPC.PK_UNIT = minu.pk_unit AND minu.del_flag = '0'
+          INNER JOIN bd_pd_as als ON pd.PK_PD= als.PK_PD and als.del_flag='0'
+
+      where pd.flag_rm='0'
+        and pd.flag_reag='0'
+
+     and pd.pk_pd in
+      <foreach collection="list" item="pkPd" open="(" separator="," close=")">
+        #{pkPd,jdbcType=VARCHAR}
+      </foreach>
+     )  item
+    order by pk_ord asc
+  </select>
+
   <resultMap id="getBdPdResultMap" type="com.zebone.modules.mobile.bd.pd.vo.BdPdVO">
     <id column="PK_PD" jdbcType="CHAR" property="pkPd" />
+    <result column="CODE" jdbcType="VARCHAR" property="code" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="SPEC" jdbcType="VARCHAR" property="spec" />
+    <result column="SHORT_NAME" jdbcType="VARCHAR" property="shortName" />
+    <result column="BARCODE" jdbcType="VARCHAR" property="barcode" />
+    <result column="SPCODE" jdbcType="VARCHAR" property="spcode" />
+    <result column="CONCENT" jdbcType="DECIMAL" property="concent" />
+    <result column="WEIGHT" jdbcType="DECIMAL" property="weight" />
+    <result column="PK_UNIT_WT" jdbcType="CHAR" property="pkUnitWt" />
+    <result column="VOL" jdbcType="DECIMAL" property="vol" />
+    <result column="PK_UNIT_VOL" jdbcType="CHAR" property="pkUnitVol" />
+    <result column="PK_UNIT_MIN" jdbcType="CHAR" property="pkUnitMin" />
+    <result column="PACK_SIZE" jdbcType="DECIMAL" property="packSize" />
+    <result column="PK_UNIT_PACK" jdbcType="CHAR" property="pkUnitPack" />
+    <result column="EU_MUPUTYPE" jdbcType="VARCHAR" property="euMuputype" />
+    <result column="EU_PDTYPE" jdbcType="VARCHAR" property="euPdtype" />
+    <result column="EU_DRUGTYPE" jdbcType="VARCHAR" property="euDrugtype" />
+    <result column="NAME_CHEM" jdbcType="VARCHAR" property="nameChem" />
+    <result column="PK_FACTORY" jdbcType="CHAR" property="pkFactory" />
+    <result column="APPR_NO" jdbcType="VARCHAR" property="apprNo" />
+    <result column="EU_PDPRICE" jdbcType="VARCHAR" property="euPdprice" />
+    <result column="EU_PAP" jdbcType="VARCHAR" property="euPap" />
+    <result column="AMT_PAP" jdbcType="DECIMAL" property="amtPap" />
+    <result column="PAP_RATE" jdbcType="DECIMAL" property="papRate" />
+    <result column="DT_ABRD" jdbcType="VARCHAR" property="dtAbrd" />
+    <result column="DT_MADE" jdbcType="VARCHAR" property="dtMade" />
+    <result column="DT_DOSAGE" jdbcType="VARCHAR" property="dtDosage" />
+    <result column="DT_PHARM" jdbcType="VARCHAR" property="dtPharm" />
+    <result column="DT_POIS" jdbcType="VARCHAR" property="dtPois" />
+    <result column="DT_ANTI" jdbcType="VARCHAR" property="dtAnti" />
+    <result column="FLAG_PRECIOUS" jdbcType="CHAR" property="flagPrecious" />
+    <result column="EU_USECATE" jdbcType="VARCHAR" property="euUsecate" />
+    <result column="DT_STORETYPE" jdbcType="VARCHAR" property="dtStoretype" />
+    <result column="DT_BASE" jdbcType="VARCHAR" property="dtBase" />
+    <result column="FLAG_RM" jdbcType="CHAR" property="flagRm" />
+    <result column="FLAG_REAG" jdbcType="CHAR" property="flagReag" />
+    <result column="FLAG_VACC" jdbcType="CHAR" property="flagVacc" />
+    <result column="FLAG_ST" jdbcType="CHAR" property="flagSt" />
+    <result column="FLAG_GMP" jdbcType="CHAR" property="flagGmp" />
+    <result column="FLAG_TPN" jdbcType="CHAR" property="flagTpn" />
+    <result column="FLAG_PED" jdbcType="CHAR" property="flagPed" />
+    <result column="NOTE" jdbcType="VARCHAR" property="note" />
+    <result column="DOSAGE_DEF" jdbcType="DECIMAL" property="dosageDef" />
+    <result column="PK_UNIT_DEF" jdbcType="CHAR" property="pkUnitDef" />
+    <result column="CODE_SUPPLY" jdbcType="VARCHAR" property="codeSupply" />
+    <result column="CODE_FREQ" jdbcType="VARCHAR" property="codeFreq" />
+    <result column="DT_CHCATE" jdbcType="VARCHAR" property="dtChcate" />
+    <result column="PK_ITEMCATE" jdbcType="CHAR" property="pkItemcate" />
+    <result column="PK_ORDTYPE" jdbcType="CHAR" property="pkOrdtype" />
+    <result column="CREATOR" jdbcType="CHAR" property="creator" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFIER" jdbcType="CHAR" property="modifier" />
+    <result column="DEL_FLAG" jdbcType="CHAR" property="delFlag" />
+    <result column="PK_ORG" jdbcType="CHAR" property="pkOrg" />
+    <result column="PRICE" jdbcType="DECIMAL" property="price" />
+    <result column="VALID_CNT" jdbcType="DECIMAL" property="validCnt" />
+    <result column="EU_VALID_UNIT" jdbcType="VARCHAR" property="euValidUnit" />
+    <result column="FLAG_STOP" jdbcType="CHAR" property="flagStop" />
+    <result column="EU_SOURCE" jdbcType="VARCHAR" property="euSource" />
+    <result column="TS" jdbcType="TIMESTAMP" property="ts" />
+    <result column="PK_PDIND" jdbcType="CHAR" property="pkPdind" />
+    <result column="PK_PDCATE" jdbcType="CHAR" property="pkPdcate" />
+    <result column="REG_NO" jdbcType="VARCHAR" property="regNo" />
+    <result column="DATE_VALID_REG" jdbcType="TIMESTAMP" property="dateValidReg" />
+    <result column="EU_STOCKMODE" jdbcType="VARCHAR" property="euStockmode" />
+    <result column="CODE_COSTITEM" jdbcType="VARCHAR" property="codeCostitem" />
+    <result column="PK_ITEM" jdbcType="VARCHAR" property="pkItem" />
+    <result column="FLAG_SINGLE" jdbcType="CHAR" property="flagSingle" />
+    <result column="FLAG_IMP" jdbcType="CHAR" property="flagImp" />
+    <result column="FLAG_USE" jdbcType="CHAR" property="flagUse" />
+    <result column="PK_PDGN" jdbcType="VARCHAR" property="pkPdgn" />
+    <result column="DT_PDTYPE" jdbcType="VARCHAR" property="dtPdtype" />
+    <result column="PACK_SIZE_MAX" jdbcType="DECIMAL" property="packSizeMax" />
+    <result column="DT_USAGENOTE" jdbcType="VARCHAR" property="dtUsagenote" />
+    <result column="DT_INJTYPE" jdbcType="VARCHAR" property="dtInjtype" />
+    <result column="FLAG_CHRT" jdbcType="CHAR" property="flagChrt" />
+    <result column="EU_HERBTYPE" jdbcType="VARCHAR" property="euHerbtype" />
+    <result column="OLD_YB_ID" jdbcType="VARCHAR" property="oldYbId" />
+    <result column="OLD_ID" jdbcType="VARCHAR" property="oldId" />
+    <result column="AGE_MIN" jdbcType="DECIMAL" property="ageMin" />
+    <result column="AGE_MAX" jdbcType="DECIMAL" property="ageMax" />
+    <result column="EU_SEX" jdbcType="VARCHAR" property="euSex" />
+    <result column="OLD_CODE" jdbcType="VARCHAR" property="oldCode" />
+    <result column="QUOTA_DOS" jdbcType="DECIMAL" property="quotaDos" />
+    <result column="EU_HPTYPE" jdbcType="VARCHAR" property="euHptype" />
+    <result column="CODE_HP" jdbcType="VARCHAR" property="codeHp" />
+    <result column="CODE_STD" jdbcType="VARCHAR" property="codeStd" />
+    <result column="NAME_GEN" jdbcType="VARCHAR" property="nameGen" />
+    <result column="EU_LABELTYPE" jdbcType="VARCHAR" property="euLabeltype" />
+    <result column="PK_AUDIT" jdbcType="CHAR" property="pkAudit" />
+    <result column="CODE_EXT" jdbcType="VARCHAR" property="codeExt" />
+    <result column="VAL_DDD" jdbcType="DECIMAL" property="valDdd" />
+    <result column="DT_DRUGEFFECT" jdbcType="VARCHAR" property="dtDrugeffect" />
+    <result column="EU_MUPUTYPE_OP" jdbcType="VARCHAR" property="euMuputypeOp" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="unit_pack_name" jdbcType="VARCHAR" property="unitPackName" />
+    <result column="code_ordtype" jdbcType="VARCHAR" property="codeOrdtype" />
   </resultMap>
 
 </mapper>

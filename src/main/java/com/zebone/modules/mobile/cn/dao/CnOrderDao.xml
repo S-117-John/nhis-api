@@ -137,11 +137,14 @@
        ord.pk_ord,     --医嘱PK
        ord.code_ord,   --医嘱编码
        ord.name_ord,   --医嘱名称
+       ord.quan,       --用量
        ord.spec,       --规格
        ord.dosage,     --剂量
        ord.pk_unit_dos, --剂量单位
        ord.code_supply, --用法
+       bs.NAME name_supply,--用法
        ord.code_freq,   --频次
+       btf.name name_freq, --频次
        ord.pk_emp_ord,  --医生
        ord.name_emp_ord,--医生姓名
        ord.pk_dept,     --科室
@@ -159,13 +162,22 @@
        lab.dt_colltype,  --采集方法
        lab.dt_contype,   --试管类型
        lab.note,         --检验注意事项
-       lab.dt_samptype   --标本类型
+       lab.dt_samptype,   --标本类型
+       ord.DATE_STOP,     --停止时间
+       ord.NAME_EMP_STOP,    --停止
+       ord.FIRST_NUM,
+       ord.LAST_NUM,
+       (CASE  WHEN ord.EU_STATUS_ORD<![CDATA[<]]>4 THEN 1 ELSE 0 end ) isnow
   from cn_order ord
        left outer join bd_ord_ris ris on ord.pk_ord=ris.pk_ord
        left outer join bd_ord_lab lab on ord.pk_ord=lab.pk_ord
+       left join BD_SUPPLY bs on bs.code=ord.code_supply
+       left join bd_term_freq btf on btf.code=ord.code_freq
  where ord.pk_pv=#{pkPv,jdbcType=CHAR} and
        ord.flag_erase='0'
   </select>
+  
+ 
   <resultMap id="listPatientOrderResultMap" type="com.zebone.modules.mobile.cn.vo.CnOrderVO">
     <id column="PK_CNORD" jdbcType="CHAR" property="pkCnord" />
     <result column="PK_ORD" jdbcType="CHAR" property="pkOrd" />
@@ -187,6 +199,15 @@
     <result column="FLAG_SELF" jdbcType="CHAR" property="flagSelf" />
     <result column="FLAG_BL" jdbcType="CHAR" property="flagBl" />
     <result column="FLAG_NOTE" jdbcType="CHAR" property="flagNote" />
+    <result column="quan" jdbcType="NUMERIC" property="quan" />
+    <result column="name_supply" jdbcType="VARCHAR" property="nameSupply" />
+    <result column="name_freq" jdbcType="VARCHAR" property="nameFreq" />
+    <result column="DATE_STOP" jdbcType="TIMESTAMP" property="dateStop" />
+    <result column="FLAG_STOP" jdbcType="CHAR" property="flagStop" />
+    <result column="FIRST_NUM" jdbcType="INTEGER" property="firstNum" />
+    <result column="LAST_NUM" jdbcType="INTEGER" property="lastNum" />
+    <result column="NAME_EMP_STOP" jdbcType="VARCHAR" property="nameEmpStop" />
+    <result column="isnow" jdbcType="VARCHAR" property="isnow" />
     <association property="bdOrdRis" javaType="com.zebone.common.entity.bd.ord.BdOrdRis">
       <id column="PK_ORDRIS" jdbcType="CHAR" property="pkOrdris" />
       <result column="DT_TYPE" jdbcType="VARCHAR" property="dtType" />
@@ -201,4 +222,90 @@
       <result column="DT_SAMPTYPE" jdbcType="VARCHAR" property="dtSamptype" />
     </association>
   </resultMap>
+   <select id="checkStopOrd" parameterType="java.lang.String" resultType="java.lang.Integer" >
+    	select count(1) cnt from CN_ORDER where ((EU_ALWAYS='0' and EU_STATUS_ORD<![CDATA[>=]]>4) or (EU_ALWAYS='1' and EU_STATUS_ORD<![CDATA[>=]]>3)) and PK_CNORD in ( ${pkCnord,jdbcType=VARCHAR} )
+  </select>
+  <select id="queryOrdStopListByPk" resultMap="listPatientOrderResultMap">
+    select ord.PK_CNORD,
+       ord.pk_ord,     
+       ord.code_ord,   
+       ord.name_ord,   
+       ord.quan,       
+       ord.spec,       
+       ord.dosage,     
+       ord.pk_unit_dos,
+       ord.code_supply,
+       bs.NAME name_supply,
+       ord.code_freq, 
+       btf.name name_freq,
+       ord.pk_emp_ord,  
+       ord.name_emp_ord,
+       ord.pk_dept,     
+       ord.code_ordtype,
+       ord.date_start,  
+       ord.eu_always,   
+       ord.pk_dept_exec,
+       ord.note_ord,    
+       ord.flag_self,   
+       ord.flag_bl,     
+       ord.flag_note,   
+       ris.dt_type,     
+       ris.dt_body,     
+       ris.desc_att,    
+       lab.dt_colltype, 
+       lab.dt_contype,  
+       lab.note,        
+       lab.dt_samptype,   
+       ord.DATE_STOP,     
+       ord.NAME_EMP_STOP,  
+       ord.FIRST_NUM,
+       ord.LAST_NUM,
+       (CASE  WHEN ord.EU_STATUS_ORD<![CDATA[<]]>4 THEN 1 ELSE 0 end ) isnow
+  from cn_order ord
+       left outer join bd_ord_ris ris on ord.pk_ord=ris.pk_ord
+       left outer join bd_ord_lab lab on ord.pk_ord=lab.pk_ord
+       left join BD_SUPPLY bs on bs.code=ord.code_supply
+       left join bd_term_freq btf on btf.code=ord.code_freq
+ where ord.pk_cnord in  ( ${pkCnord,jdbcType=VARCHAR} )
+       and ord.flag_erase='0'
+  </select>
+  <select id="checkSignOrd" parameterType="java.lang.String" resultType="java.lang.Integer" >
+    	select count(1) cnt from CN_ORDER where EU_STATUS_ORD!='0' and PK_CNORD in ( ${pkCnord,jdbcType=VARCHAR} )
+  </select>
+  <update id="signOrd" parameterType="java.util.Map">
+         update cn_order
+		   set date_stop=#{dateStop,jdbcType=TIMESTAMP},    
+		       pk_emp_stop=#{pkEmpStop,jdbcType=VARCHAR},  
+		       name_emp_stop=#{nameEmpStop,jdbcType=VARCHAR},
+		       flag_stop='1'  
+		 where pk_cnord in ( ${pkCnord,jdbcType=VARCHAR} ) and 
+		       flag_stop='0'
+   </update>
+   <select id="checkDelOrd" parameterType="java.lang.String" resultType="java.lang.Integer" >
+    	select count(1) cnt from CN_ORDER where EU_STATUS_ORD!='0' and EU_STATUS_ORD!='9' and PK_CNORD in ( ${pkCnord,jdbcType=VARCHAR} )
+  </select>
+  <delete id="delOrd" parameterType="java.lang.String" >
+    	delete CN_ORDER where (EU_STATUS_ORD='0' or EU_STATUS_ORD='9') and PK_CNORD in ( ${pkCnord,jdbcType=VARCHAR} )
+  </delete>
+    <select id="selectSn" resultType="java.lang.Double" >
+        select val
+        from BD_SERIALNO
+        where name_tb = #{tableName,jdbcType=VARCHAR} and name_fd = #{fieldName,jdbcType=VARCHAR}
+    </select>
+    <update id="updateSn">
+        update BD_SERIALNO
+        set val = val+ #{count, jdbcType=INTEGER}
+        where name_tb = #{tableName,jdbcType=VARCHAR} and name_fd = #{fieldName,jdbcType=VARCHAR}
+    </update>
+    <insert id="initSn" parameterType="com.zebone.common.entity.bd.serialno.BdSerialno" >
+        insert into BD_SERIALNO (PK_SERIALNO, PK_ORG, NAME_TB, NAME_FD, VAL_INIT, VAL )
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            #{pkSerialno,jdbcType=CHAR},
+            #{pkOrg,jdbcType=CHAR},
+            #{nameTb,jdbcType=VARCHAR},
+            #{nameFd,jdbcType=VARCHAR},
+            #{valInit,jdbcType=DECIMAL},
+            #{val,jdbcType=DECIMAL},
+        </trim>
+    </insert>
 </mapper>

@@ -9,6 +9,7 @@ import com.zebone.common.entity.bd.pd.BdPdAs;
 import com.zebone.modules.mobile.bd.pd.vo.BdPdVO;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public interface BdPdService {
@@ -22,7 +23,7 @@ public interface BdPdService {
 
     @Cached(expire = 3600, cacheType = CacheType.REMOTE)
     @CachePenetrationProtect
-    List<BdPd> listBdPs(List<String> ids);
+    List<BdPdVO> listBdPs(List<String> ids);
 
     /**
      * 检索药品
@@ -30,6 +31,12 @@ public interface BdPdService {
      * @return
      */
     List<BdPdAs> search(String spCode);
+
+    /**
+     * 查询药品详细信息
+     * @return
+     */
+    List<Map<String,Object>> getBdPdAndBdOrdByPkPd( List<String> bdPds);
 
 
 }
