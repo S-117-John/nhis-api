@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zebone.modules.mobile.bd.encoderule.dao.BdEncoderuleDao">
+  <resultMap id="BaseResultMap" type="com.zebone.common.entity.bd.encoderule.BdEncoderule">
+    <id column="PK_ENCODERULE" jdbcType="CHAR" property="pkEncoderule" />
+    <result column="PK_ORG" jdbcType="CHAR" property="pkOrg" />
+    <result column="CODE" jdbcType="VARCHAR" property="code" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="LENGTH_CODE" jdbcType="INTEGER" property="lengthCode" />
+    <result column="FLAG_PREFIX" jdbcType="CHAR" property="flagPrefix" />
+    <result column="PREFIX" jdbcType="CHAR" property="prefix" />
+    <result column="FLAG_DATE" jdbcType="CHAR" property="flagDate" />
+    <result column="FORMAT_DATE" jdbcType="CHAR" property="formatDate" />
+    <result column="EU_SNRULE" jdbcType="VARCHAR" property="euSnrule" />
+    <result column="VAL_INIT" jdbcType="VARCHAR" property="valInit" />
+    <result column="VAL" jdbcType="CHAR" property="val" />
+    <result column="FLAG_SUFFIX" jdbcType="CHAR" property="flagSuffix" />
+    <result column="SUFFIX" jdbcType="CHAR" property="suffix" />
+    <result column="TS" jdbcType="TIMESTAMP" property="ts" />
+    <!-- <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFIER" jdbcType="CHAR" property="modifier" />
+    <result column="DEL_FLAG" jdbcType="CHAR" property="delFlag" />
+    <result column="TS" jdbcType="TIMESTAMP" property="ts" />
+    <result column="EU_ORDTYPE" jdbcType="VARCHAR" property="euOrdtype" />
+    <result column="FLAG_IP" jdbcType="CHAR" property="flagIp" />
+    <result column="FLAG_OP" jdbcType="CHAR" property="flagOp" /> -->
+  </resultMap>
+  <!-- <sql id="Base_Column_List">
+    PK_ORDSET, PK_ORG, CODE, "NAME", EU_RIGHT, PK_DEPT, PK_EMP, PK_DIAG, PK_PARENT, SPCODE, 
+    D_CODE, CREATOR, CREATE_TIME, MODIFIER, DEL_FLAG, TS, EU_ORDTYPE, FLAG_IP, FLAG_OP
+  </sql> -->
+  <select id="getEncoderuleByCode" resultMap="BaseResultMap">
+    select
+       *
+    from BD_ENCODERULE
+    where  code = #{code}  and del_flag ='0'
+  </select>
+  <update id="updateByPk" parameterType="com.zebone.common.entity.bd.encoderule.BdEncoderule">
+         update BD_ENCODERULE
+		   set ts=#{ts,jdbcType=TIMESTAMP},    
+		       val=#{val,jdbcType=VARCHAR}
+		 where PK_ENCODERULE=#{pkEncoderule}
+   </update>
+
+</mapper>
