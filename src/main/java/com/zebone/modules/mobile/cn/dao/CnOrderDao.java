@@ -3,6 +3,7 @@ package com.zebone.modules.mobile.cn.dao;
 
 
 import com.zebone.common.entity.bd.serialno.BdSerialno;
+import com.zebone.common.entity.cn.CnOrder;
 import com.zebone.modules.mobile.cn.vo.CnOrderVO;
 
 import org.apache.ibatis.annotations.Mapper;

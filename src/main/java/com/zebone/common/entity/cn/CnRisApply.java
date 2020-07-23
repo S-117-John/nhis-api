@@ -4,6 +4,9 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -96,75 +99,6 @@ public class CnRisApply implements Serializable {
 	
 	
 	
-	/**
-	 * 数量
-	 */
-	private double quan ;
-	/**
-	 * 加急标志
-	 */
-	private String flagEmer;
-	/**
-	 * 执行机构
-	 */
-	private String pkOrgExec;
-	/**
-	 * 执行科室
-	 */
-	private String pkDeptExec;
-	/**
-	 * 医嘱备注
-	 */
-	private String noteOrd;
-	private Integer ordsn;
 	
-	private Integer ordsnParent;
-	
-	private Integer infantNo;
-	
-	private String pkPv;
-	/**
-	 * 医嘱类型
-	 */
-	private String codeOrdType;
-	
-	/**
-	 * 医嘱类型编码
-	 */
-	private String pkOrd;
-	/**
-	 * 医嘱编码
-	 */
-	private String codeOrd;
-	/**
-	 * 医嘱名称
-	 */
-	private String nameOrd;
-	/**
-	 * 开立病区
-	 */
-	private String pkDeptNs;
-	/**
-	 * 计费标志
-	 */
-	private String flagBl;
-	
-	private Date dateStart;
-	/**
-	 * 申请单号
-	 */
-	private String codeApply;
-	/**
-	 * 患者主键
-	 */
-	private String pkPi;
-	private String pkEmpInput;
-    
-    private String NameEmpInput;
-    
-    private String pkDept;
-    private String priceCg;
-    private String euIntern;
-    private Integer groupno;
 
 }

@@ -10,6 +10,7 @@ import com.zebone.modules.mobile.cn.vo.CnLabApplyVo;
 import com.zebone.modules.mobile.cn.vo.CnOrderVO;
 import com.zebone.modules.mobile.cn.vo.CnRisApplyVo;
 import com.zebone.modules.mobile.patient.vo.PvEncounterVO;
+import com.zebone.common.entity.bd.ou.BdOuDept;
 import com.zebone.common.entity.bd.ou.BdOuUser;
 
 import java.util.List;
@@ -105,11 +106,30 @@ public interface CnOrdService {
      * @param user
      * @param saveLisList
      */
-    List<CnOrder> saveLisApplyList(BdOuUser user, List<CnLabApplyVo> saveLisList,PvEncounterVO pvEncounterVO);
+    List<CnOrder> saveLisApplyList(BdOuUser user, List<CnLabApplyVo> saveLisList,PvEncounterVO pvEncounterVO,BdOuDept dept);
     /**
      * 保存检查申请
      * @param user
      * @param saveLisList
      */
-    List<CnOrder> saveRisApplyList(BdOuUser user, List<CnRisApplyVo> saveRisList,PvEncounterVO pvEncounterVO);
+    List<CnOrder> saveRisApplyList(BdOuUser user, List<CnRisApplyVo> saveRisList,PvEncounterVO pvEncounterVO,BdOuDept dept);
+
+
+    /**
+     * 设置医嘱的值
+     * @param cnOrders
+     * @param bdPdList
+     * @param pvEncounterVO
+     * @param user
+     * @return
+     */
+    List<CnOrder> setSaveCnOrder(List<CnOrder> cnOrders, List<Map<String,Object>> bdPdList,PvEncounterVO pvEncounterVO,BdOuUser user);
+
+    /**
+     * 保存医嘱数据
+     * @param cnOrders
+     * @param saveType
+     * @param user
+     */
+    void saveOrdCnOrder(List<CnOrder> cnOrders,String saveType,BdOuUser user);
 }

@@ -83,6 +83,7 @@ where pd.flag_rm = '0'
 			           srv.flag_hm as flag_emer ,
 			           bdc.name name_samptype
 			           ,bdc1.name name_type
+			           ,srv.EU_ORDTYPE
 			      from bd_ord srv 
 			      inner join bd_ord_org so  on srv.pk_ord = so.pk_ord  and so.del_flag = '0' 
 			      inner join bd_ord_alias alias on so.pk_ord = alias.pk_ord and so.pk_org = alias.pk_org and alias.del_flag='0' 

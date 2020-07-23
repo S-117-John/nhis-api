@@ -57,4 +57,7 @@ public class CnOrderVO extends CnOrder {
      * 是否当前
      */
     private String isnow;
+
+    private String sign;
+
 }

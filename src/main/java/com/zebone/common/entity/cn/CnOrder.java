@@ -1,7 +1,6 @@
 package com.zebone.common.entity.cn;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -264,7 +263,6 @@ public class CnOrder implements Serializable {
 
     private String nameEmpErase;
 
-    private String pkOrdanti;
 
     private String flagErase;
 
@@ -300,7 +298,7 @@ public class CnOrder implements Serializable {
 
     private String flagFit;
 
-    private BigDecimal quanBed;
+    private Double quanBed;
 
     @ApiModelProperty("医嘱备注")
     private String noteOrd;
@@ -344,9 +342,9 @@ public class CnOrder implements Serializable {
 
     private Integer groupno;
 
-    private BigDecimal quanDisp;
+    private Double quanDisp;
 
-    private BigDecimal ratioHp;
+    private Double ratioHp;
 
     private String descFit;
 
@@ -361,7 +359,7 @@ public class CnOrder implements Serializable {
     private String euOrdtype;
 
     //监测类型
-    private String euMonitorType;
+    //private String euMonitorType;
 
 
     private static final long serialVersionUID = 1L;

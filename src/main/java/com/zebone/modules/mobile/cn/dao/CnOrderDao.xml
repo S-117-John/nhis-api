@@ -167,6 +167,8 @@
        ord.NAME_EMP_STOP,    --停止
        ord.FIRST_NUM,
        ord.LAST_NUM,
+       ord.ORDSN_PARENT,
+       ord.ORDSN,
        (CASE  WHEN ord.EU_STATUS_ORD<![CDATA[<]]>4 THEN 1 ELSE 0 end ) isnow
   from cn_order ord
        left outer join bd_ord_ris ris on ord.pk_ord=ris.pk_ord
@@ -175,12 +177,15 @@
        left join bd_term_freq btf on btf.code=ord.code_freq
  where ord.pk_pv=#{pkPv,jdbcType=CHAR} and
        ord.flag_erase='0'
+       order by ord.pk_pv, ord.date_start,nvl(ord.groupno,0), ord.ordsn_parent,ord.ordsn
   </select>
-  
- 
+
+
   <resultMap id="listPatientOrderResultMap" type="com.zebone.modules.mobile.cn.vo.CnOrderVO">
     <id column="PK_CNORD" jdbcType="CHAR" property="pkCnord" />
     <result column="PK_ORD" jdbcType="CHAR" property="pkOrd" />
+    <result column="ORDSN" jdbcType="DECIMAL" property="ordsn" />
+    <result column="ORDSN_PARENT" jdbcType="DECIMAL" property="ordsnParent" />
     <result column="CODE_ORD" jdbcType="VARCHAR" property="codeOrd" />
     <result column="NAME_ORD" jdbcType="VARCHAR" property="nameOrd" />
     <result column="SPEC" jdbcType="VARCHAR" property="spec" />
@@ -273,13 +278,17 @@
     	select count(1) cnt from CN_ORDER where EU_STATUS_ORD!='0' and PK_CNORD in ( ${pkCnord,jdbcType=VARCHAR} )
   </select>
   <update id="signOrd" parameterType="java.util.Map">
-         update cn_order
+         <!-- update cn_order
 		   set date_stop=#{dateStop,jdbcType=TIMESTAMP},    
 		       pk_emp_stop=#{pkEmpStop,jdbcType=VARCHAR},  
 		       name_emp_stop=#{nameEmpStop,jdbcType=VARCHAR},
 		       flag_stop='1'  
 		 where pk_cnord in ( ${pkCnord,jdbcType=VARCHAR} ) and 
-		       flag_stop='0'
+		       flag_stop='0' -->
+		  
+		  update cn_order set flag_sign='1',date_sign=#{dateSign,jdbcType=TIMESTAMP},eu_status_ord='1'
+		 where pk_cnord in ( ${pkCnord,jdbcType=VARCHAR} ) and 
+		     flag_erase='0' and eu_status_ord='0'
    </update>
    <select id="checkDelOrd" parameterType="java.lang.String" resultType="java.lang.Integer" >
     	select count(1) cnt from CN_ORDER where EU_STATUS_ORD!='0' and EU_STATUS_ORD!='9' and PK_CNORD in ( ${pkCnord,jdbcType=VARCHAR} )

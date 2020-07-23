@@ -23,8 +23,12 @@ public class CnOrderParamVO implements Serializable {
     public String code;
 
     public String codeIp;
+
+    public String saveType;//0保存1签署
     
     public List<CnLabApplyVo> labApplyList;
     
     public List<CnRisApplyVo> risApplyList;
+    
+    public String codeDept;
 }

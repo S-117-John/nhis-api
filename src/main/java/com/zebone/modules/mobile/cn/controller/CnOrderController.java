@@ -2,14 +2,19 @@ package com.zebone.modules.mobile.cn.controller;
 
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.zebone.common.entity.bd.ord.BdOrdSetDt;
 import com.zebone.common.entity.bd.ord.BdOrdType;
+import com.zebone.common.entity.bd.ou.BdOuDept;
 import com.zebone.common.entity.bd.ou.BdOuUser;
 import com.zebone.common.entity.bd.unit.BdUnit;
 import com.zebone.common.entity.cn.CnLabApply;
 import com.zebone.common.entity.cn.CnOrder;
 import com.zebone.common.entity.cn.CnRisApply;
+import com.zebone.core.gson.DoubleAdapter;
+import com.zebone.core.gson.GsonUtil;
+import com.zebone.core.gson.IntTypeAdapter;
 import com.zebone.core.launch.constant.AppConstant;
 import com.zebone.core.tool.api.R;
 import com.zebone.modules.mobile.bd.ord.service.BdOrdSetService;
@@ -19,6 +24,7 @@ import com.zebone.modules.mobile.bd.ou.service.BdOuUserService;
 import com.zebone.modules.mobile.bd.pd.service.BdPdService;
 import com.zebone.modules.mobile.bd.pd.vo.BdPdVO;
 import com.zebone.modules.mobile.cn.service.CnOrdService;
+import com.zebone.modules.mobile.cn.support.SortByOrdUtil;
 import com.zebone.modules.mobile.cn.vo.CnLabApplyVo;
 import com.zebone.modules.mobile.cn.vo.CnOrderParamVO;
 import com.zebone.modules.mobile.cn.vo.CnOrderVO;
@@ -47,6 +53,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(AppConstant.APPLICATION_MOBILE_ORD)
 public class CnOrderController {
+
+
 
     @Autowired
     private CnOrdService cnOrdService;
@@ -77,110 +85,44 @@ public class CnOrderController {
         List<BdOrdType> bdOrdTypeList = bdOrdTypeService.listBdOrdType();
         list.forEach(a->{
             bdOrdTypeList.forEach(b->{
-                if(a.getCodeOrdtype().equals(b.getCode())){
-                    a.setBdOrdType(b);
-                    a.setBdOrdTypeName(b.getName());
-                }
+            	if(null!=a.getCodeOrdtype()&& !"".equals(a.getCodeOrdtype())){
+	                if(a.getCodeOrdtype().equals(b.getCode())){
+	                    a.setBdOrdType(b);
+	                    a.setBdOrdTypeName(b.getName());
+	                }
+            	}
             });
             a.setKey(a.getPkCnord());
 
         });
+        if(list != null && list.size()>0){
+           new SortByOrdUtil().ordGroup(list);
+        }
         return R.data(list);
     }
 
     @ApiOperation(value = "保存医嘱", notes = "保存医嘱")
     @PostMapping("save")
     public void save(String ordList){
-        Gson gson = new Gson();
-        CnOrderParamVO cnOrderParamVO = gson.fromJson(ordList,new TypeToken<CnOrderParamVO>(){}.getType());
+        CnOrderParamVO cnOrderParamVO = GsonUtil.gson.fromJson(ordList,new TypeToken<CnOrderParamVO>(){}.getType());
         if(cnOrderParamVO == null ){
             return;
         }
         String code = cnOrderParamVO.getCode();
         String codeIp = cnOrderParamVO.getCodeIp();
+        String saveType = cnOrderParamVO.getSaveType();
         List<CnOrder> cnOrders = cnOrderParamVO.getCnOrdList();
         //查询药品
         List<String> bdPds = new ArrayList<>();
         cnOrders.forEach(a->{bdPds.add(a.getPkOrd());});
-        Date d = new Date();
         //查询药品信息
         List<Map<String,Object>> bdPdList = bdPdService.getBdPdAndBdOrdByPkPd(bdPds);
         //查询医生信息
         BdOuUser user = bdOuUserService.getUser(code);
         //查询患者信息
         PvEncounterVO pvEncounterVO = patientService.getPatientInfo(codeIp);
-        //将药品属性赋值给医嘱属性
-        int i = 0;
-        Integer ordsn = 0;
-        for(CnOrder cn :cnOrders){
-            i++;
-            String pkCnord = StringUtil.isNullOrEmpty(cn.getPkCnord())? UUID.randomUUID().toString():cn.getPkCnord();
-            cn.setPkCnord(pkCnord);
-            cn.setEuStatusOrd("0");
-            if(i ==1){
-                ordsn = cnOrdService.getSerialNo("CN_ORDER", "ORDSN", 1);
-                cn.setOrdsn(ordsn);
-                cn.setOrdsnParent(ordsn);
-            }else{
-                cn.setOrdsn(cnOrdService.getSerialNo("CN_ORDER", "ORDSN", 1));
-                cn.setOrdsnParent(ordsn);
-            }
-            cn.setPkPv(pvEncounterVO.getPkPv());
-            cn.setPkPi(pvEncounterVO.getPkPi());
-            cn.setTs(d);
-            cn.setDateEnter(d);
-            cn.setOrdsnChk(cn.getOrdsn());
-            cn.setPkEmpInput(user.getPkEmp());
-            cn.setNameEmpInput(user.getNameEmp());
-            cn.setPkDept(pvEncounterVO.getPkDept());
-            cn.setPkDeptNs(pvEncounterVO.getPkDeptNs());
-            cn.setPkEmpOrd(user.getPkEmp());
-            cn.setNameEmpOrd(user.getNameEmp());
-            cn.setCreator(user.getPkEmp());
-            cn.setCreateTime(d);
-            cn.setDelFlag("0");
-            cn.setTs(d);
-            for(Map<String,Object> m : bdPdList){
-                if(cn.getPkOrd().equals(m.get("PK_PD").toString())){
-                    cn.setCodeOrdtype(m.get("CODE_ORDTYPE").toString());
-                    cn.setCodeOrd(m.get("CODE").toString());
-                    cn.setNameOrd(m.get("NAME").toString());
-                    cn.setSpec(m.get("SPEC").toString());
-                    cn.setDosage(Double.valueOf(m.get("QUAN_MIN").toString()));
-                    cn.setPkUnitDos(m.get("PK_UNIT_MIN").toString());
-                    cn.setQuan(Double.valueOf(m.get("PACK_SIZE").toString()));
-                    cn.setPkUnit(m.get("PK_UNIT").toString());
-                    if(Double.valueOf(m.get("PACK_SIZE").toString())!=0 && "0".equals(cn.getEuAlways())&& !StringUtil.isNullOrEmpty(m.get("PK_PD").toString())){
-                        double execTimes = (cn.getFirstNum() == null || cn.getFirstNum()==0) ? (Integer.getInteger(m.get("CNT").toString()) == 0 ? 1 : Integer.getInteger(m.get("CNT").toString())) : cn.getFirstNum();
-                        if("0".equals(m.get("EU_MUPUTYPE").toString())){//按次取整
-                            cn.setQuanCg(Math.floor(Double.valueOf(m.get("PACK_SIZE").toString())/(Double.valueOf(m.get("PACK_SIZE").toString()) > 1 ? 1 : Double.valueOf(m.get("PACK_SIZE").toString())))*execTimes);
-                        }else{ //按批取整
-                            cn.setQuanCg(Math.floor(Double.valueOf(m.get("PACK_SIZE").toString())/(Double.valueOf(m.get("PACK_SIZE").toString()) > 1 ? 1 : Double.valueOf(m.get("PACK_SIZE").toString())))*execTimes);
-                        }
-                    }
-                    cn.setPkUnitCg(m.get("PK_UNIT").toString());
-                    cn.setPackSize(Double.valueOf(m.get("PACK_SIZE").toString()));
-                    cn.setPriceCg(Double.valueOf(m.get("PRICE").toString()));
-                    if(cn.getFirstNum() != null &&cn.getFirstNum()>0){
-                        cn.setFlagFirst("1");
-                    }else{
-                        cn.setFlagFirst("0");
-                    }
-                    if(!StringUtil.isNullOrEmpty(m.get("PK_PD").toString())){
-                        cn.setFlagDurg("1");
-                    }else {
-                        cn.setFlagDurg("0");
-                    }
-                    break;
-                }
-            }
-        }
-        if(cnOrders!=null && cnOrders.size()>0){
-            cnOrdService.save(cnOrders);
-            cnOrdService.saveOrdAnti(cnOrders,user.getPkOrg());
-        }
-
-
+        cnOrders = cnOrdService.setSaveCnOrder(cnOrders,bdPdList,pvEncounterVO,user);
+        cnOrdService.saveOrdCnOrder(cnOrders,saveType,user);
     }
 
     @ApiOperation(value = "获取医嘱模板明细", notes = "传入医嘱模板pk")
@@ -263,9 +205,10 @@ public class CnOrderController {
         BdOuUser user=bdOuUserService.getUser(doctorCode);
         HashMap<String, Object> map=new HashMap<String, Object>();
         map.put("pkCnord", pkCnords);
-        map.put("dateStop", new Date());
-        map.put("pkEmpStop", user.getPkEmp());
-        map.put("nameEmpStop", user.getNameUser());
+//        map.put("dateStop", new Date());
+//        map.put("pkEmpStop", user.getPkEmp());
+//        map.put("nameEmpStop", user.getNameUser());
+        map.put("dateSign", new Date());
         Integer res=cnOrdService.signOrd(map);
         if(res>0){
         	return R.success("签署成功");
@@ -292,23 +235,26 @@ public class CnOrderController {
     @PostMapping("saveLisApplyList")
     public void saveLisApplyList(String param ) throws IllegalAccessException, InvocationTargetException{
     	Gson gson = new Gson();
-        CnOrderParamVO cnOrderParamVO = gson.fromJson(param,new TypeToken<CnOrderParamVO>(){}.getType());
+        CnOrderParamVO cnOrderParamVO = GsonUtil.gson.fromJson(param,new TypeToken<CnOrderParamVO>(){}.getType());
 		List<CnLabApplyVo> saveLisList =cnOrderParamVO.getLabApplyList();
 		if(saveLisList.size()<=0) return;
 		BdOuUser user=bdOuUserService.getUser(cnOrderParamVO.getCode());
+		BdOuDept dept=bdOuUserService.getDept(cnOrderParamVO.getCodeDept());
 		PvEncounterVO pvEncounterVO = patientService.getPatientInfo(cnOrderParamVO.getCodeIp());
-	    cnOrdService.saveLisApplyList(user, saveLisList,pvEncounterVO);
+	    cnOrdService.saveLisApplyList(user, saveLisList,pvEncounterVO,dept);
 	}
     @ApiOperation(value = "保存检查申请", notes = "保存检查申请")
     @PostMapping("saveRisApplyList")
     public void saveRisApplyList(String param) throws IllegalAccessException, InvocationTargetException{
     	Gson gson = new Gson();
-        CnOrderParamVO cnOrderParamVO = gson.fromJson(param,new TypeToken<CnOrderParamVO>(){}.getType());
+        CnOrderParamVO cnOrderParamVO = GsonUtil.gson.fromJson(param,new TypeToken<CnOrderParamVO>(){}.getType());
 		List<CnRisApplyVo> saveRisList =cnOrderParamVO.getRisApplyList();
 		if(saveRisList.size()<=0) return;
 		BdOuUser user=bdOuUserService.getUser(cnOrderParamVO.getCode());
+		BdOuDept dept=bdOuUserService.getDept(cnOrderParamVO.getCodeDept());
 		PvEncounterVO pvEncounterVO = patientService.getPatientInfo(cnOrderParamVO.getCodeIp());
-		cnOrdService.saveRisApplyList(user, saveRisList,pvEncounterVO);  
+		cnOrdService.saveRisApplyList(user, saveRisList,pvEncounterVO,dept);  
 	}
+
     
 }

@@ -4,6 +4,7 @@ package com.zebone.modules.mobile.cn.service.impl;
 import com.google.common.collect.Lists;
 import com.zebone.common.entity.bd.ord.BdOrd;
 import com.zebone.common.entity.bd.ord.BdOrdAlias;
+import com.zebone.common.entity.bd.ou.BdOuDept;
 import com.zebone.common.entity.bd.ou.BdOuUser;
 import com.zebone.common.entity.bd.pd.BdPd;
 import com.zebone.common.entity.bd.pd.BdPdAs;
@@ -217,6 +218,11 @@ public class CnOrdServiceImpl implements CnOrdService {
 		return cnOrderDao.checkDelOrd(pkCnord);
 	}
 
+	/**
+	 * 删除医嘱(批量)
+	 * @param pkCnord
+	 * @return
+	 */
 	@Override
 	public Integer delOrd(String pkCnord) {
 		// TODO Auto-generated method stub
@@ -267,13 +273,14 @@ public class CnOrdServiceImpl implements CnOrdService {
         Date ts = new Date();
         List<String> pks = new ArrayList<String>();
         for(CnOrder ord:ordList){
-            if(!StringUtil.isNullOrEmpty(ord.getPkOrdanti()) && ("1".equals(ord.getFlagPrev()) || "1".equals(ord.getFlagThera()))){
+            //!StringUtil.isNullOrEmpty(ord.getPkOrdanti()) &&
+            if(("1".equals(ord.getFlagPrev()) || "1".equals(ord.getFlagThera()))){
                 if(!StringUtil.isNullOrEmpty(ord.getPkCnord())){
                     pks.add(ord.getPkCnord());
                 }
                 CnOrdAnti anti = new CnOrdAnti();
                 BeanUtils.copyProperties(anti, ord);
-                anti.setEuType(ord.getEuMonitorType());
+                //anti.setEuType(ord.getEuMonitorType());
                 anti.setPkOrg(pkOrg);
                 anti.setTs(ts);
                 cnOrdAntis.add(anti);
@@ -288,15 +295,16 @@ public class CnOrdServiceImpl implements CnOrdService {
      * 保存检验申请
      */
 	@Override
-	public List<CnOrder> saveLisApplyList(BdOuUser user,List<CnLabApplyVo> saveLisList, PvEncounterVO pvEncounterVO) {
+	public List<CnOrder> saveLisApplyList(BdOuUser user,List<CnLabApplyVo> saveLisList, PvEncounterVO pvEncounterVO,BdOuDept dept) {
 		List<CnOrder> signCnOrder = new ArrayList<CnOrder>();
 		List<CnOrder> newOrdList = new ArrayList<CnOrder>();
 		List<CnLabApply> newLisList = new ArrayList<CnLabApply>();
 		Date d = new Date();
 		for (CnLabApplyVo lisVO1 : saveLisList) {
 			CnOrder orderVO = new CnOrder();
-			CnLabApply lisVO = new CnLabApply();
-			BeanUtils.copyProperties(lisVO, lisVO1);
+			CnLabApplyVo lisVO = new CnLabApplyVo();
+			BeanUtils.copyProperties(lisVO1,lisVO);
+			lisVO.setPkOrgExec(user.getPkOrg());
 			lisVO.setPkOrdlis(UUID.randomUUID().toString().replaceAll("-", ""));
 			orderVO.setPkCnord(UUID.randomUUID().toString().replaceAll("-", ""));
 			lisVO.setPkCnord(orderVO.getPkCnord());
@@ -329,7 +337,7 @@ public class CnOrdServiceImpl implements CnOrdService {
 			orderVO.setDateStart(lisVO.getDateStart());
 			if (null == lisVO.getPkEmpInput()|| "".equals(lisVO.getPkEmpInput())) {
 				orderVO.setPkEmpInput(user.getPkEmp());
-				orderVO.setNameEmpInput(user.getNameEmp());
+				orderVO.setNameEmpInput(user.getNameUser());
 			} else {
 				orderVO.setPkEmpInput(lisVO.getPkEmpInput());
 				orderVO.setNameEmpInput(lisVO.getNameEmpInput());
@@ -341,7 +349,14 @@ public class CnOrdServiceImpl implements CnOrdService {
 				orderVO.setPkDept(lisVO.getPkDept());
 			}
 			orderVO.setPriceCg(null == lisVO.getPriceCg() ? 0 : Double.parseDouble(lisVO.getPriceCg()));
-			newLisList.add(lisVO);
+			CnLabApply lis = new CnLabApply();
+			BeanUtils.copyProperties(lisVO,lis);
+			newLisList.add(lis);
+			//少了科室
+			orderVO.setPkDept(dept.getPkDept());
+			orderVO.setNameEmpInput(user.getNameUser());
+			orderVO.setNameEmpOrd(user.getNameUser());
+			orderVO.setPkEmpOrd(user.getPkEmp());
 			newOrdList.add(orderVO);
 			signCnOrder.add(orderVO);
 		}
@@ -386,7 +401,7 @@ public class CnOrdServiceImpl implements CnOrdService {
 		orderVO.setDateEnter(orderVO.getTs());
 		//orderVO.setPkDept(user.);
 	}
-    private void setLisOrdPubField(CnLabApply lisVO, CnOrder orderVO) {
+    private void setLisOrdPubField(CnLabApplyVo lisVO, CnOrder orderVO) {
 		orderVO.setQuan(lisVO.getQuan());
 		orderVO.setDosage(lisVO.getQuan());
 		orderVO.setFlagEmer(lisVO.getFlagEmer());
@@ -394,7 +409,7 @@ public class CnOrdServiceImpl implements CnOrdService {
 		orderVO.setPkDeptExec(lisVO.getPkDeptExec());
 		orderVO.setNoteOrd(lisVO.getNoteOrd());
 	}
-    private void setRisOrdPubField(CnRisApply risVO, CnOrder orderVO) {
+    private void setRisOrdPubField(CnRisApplyVo risVO, CnOrder orderVO) {
 		orderVO.setQuan(risVO.getQuan());
 		orderVO.setDosage(risVO.getQuan());
 		orderVO.setFlagEmer(risVO.getFlagEmer());
@@ -407,16 +422,17 @@ public class CnOrdServiceImpl implements CnOrdService {
      * 保存检查申请
      */
 	@Override
-	public List<CnOrder> saveRisApplyList(BdOuUser user,List<CnRisApplyVo> saveRisList,PvEncounterVO pvEncounterVO) {
+	public List<CnOrder> saveRisApplyList(BdOuUser user,List<CnRisApplyVo> saveRisList,PvEncounterVO pvEncounterVO,BdOuDept dept) {
 		// TODO Auto-generated method stub
 		List<CnOrder> signCnOrder = new ArrayList<CnOrder>();
 		List<CnOrder> newOrdList = new ArrayList<CnOrder>();
 		List<CnRisApply> newRisList = new ArrayList<CnRisApply>();
 		Date d = new Date();
 		for (CnRisApplyVo risVO1 : saveRisList) {
-			CnRisApply risVO = new CnRisApply();
-			BeanUtils.copyProperties(risVO, risVO1);
+			CnRisApplyVo risVO = new CnRisApplyVo();
+			BeanUtils.copyProperties(risVO1,risVO);
 			CnOrder orderVO = new CnOrder();
+			risVO.setPkOrgExec(user.getPkOrg());
 			risVO.setPkOrdris(UUID.randomUUID().toString().replaceAll("-", ""));
 			orderVO.setPkCnord(UUID.randomUUID().toString().replaceAll("-", ""));
 			orderVO.setOrdsn(risVO.getOrdsn());
@@ -447,7 +463,7 @@ public class CnOrdServiceImpl implements CnOrdService {
 			orderVO.setFlagFit(risVO1.getFlagFit());// 适应症标志
 			if (null==risVO.getPkEmpInput() || "".equals(risVO.getPkEmpInput())) {
 				orderVO.setPkEmpInput(user.getPkEmp());
-				orderVO.setNameEmpInput(user.getNameEmp());
+				orderVO.setNameEmpInput(user.getNameUser());
 			} else {
 				orderVO.setPkEmpInput(risVO.getPkEmpInput());
 				orderVO.setNameEmpInput(risVO.getNameEmpInput());
@@ -461,9 +477,16 @@ public class CnOrdServiceImpl implements CnOrdService {
 			//orderVO.setCnSignCa(risVO.getCnSignCa());
 			orderVO.setPriceCg(null==risVO.getPriceCg() ? 0
 					: Double.parseDouble(risVO.getPriceCg()));
-			orderVO.setEuIntern(risVO.getEuIntern());
+			orderVO.setEuIntern(user.getEuCerttype());
 			orderVO.setGroupno(risVO.getGroupno());
-			newRisList.add(risVO);
+			CnRisApply ris = new CnRisApply();
+			BeanUtils.copyProperties(risVO,ris);
+			newRisList.add(ris);
+			//少了科室
+			orderVO.setPkDept(dept.getPkDept());
+			orderVO.setNameEmpInput(user.getNameUser());
+			orderVO.setNameEmpOrd(user.getNameUser());
+			orderVO.setPkEmpOrd(user.getPkEmp());
 			newOrdList.add(orderVO);
 			signCnOrder.add(orderVO);
 		}
@@ -475,4 +498,106 @@ public class CnOrdServiceImpl implements CnOrdService {
 		}
 		return signCnOrder;
 	}
+	@Override
+	public  List<CnOrder> setSaveCnOrder(List<CnOrder> cnOrders, List<Map<String,Object>> bdPdList,PvEncounterVO pvEncounterVO,BdOuUser user){
+		//将药品属性赋值给医嘱属性
+		int i = 0;
+		Integer ordsn = 0;
+		Date d = new Date();
+		for(CnOrder cn :cnOrders){
+			i++;
+			String pkCnord = StringUtil.isNullOrEmpty(cn.getPkCnord())? UUID.randomUUID().toString().replaceAll("-", ""):cn.getPkCnord();
+			cn.setPkCnord(pkCnord);
+			cn.setEuStatusOrd("0");
+			if(i ==1){
+				ordsn = getSerialNo("CN_ORDER", "ORDSN", 1);
+				cn.setOrdsn(ordsn);
+				cn.setOrdsnParent(ordsn);
+			}else{
+				cn.setOrdsn(getSerialNo("CN_ORDER", "ORDSN", 1));
+				cn.setOrdsnParent(ordsn);
+			}
+			cn.setPkPv(pvEncounterVO.getPkPv());
+			cn.setPkPi(pvEncounterVO.getPkPi());
+			cn.setTs(d);
+			cn.setDateEnter(d);
+			cn.setOrdsnChk(cn.getOrdsn());
+			cn.setPkEmpInput(user.getPkEmp());
+			cn.setNameEmpInput(user.getNameUser());
+			cn.setPkDept(pvEncounterVO.getPkDept());
+			cn.setPkDeptNs(pvEncounterVO.getPkDeptNs());
+			cn.setPkEmpOrd(user.getPkEmp());
+			cn.setNameEmpOrd(user.getNameUser());
+			cn.setCreator(user.getPkEmp());
+			cn.setCreateTime(d);
+			cn.setDelFlag("0");
+			cn.setTs(d);
+			for(Map<String,Object> m : bdPdList){
+				if(cn.getPkOrd().equals(m.get("pkPd").toString())){
+					cn.setCodeOrdtype(m.get("codeOrdtype").toString());
+					cn.setCodeOrd(m.get("code").toString());
+					cn.setNameOrd(m.get("srvname").toString());
+					cn.setSpec(m.get("spec").toString());
+					if(m.containsKey("quanMin")){
+						cn.setDosage(Double.valueOf(m.get("quanMin").toString()));
+					}
+
+					cn.setPkUnitDos(m.get("pkUnitMin").toString());
+					//cn.setQuan(Double.valueOf(m.get("PACK_SIZE").toString()));
+					cn.setPkUnit(m.get("pkUnit").toString());
+					if(Double.valueOf(m.get("packSize").toString())!=0 &&
+							"0".equals(cn.getEuAlways())&&
+							!StringUtil.isNullOrEmpty(m.get("pkPd").toString())){
+//						double execTimes = (cn.getFirstNum() == null ||
+//								"0".equals(cn.getFirstNum())) ?
+//								(Integer.getInteger(m.get("cnt").toString()) == 0 ?
+//										1 : Integer.getInteger(m.get("cnt").toString())) : cn.getFirstNum();
+						double execTimes = 0;
+						if("0".equals(m.get("euMuputype").toString())){//按次取整
+							cn.setQuanCg(Math.floor(Double.valueOf(m.get("packSize").toString())/(Double.valueOf(m.get("packSize").toString()) > 1 ? 1 : Double.valueOf(m.get("packSize").toString())))*execTimes);
+						}else{ //按批取整
+							cn.setQuanCg(Math.floor(Double.valueOf(m.get("packSize").toString())/(Double.valueOf(m.get("packSize").toString()) > 1 ? 1 : Double.valueOf(m.get("packSize").toString())))*execTimes);
+						}
+					}
+					cn.setPkUnitCg(m.get("pkUnit").toString());
+					cn.setPackSize(Double.valueOf(m.get("packSize").toString()));
+					cn.setPriceCg(Double.valueOf(m.get("price").toString()));
+					if(cn.getFirstNum() != null &&cn.getFirstNum()>0){
+						cn.setFlagFirst("1");
+					}else{
+						cn.setFlagFirst("0");
+					}
+					if(!StringUtil.isNullOrEmpty(m.get("pkPd").toString())){
+						cn.setFlagDurg("1");
+					}else {
+						cn.setFlagDurg("0");
+					}
+					break;
+				}
+			}
+		}
+		return cnOrders;
+	}
+
+	public  void saveOrdCnOrder(List<CnOrder> cnOrders,String saveType,BdOuUser user){
+		if(cnOrders!=null && cnOrders.size()>0){
+			this.save(cnOrders);
+			this.saveOrdAnti(cnOrders,user.getPkOrg());
+		}
+		String pkCnords="";
+		for(CnOrder s : cnOrders){
+			pkCnords="'"+s.getPkCnord()+"',";
+		}
+		pkCnords=pkCnords.substring(0,pkCnords.lastIndexOf(","));
+		if("1".equals(saveType)){
+			// TODO: 2020/7/22调用签署
+			HashMap<String, Object> map=new HashMap<String, Object>();
+			map.put("pkCnord", pkCnords);
+			map.put("dateStop", new Date());
+			map.put("pkEmpStop", user.getPkEmp());
+			map.put("nameEmpStop", user.getNameUser());
+			Integer res=this.signOrd(map);
+		}
+	}
+
 }
