@@ -40,7 +40,7 @@ public interface CnOrderDao {
      * @param param
      * @return
      */
-    Integer signOrd(Map<String,Object> param);
+    Integer signOrd(String pkCnord);
     /**
      * 查询医嘱是否可以删除
      * @param pkCnord

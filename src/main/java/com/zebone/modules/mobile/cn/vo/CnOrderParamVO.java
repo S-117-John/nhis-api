@@ -31,4 +31,9 @@ public class CnOrderParamVO implements Serializable {
     public List<CnRisApplyVo> risApplyList;
     
     public String codeDept;
+
+    /**
+     * 医生编码
+     */
+    private String doctorCode;
 }

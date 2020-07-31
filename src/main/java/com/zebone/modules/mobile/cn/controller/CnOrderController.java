@@ -39,10 +39,7 @@ import io.swagger.annotations.ApiOperation;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -53,8 +50,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(AppConstant.APPLICATION_MOBILE_ORD)
 public class CnOrderController {
-
-
 
     @Autowired
     private CnOrdService cnOrdService;
@@ -70,9 +65,9 @@ public class CnOrderController {
 
     @Autowired
     private PatientService patientService;
+
     @Autowired
     private BdOuUserService bdOuUserService;
-
 
     @ApiOperation(value = "查询患者医嘱", notes = "传入pkPv")
     @GetMapping("")
@@ -81,7 +76,14 @@ public class CnOrderController {
         if(pvEncounterVO==null){
             return R.fail("未查询到患者信息");
         }
-        List<CnOrderVO> list = cnOrdService.listPatientOrder(pvEncounterVO.getPkPv());
+        List<CnOrderVO> list = new ArrayList<>();
+//        List<CnOrderVO> list = cnOrdService.listPatientOrder(pvEncounterVO.getPkPv());
+        List<CnOrder> cnOrderList = cnOrdService.list(pvEncounterVO.getPkPv());
+        cnOrderList.forEach(cnOrder -> {
+            CnOrderVO cnOrderVO = new CnOrderVO();
+            BeanUtils.copyProperties(cnOrder,cnOrderVO);
+            list.add(cnOrderVO);
+        });
         List<BdOrdType> bdOrdTypeList = bdOrdTypeService.listBdOrdType();
         list.forEach(a->{
             bdOrdTypeList.forEach(b->{
@@ -209,7 +211,7 @@ public class CnOrderController {
 //        map.put("pkEmpStop", user.getPkEmp());
 //        map.put("nameEmpStop", user.getNameUser());
         map.put("dateSign", new Date());
-        Integer res=cnOrdService.signOrd(map);
+        Integer res=cnOrdService.signOrd(pkCnords);
         if(res>0){
         	return R.success("签署成功");
         }
@@ -256,5 +258,20 @@ public class CnOrderController {
 		cnOrdService.saveRisApplyList(user, saveRisList,pvEncounterVO,dept);  
 	}
 
+    @ApiOperation(value = "停止医嘱", notes = "停止医嘱（批量）")
+    @PutMapping("stop")
+	public void stop(String param){
+        List<CnOrder> cnOrderList = GsonUtil.gson.fromJson(param,new TypeToken<List<CnOrder>>(){}.getType());
+        cnOrdService.stop(cnOrderList);
+    }
+
+    @ApiOperation(value = "首页停止医嘱", notes = "首页停止医嘱（批量）")
+    @PutMapping("sign")
+    public void sign(String param){
+        CnOrderParamVO cnOrderParamVO = GsonUtil.gson.fromJson(param,CnOrderParamVO.class);
+        List<CnOrder> cnOrderList = cnOrderParamVO.getCnOrdList();
+        cnOrdService.sign(cnOrderList);
+
+    }
     
 }

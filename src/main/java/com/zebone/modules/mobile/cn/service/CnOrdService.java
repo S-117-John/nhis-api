@@ -20,6 +20,8 @@ public interface CnOrdService {
 
     List<CnOrderVO> listPatientOrder(String pkPv);
 
+    List<CnOrder> list(String pkPv);
+
     void save(List<CnOrder> cnOrders);
 
     /**
@@ -60,7 +62,7 @@ public interface CnOrdService {
      * @param param
      * @return
      */
-    Integer signOrd(Map<String,Object> param);
+    Integer signOrd(String pkCnord);
     
     /**
      * 查询医嘱是否可以删除
@@ -110,7 +112,7 @@ public interface CnOrdService {
     /**
      * 保存检查申请
      * @param user
-     * @param saveLisList
+     * @param
      */
     List<CnOrder> saveRisApplyList(BdOuUser user, List<CnRisApplyVo> saveRisList,PvEncounterVO pvEncounterVO,BdOuDept dept);
 
@@ -132,4 +134,16 @@ public interface CnOrdService {
      * @param user
      */
     void saveOrdCnOrder(List<CnOrder> cnOrders,String saveType,BdOuUser user);
+
+    /**
+     * 停止医嘱
+     * @param cnOrders
+     */
+    void stop(List<CnOrder> cnOrders);
+
+    /**
+     * 签署医嘱
+     * @param cnOrders
+     */
+    void sign(List<CnOrder> cnOrders);
 }

@@ -261,7 +261,7 @@
       FROM bd_pd pd
       left join bd_pd_store pds on pds.pk_pd = pd.PK_PD and pds.flag_stop = '0'
       INNER join bd_ordtype ordtype
-      ON ordtype.pk_ordtype = pd.pk_ordtype AND ordtype.del_flag = '0' and ordtype.EU_CPOETYPE = '0'
+      ON ordtype.pk_ordtype = pd.pk_ordtype AND ordtype.del_flag = '0'
           left join bd_pd_base bas on pd.pk_pd = bas.pk_pd and bas.del_flag = '0'
           left join (select sum (quan_min - quan_prep) quan_min,pk_pd,pk_store from pd_stock where del_flag = '0'  and flag_stop = '0' group by pk_pd,pk_store) stk on pds.pk_pd = stk.pk_pd and pds.pk_store=stk.pk_store
           left join bd_pd_convert con on con.pk_pdconvert = pds.pk_pdconvert and con.del_flag = '0'

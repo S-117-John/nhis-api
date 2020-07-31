@@ -277,7 +277,7 @@
   <select id="checkSignOrd" parameterType="java.lang.String" resultType="java.lang.Integer" >
     	select count(1) cnt from CN_ORDER where EU_STATUS_ORD!='0' and PK_CNORD in ( ${pkCnord,jdbcType=VARCHAR} )
   </select>
-  <update id="signOrd" parameterType="java.util.Map">
+  <update id="signOrd" parameterType="java.lang.String" >
          <!-- update cn_order
 		   set date_stop=#{dateStop,jdbcType=TIMESTAMP},    
 		       pk_emp_stop=#{pkEmpStop,jdbcType=VARCHAR},  
@@ -286,7 +286,7 @@
 		 where pk_cnord in ( ${pkCnord,jdbcType=VARCHAR} ) and 
 		       flag_stop='0' -->
 		  
-		  update cn_order set flag_sign='1',date_sign=#{dateSign,jdbcType=TIMESTAMP},eu_status_ord='1'
+		  update cn_order set flag_sign='1',date_sign=sysdate,eu_status_ord='1'
 		 where pk_cnord in ( ${pkCnord,jdbcType=VARCHAR} ) and 
 		     flag_erase='0' and eu_status_ord='0'
    </update>

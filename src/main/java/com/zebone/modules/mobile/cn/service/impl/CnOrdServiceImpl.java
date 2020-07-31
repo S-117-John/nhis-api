@@ -75,7 +75,28 @@ public class CnOrdServiceImpl implements CnOrdService {
         return cnOrderDao.listPatientOrder(pkPv);
     }
 
-    /**
+	/**
+	 * 获取患者医嘱
+	 * @param pkPv
+	 * @return
+	 */
+	@Override
+	public List<CnOrder> list(String pkPv) {
+
+		Specification specification = new Specification() {
+			@Override
+			public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				predicates.add(criteriaBuilder.equal(root.get("pkPv"),pkPv));
+				predicates.add(criteriaBuilder.equal(root.get("flagErase"),"0"));
+				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<CnOrder> list = cnOrderRepository.findAll(specification);
+		return list;
+	}
+
+	/**
      * 保存医嘱
      * @param cnOrders
      */
@@ -207,9 +228,9 @@ public class CnOrdServiceImpl implements CnOrdService {
 	}
 
 	@Override
-	public Integer signOrd(Map<String, Object> param) {
+	public Integer signOrd(String pkCnord) {
 		// TODO Auto-generated method stub
-		return cnOrderDao.signOrd(param);
+		return cnOrderDao.signOrd(pkCnord);
 	}
 
 	@Override
@@ -533,19 +554,22 @@ public class CnOrdServiceImpl implements CnOrdService {
 			cn.setDelFlag("0");
 			cn.setTs(d);
 			for(Map<String,Object> m : bdPdList){
-				if(cn.getPkOrd().equals(m.get("pkPd").toString())){
+				if(cn.getPkOrd().equals(m.get("pkOrd").toString())){
 					cn.setCodeOrdtype(m.get("codeOrdtype").toString());
 					cn.setCodeOrd(m.get("code").toString());
 					cn.setNameOrd(m.get("srvname").toString());
-					cn.setSpec(m.get("spec").toString());
+					cn.setSpec(m.get("spec")==null?"":m.get("spec").toString());
 					if(m.containsKey("quanMin")){
 						cn.setDosage(Double.valueOf(m.get("quanMin").toString()));
 					}
-
-					cn.setPkUnitDos(m.get("pkUnitMin").toString());
+					if(m.containsKey("pkUnitMin")){
+						cn.setPkUnitDos(m.get("pkUnitMin").toString());
+					}
 					//cn.setQuan(Double.valueOf(m.get("PACK_SIZE").toString()));
-					cn.setPkUnit(m.get("pkUnit").toString());
-					if(Double.valueOf(m.get("packSize").toString())!=0 &&
+					if(m.containsKey("pkUnit")){
+						cn.setPkUnit(m.get("pkUnit").toString());
+					}
+					if(m.get("packSize")!= null&& Double.valueOf(m.get("packSize").toString())!=0 &&
 							"0".equals(cn.getEuAlways())&&
 							!StringUtil.isNullOrEmpty(m.get("pkPd").toString())){
 //						double execTimes = (cn.getFirstNum() == null ||
@@ -559,15 +583,15 @@ public class CnOrdServiceImpl implements CnOrdService {
 							cn.setQuanCg(Math.floor(Double.valueOf(m.get("packSize").toString())/(Double.valueOf(m.get("packSize").toString()) > 1 ? 1 : Double.valueOf(m.get("packSize").toString())))*execTimes);
 						}
 					}
-					cn.setPkUnitCg(m.get("pkUnit").toString());
-					cn.setPackSize(Double.valueOf(m.get("packSize").toString()));
-					cn.setPriceCg(Double.valueOf(m.get("price").toString()));
+					cn.setPkUnitCg(m.get("pkUnit")==null?"":m.get("pkUnit").toString());
+					cn.setPackSize(Double.valueOf(m.get("packSize")==null?"0":m.get("packSize").toString()));
+					cn.setPriceCg(Double.valueOf(m.get("price")==null?"0":m.get("price").toString()));
 					if(cn.getFirstNum() != null &&cn.getFirstNum()>0){
 						cn.setFlagFirst("1");
 					}else{
 						cn.setFlagFirst("0");
 					}
-					if(!StringUtil.isNullOrEmpty(m.get("pkPd").toString())){
+					if(!StringUtil.isNullOrEmpty(m.get("pkOrd").toString())){
 						cn.setFlagDurg("1");
 					}else {
 						cn.setFlagDurg("0");
@@ -590,14 +614,47 @@ public class CnOrdServiceImpl implements CnOrdService {
 		}
 		pkCnords=pkCnords.substring(0,pkCnords.lastIndexOf(","));
 		if("1".equals(saveType)){
-			// TODO: 2020/7/22调用签署
-			HashMap<String, Object> map=new HashMap<String, Object>();
-			map.put("pkCnord", pkCnords);
-			map.put("dateStop", new Date());
-			map.put("pkEmpStop", user.getPkEmp());
-			map.put("nameEmpStop", user.getNameUser());
-			Integer res=this.signOrd(map);
+			Integer res=this.signOrd(pkCnords);
 		}
+	}
+
+	/**
+	 * 停止医嘱
+	 * @param cnOrders
+	 */
+	@Override
+	public void stop(List<CnOrder> cnOrders) {
+		List<String> ids = new ArrayList<>();
+		cnOrders.forEach(cnOrder -> {
+			ids.add(cnOrder.getPkCnord());
+		});
+		List<CnOrder> cnOrderList = cnOrderRepository.findAllById(ids);
+		cnOrderList.forEach(cnOrder -> {
+			cnOrder.setFlagStop("1");
+			cnOrder.setDateStop(new Date());
+		});
+		cnOrderRepository.saveAll(cnOrderList);
+	}
+
+	/**
+	 * 签署医嘱
+	 * @param cnOrders
+	 */
+	@Override
+	public void sign(List<CnOrder> cnOrders) {
+		List<String> ids = new ArrayList<>();
+		cnOrders.forEach(cnOrder -> {
+			ids.add(cnOrder.getPkCnord());
+		});
+		List<CnOrder> cnOrderList = cnOrderRepository.findAllById(ids);
+		cnOrderList.forEach(cnOrder -> {
+			cnOrder.setFlagSign("1");
+			cnOrder.setDateSign(new Date());
+			cnOrder.setEuStatusOrd("1");
+			cnOrder.setFlagErase("0");
+		});
+
+		cnOrderRepository.saveAll(cnOrderList);
 	}
 
 }
