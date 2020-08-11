@@ -3,13 +3,12 @@ package com.zebone.modules.mobile.cn.vo;
 import com.zebone.common.entity.bd.ord.BdOrdLab;
 import com.zebone.common.entity.bd.ord.BdOrdRis;
 import com.zebone.common.entity.bd.ord.BdOrdType;
+import com.zebone.common.entity.bd.ou.BdOuDept;
 import com.zebone.common.entity.cn.CnOrder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -21,6 +20,9 @@ public class CnOrderVO extends CnOrder {
     private BdOrdLab bdOrdLab;
 
     private BdOrdType bdOrdType;
+
+    private List<BdOuDept> deptList;
+
     /**
      * 用法名称
      */

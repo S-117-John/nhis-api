@@ -18,19 +18,22 @@ public class CnOrderParamVO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public List<CnOrder> cnOrdList;
+    private List<CnOrder> cnOrdList;
 
-    public String code;
+    private String code;
 
-    public String codeIp;
+    private String codeIp;
 
-    public String saveType;//0保存1签署
+    private String saveType;//0保存1签署
+
+    private List<CnLabApplyVo> labApplyList;
     
-    public List<CnLabApplyVo> labApplyList;
-    
-    public List<CnRisApplyVo> risApplyList;
-    
-    public String codeDept;
+    private List<CnRisApplyVo> risApplyList;
+
+    /**
+     * 科室编码
+     */
+    private String codeDept;
 
     /**
      * 医生编码

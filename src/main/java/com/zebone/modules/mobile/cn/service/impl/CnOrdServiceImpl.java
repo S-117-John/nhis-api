@@ -2,8 +2,11 @@ package com.zebone.modules.mobile.cn.service.impl;
 
 
 import com.google.common.collect.Lists;
+import com.zebone.common.entity.bd.dept.BdDeptBu;
+import com.zebone.common.entity.bd.dept.BdDeptBus;
 import com.zebone.common.entity.bd.ord.BdOrd;
 import com.zebone.common.entity.bd.ord.BdOrdAlias;
+import com.zebone.common.entity.bd.ord.BdOrdDept;
 import com.zebone.common.entity.bd.ou.BdOuDept;
 import com.zebone.common.entity.bd.ou.BdOuUser;
 import com.zebone.common.entity.bd.pd.BdPd;
@@ -13,7 +16,11 @@ import com.zebone.common.entity.cn.CnLabApply;
 import com.zebone.common.entity.cn.CnOrdAnti;
 import com.zebone.common.entity.cn.CnOrder;
 import com.zebone.common.entity.cn.CnRisApply;
+import com.zebone.modules.mobile.bd.dept.repository.BdDeptBuRepository;
+import com.zebone.modules.mobile.bd.dept.repository.BdDeptBusRepository;
 import com.zebone.modules.mobile.bd.ord.repository.BdOrdAliasRepository;
+import com.zebone.modules.mobile.bd.ord.repository.BdOrdDeptRepository;
+import com.zebone.modules.mobile.bd.ou.repository.BdOuDeptRepository;
 import com.zebone.modules.mobile.bd.pd.repository.BdPdAsRepository;
 import com.zebone.modules.mobile.cn.dao.CnOrderDao;
 import com.zebone.modules.mobile.cn.repository.CnLabApplyRepository;
@@ -30,6 +37,9 @@ import io.netty.util.internal.StringUtil;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +74,18 @@ public class CnOrdServiceImpl implements CnOrdService {
 
     @Autowired
     private BdOrdAliasRepository bdOrdAliasRepository;
+
+    @Autowired
+    private BdOrdDeptRepository bdOrdDeptRepository;
+
+    @Autowired
+    private BdOuDeptRepository bdOuDeptRepository;
+
+    @Autowired
+    private BdDeptBuRepository bdDeptBuRepository;
+
+    @Autowired
+    private BdDeptBusRepository bdDeptBusRepository;
 
     /**
      * 查询已开立医嘱
@@ -160,7 +182,9 @@ public class CnOrdServiceImpl implements CnOrdService {
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
-        List<BdOrdAlias> listOrd = bdOrdAliasRepository.findAll(specificationOrd);
+		Pageable pageable = PageRequest.of(0,50);
+		Page<BdOrdAlias> aliasPage = bdOrdAliasRepository.findAll(specificationOrd,pageable);
+        List<BdOrdAlias> listOrd = aliasPage.toList();
 
         //3、创建视图类
         List<CnOrderVO> cnOrderVOList = Lists.newArrayList();
@@ -185,6 +209,7 @@ public class CnOrdServiceImpl implements CnOrdService {
             cnOrderVO.setSpec(bdOrdAlias.getBdOrd().getSpec());
             cnOrderVO.setPkUnit(bdOrdAlias.getBdOrd().getPkUnit());
             cnOrderVO.setCodeOrdType(bdOrdAlias.getBdOrd().getCodeOrdtype());
+            cnOrderVO.setPkOrd(bdOrdAlias.getBdOrd().getPkOrd());
             cnOrderVOList.add(cnOrderVO);
         });
 
@@ -194,6 +219,17 @@ public class CnOrdServiceImpl implements CnOrdService {
                 collectingAndThen(
                         toCollection(() -> new TreeSet<>(comparing(n->((CnOrderVO) n).getKey()))),ArrayList::new)
         );
+
+        //7、查询执行科室
+		result.forEach(cnOrderVO -> {
+			List<BdOrdDept> bdOrdDepts = bdOrdDeptRepository.findByPkOrd(cnOrderVO.getPkOrd());
+			List<String> pkDepts = Lists.newArrayList();
+			bdOrdDepts.forEach(bdOrdDept -> {
+				pkDepts.add(bdOrdDept.getPkDept());
+			});
+			List<BdOuDept> bdOuDeptList = bdOuDeptRepository.findAllById(pkDepts);
+			cnOrderVO.setDeptList(bdOuDeptList);
+		});
 
         return result;
     }
@@ -271,19 +307,6 @@ public class CnOrdServiceImpl implements CnOrdService {
         return ret;
     }
 
-   /* *//**
-     * 保存检验
-     * @param cnRisApply
-     *//*
-    @Override
-    public void saveCnRisApply(List<CnRisApply> cnRisApply){
-        cnRisApplyRepository.saveAll(cnRisApply);
-    }
-
-    @Override
-    public  void saveCnLabApply(List<CnLabApply> cnLabApply){
-        cnLabApplyRepository.saveAll(cnLabApply);
-    }*/
 
     @Override
     public  List<CnOrdAnti> saveOrdAnti(List<CnOrder> ordList,String pkOrg){
@@ -643,8 +666,10 @@ public class CnOrdServiceImpl implements CnOrdService {
 	@Override
 	public void sign(List<CnOrder> cnOrders) {
 		List<String> ids = new ArrayList<>();
+		final String[] pkDeptExe = {""};
 		cnOrders.forEach(cnOrder -> {
 			ids.add(cnOrder.getPkCnord());
+			pkDeptExe[0] = cnOrder.getPkDeptExec();
 		});
 		List<CnOrder> cnOrderList = cnOrderRepository.findAllById(ids);
 		cnOrderList.forEach(cnOrder -> {
@@ -652,9 +677,51 @@ public class CnOrdServiceImpl implements CnOrdService {
 			cnOrder.setDateSign(new Date());
 			cnOrder.setEuStatusOrd("1");
 			cnOrder.setFlagErase("0");
+			cnOrder.setFlagDoctor("1");//医生是1，护士是0
+			if("1".equals(cnOrder.getFlagDurg())){
+				cnOrder.setPkDeptExec(pkDeptExe[0]);
+			}
 		});
 
 		cnOrderRepository.saveAll(cnOrderList);
 	}
 
+	/**
+	 * 查询药品执行科室
+	 * @param deptCode 当前登陆科室编码
+	 * @return
+	 */
+	@Override
+	public String pkDeptExe(String deptCode) {
+		String pkDeptExe = "";
+		Specification specification = new Specification() {
+			@Override
+			public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
+				List<Predicate> predicates = new ArrayList<>();
+				predicates.add(criteriaBuilder.equal(root.get("delFlag"),"0"));
+				predicates.add(criteriaBuilder.equal(root.get("dtButype"),"02"));
+				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<BdDeptBu> deptBuList = bdDeptBuRepository.findAll(specification);
+		if(deptBuList.size()>0){
+			String pkDeptBu = deptBuList.get(0).getPkDeptbu();
+			Specification specification1 = new Specification() {
+				@Override
+				public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
+					List<Predicate> predicates = new ArrayList<>();
+					predicates.add(criteriaBuilder.equal(root.get("delFlag"),"0"));
+					predicates.add(criteriaBuilder.equal(root.get("pkDeptbu"),pkDeptBu));
+					predicates.add(criteriaBuilder.equal(root.get("dtDepttype"),"0402"));
+					predicates.add(criteriaBuilder.equal(root.get("flagDef"),"1"));
+					return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+				}
+			};
+			List<BdDeptBus> deptBusList = bdDeptBusRepository.findAll(specification1);
+			if(deptBuList.size()>0){
+				pkDeptExe = deptBusList.get(0).getPkDept();
+			}
+		}
+		return pkDeptExe;
+	}
 }

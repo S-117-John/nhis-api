@@ -91,6 +91,7 @@ public class CnOrderController {
 	                if(a.getCodeOrdtype().equals(b.getCode())){
 	                    a.setBdOrdType(b);
 	                    a.setBdOrdTypeName(b.getName());
+	                    a.setIsnow("1");
 	                }
             	}
             });
@@ -191,32 +192,7 @@ public class CnOrderController {
         List<CnOrderVO> list =cnOrdService.queryOrdStopListByPk(pkCnords);
         return R.data(list);
     }
-    @ApiOperation(value = "签署医嘱", notes = "传入医嘱主键")
-    @GetMapping("signOrder")
-    public R<List<CnOrderVO>> signOrder(String pkCnords,String doctorCode){
-        if(pkCnords==null){
-            return R.fail("请选择医嘱！");
-        }
-        if(null==doctorCode || doctorCode.equals("")){
-        	 return R.fail("当前操作医生为空！");
-        }
-        Integer cnt=cnOrdService.checkSignOrd(pkCnords);
-        if(cnt>0){
-        	return R.fail("所选医嘱不能签署，请检查！");
-        }
-        BdOuUser user=bdOuUserService.getUser(doctorCode);
-        HashMap<String, Object> map=new HashMap<String, Object>();
-        map.put("pkCnord", pkCnords);
-//        map.put("dateStop", new Date());
-//        map.put("pkEmpStop", user.getPkEmp());
-//        map.put("nameEmpStop", user.getNameUser());
-        map.put("dateSign", new Date());
-        Integer res=cnOrdService.signOrd(pkCnords);
-        if(res>0){
-        	return R.success("签署成功");
-        }
-        return R.fail("签署失败！");
-    }
+
     @ApiOperation(value = "删除医嘱", notes = "传入医嘱主键")
     @GetMapping("delOrder")
     public R<List<CnOrderVO>> delOrder(String pkCnords){
@@ -233,6 +209,7 @@ public class CnOrderController {
         }
 		return null;
     }
+
     @ApiOperation(value = "保存检验申请", notes = "保存检验申请")
     @PostMapping("saveLisApplyList")
     public void saveLisApplyList(String param ) throws IllegalAccessException, InvocationTargetException{
@@ -245,7 +222,8 @@ public class CnOrderController {
 		PvEncounterVO pvEncounterVO = patientService.getPatientInfo(cnOrderParamVO.getCodeIp());
 	    cnOrdService.saveLisApplyList(user, saveLisList,pvEncounterVO,dept);
 	}
-    @ApiOperation(value = "保存检查申请", notes = "保存检查申请")
+
+	@ApiOperation(value = "保存检查申请", notes = "保存检查申请")
     @PostMapping("saveRisApplyList")
     public void saveRisApplyList(String param) throws IllegalAccessException, InvocationTargetException{
     	Gson gson = new Gson();
@@ -265,11 +243,16 @@ public class CnOrderController {
         cnOrdService.stop(cnOrderList);
     }
 
-    @ApiOperation(value = "首页停止医嘱", notes = "首页停止医嘱（批量）")
+    @ApiOperation(value = "签署医嘱", notes = "签署医嘱")
     @PutMapping("sign")
     public void sign(String param){
         CnOrderParamVO cnOrderParamVO = GsonUtil.gson.fromJson(param,CnOrderParamVO.class);
         List<CnOrder> cnOrderList = cnOrderParamVO.getCnOrdList();
+        //查询科室业务线
+        String pkDeptExe = cnOrdService.pkDeptExe(cnOrderParamVO.getCodeDept());
+        cnOrderList.forEach(cnOrder -> {
+            cnOrder.setPkDeptExec(pkDeptExe);
+        });
         cnOrdService.sign(cnOrderList);
 
     }

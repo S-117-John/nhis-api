@@ -146,4 +146,11 @@ public interface CnOrdService {
      * @param cnOrders
      */
     void sign(List<CnOrder> cnOrders);
+
+    /**
+     * 查询对应执行科室
+     * @param deptCode
+     * @return
+     */
+    String pkDeptExe(String deptCode);
 }
