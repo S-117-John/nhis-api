@@ -724,4 +724,43 @@ public class CnOrdServiceImpl implements CnOrdService {
 		}
 		return pkDeptExe;
 	}
+
+	@Override
+	public List<BdOuDept> getExeDeptList(String deptCode) {
+		String pkDeptExe = "";
+		List<BdOuDept> deptList = Lists.newArrayList();
+		Specification specification = new Specification() {
+			@Override
+			public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
+				List<Predicate> predicates = new ArrayList<>();
+				predicates.add(criteriaBuilder.equal(root.get("delFlag"),"0"));
+				predicates.add(criteriaBuilder.equal(root.get("dtButype"),"02"));
+				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+		List<BdDeptBu> deptBuList = bdDeptBuRepository.findAll(specification);
+		if(deptBuList.size()>0){
+			String pkDeptBu = deptBuList.get(0).getPkDeptbu();
+			Specification specification1 = new Specification() {
+				@Override
+				public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
+					List<Predicate> predicates = new ArrayList<>();
+					predicates.add(criteriaBuilder.equal(root.get("delFlag"),"0"));
+					predicates.add(criteriaBuilder.equal(root.get("pkDeptbu"),pkDeptBu));
+					predicates.add(criteriaBuilder.equal(root.get("flagDef"),"1"));
+					return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+				}
+			};
+			List<BdDeptBus> deptBusList = bdDeptBusRepository.findAll(specification1);
+			if(deptBuList.size()>0){
+				List<String> pkDeptList = Lists.newArrayList();
+				deptBusList.forEach(bdDeptBus -> {
+					pkDeptList.add(bdDeptBus.getPkDept());
+				});
+				deptList = bdOuDeptRepository.findAllById(pkDeptList);
+			}
+		}
+
+		return deptList;
+	}
 }

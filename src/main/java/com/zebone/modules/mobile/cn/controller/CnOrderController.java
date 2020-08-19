@@ -256,5 +256,11 @@ public class CnOrderController {
         cnOrdService.sign(cnOrderList);
 
     }
+
+    @ApiOperation(value = "获取执行科室", notes = "当前科室业务线对应执行科室")
+    @GetMapping("exeDept")
+    public List<BdOuDept> getExeDept(String deptCode){
+        return cnOrdService.getExeDeptList(deptCode);
+    }
     
 }

@@ -2,6 +2,10 @@ package com.zebone.modules.mobile.cn.service;
 
 
 
+import com.alicp.jetcache.anno.CachePenetrationProtect;
+import com.alicp.jetcache.anno.CacheRefresh;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.zebone.common.entity.cn.CnLabApply;
 import com.zebone.common.entity.cn.CnOrdAnti;
 import com.zebone.common.entity.cn.CnOrder;
@@ -15,6 +19,7 @@ import com.zebone.common.entity.bd.ou.BdOuUser;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public interface CnOrdService {
 
@@ -153,4 +158,14 @@ public interface CnOrdService {
      * @return
      */
     String pkDeptExe(String deptCode);
+
+    /**
+     * 查询对应执行科室
+     * @param deptCode
+     * @return
+     */
+    @Cached(expire = 3600, cacheType = CacheType.REMOTE)
+    @CacheRefresh(refresh = 1800, stopRefreshAfterLastAccess = 3600, timeUnit = TimeUnit.SECONDS)
+    @CachePenetrationProtect
+    List<BdOuDept> getExeDeptList(String deptCode);
 }
