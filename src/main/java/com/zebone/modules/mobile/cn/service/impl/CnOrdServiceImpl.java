@@ -583,7 +583,8 @@ public class CnOrdServiceImpl implements CnOrdService {
 					cn.setNameOrd(m.get("srvname").toString());
 					cn.setSpec(m.get("spec")==null?"":m.get("spec").toString());
 					if(m.containsKey("quanMin")){
-						cn.setDosage(Double.valueOf(m.get("quanMin").toString()));
+						//用量出现了数值错误，此处先保留
+//						cn.setDosage(Double.valueOf(m.get("quanMin").toString()));
 					}
 					if(m.containsKey("pkUnitMin")){
 						cn.setPkUnitDos(m.get("pkUnitMin").toString());
@@ -626,7 +627,8 @@ public class CnOrdServiceImpl implements CnOrdService {
 		return cnOrders;
 	}
 
-	public  void saveOrdCnOrder(List<CnOrder> cnOrders,String saveType,BdOuUser user){
+	@Override
+	public  void saveOrdCnOrder(List<CnOrder> cnOrders, String saveType, BdOuUser user){
 		if(cnOrders!=null && cnOrders.size()>0){
 			this.save(cnOrders);
 			this.saveOrdAnti(cnOrders,user.getPkOrg());
