@@ -82,6 +82,7 @@ public class CnOrderController {
         cnOrderList.forEach(cnOrder -> {
             CnOrderVO cnOrderVO = new CnOrderVO();
             BeanUtils.copyProperties(cnOrder,cnOrderVO);
+            cnOrderVO.setIsnow("1");
             list.add(cnOrderVO);
         });
         List<BdOrdType> bdOrdTypeList = bdOrdTypeService.listBdOrdType();
