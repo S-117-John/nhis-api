@@ -127,6 +127,7 @@ public class CnOrdServiceImpl implements CnOrdService {
         cnOrders.forEach(cnOrder -> {
             cnOrder.setCreateTime(new Date());
             cnOrder.setFlagErase("0");
+			cnOrder.setFlagNote("0");
         });
         cnOrderRepository.saveAll(cnOrders);
     }
