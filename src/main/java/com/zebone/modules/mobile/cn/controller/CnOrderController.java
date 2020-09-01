@@ -115,6 +115,8 @@ public class CnOrderController {
         String code = cnOrderParamVO.getCode();
         String codeIp = cnOrderParamVO.getCodeIp();
         String saveType = cnOrderParamVO.getSaveType();
+        //科室编码
+        String codeDept = cnOrderParamVO.getCodeDept();
         List<CnOrder> cnOrders = cnOrderParamVO.getCnOrdList();
         //查询药品
         List<String> bdPds = new ArrayList<>();
@@ -126,6 +128,10 @@ public class CnOrderController {
         //查询患者信息
         PvEncounterVO pvEncounterVO = patientService.getPatientInfo(codeIp);
         cnOrders = cnOrdService.setSaveCnOrder(cnOrders,bdPdList,pvEncounterVO,user);
+        String pkDeptExe = cnOrdService.pkDeptExe(codeDept);
+        cnOrders.forEach(cnOrder -> {
+            cnOrder.setPkDeptExec(pkDeptExe);
+        });
         cnOrdService.saveOrdCnOrder(cnOrders,saveType,user);
     }
 
@@ -230,7 +236,9 @@ public class CnOrderController {
     	Gson gson = new Gson();
         CnOrderParamVO cnOrderParamVO = GsonUtil.gson.fromJson(param,new TypeToken<CnOrderParamVO>(){}.getType());
 		List<CnRisApplyVo> saveRisList =cnOrderParamVO.getRisApplyList();
-		if(saveRisList.size()<=0) return;
+		if(saveRisList.size()<=0) {
+            return;
+        }
 		BdOuUser user=bdOuUserService.getUser(cnOrderParamVO.getCode());
 		BdOuDept dept=bdOuUserService.getDept(cnOrderParamVO.getCodeDept());
 		PvEncounterVO pvEncounterVO = patientService.getPatientInfo(cnOrderParamVO.getCodeIp());
