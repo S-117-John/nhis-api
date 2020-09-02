@@ -8,6 +8,8 @@ import com.zebone.common.entity.bd.ord.BdOrdSetDt;
 import com.zebone.common.entity.bd.ord.BdOrdType;
 import com.zebone.common.entity.bd.ou.BdOuDept;
 import com.zebone.common.entity.bd.ou.BdOuUser;
+import com.zebone.common.entity.bd.supply.BdSupply;
+import com.zebone.common.entity.bd.term.BdTermFreq;
 import com.zebone.common.entity.bd.unit.BdUnit;
 import com.zebone.common.entity.cn.CnLabApply;
 import com.zebone.common.entity.cn.CnOrder;
@@ -23,6 +25,8 @@ import com.zebone.modules.mobile.bd.ord.vo.BdOrdTypeVO;
 import com.zebone.modules.mobile.bd.ou.service.BdOuUserService;
 import com.zebone.modules.mobile.bd.pd.service.BdPdService;
 import com.zebone.modules.mobile.bd.pd.vo.BdPdVO;
+import com.zebone.modules.mobile.bd.supply.service.BdSupplyService;
+import com.zebone.modules.mobile.bd.term.service.BdTermFreqService;
 import com.zebone.modules.mobile.cn.service.CnOrdService;
 import com.zebone.modules.mobile.cn.support.SortByOrdUtil;
 import com.zebone.modules.mobile.cn.vo.CnLabApplyVo;
@@ -69,6 +73,13 @@ public class CnOrderController {
     @Autowired
     private BdOuUserService bdOuUserService;
 
+    @Autowired
+    private BdSupplyService bdSupplyService;
+
+    @Autowired
+    private BdTermFreqService bdTermFreqService;
+
+
     @ApiOperation(value = "查询患者医嘱", notes = "传入pkPv")
     @GetMapping("")
     public R<List<CnOrderVO>> list(String pkPv){
@@ -83,8 +94,15 @@ public class CnOrderController {
             CnOrderVO cnOrderVO = new CnOrderVO();
             BeanUtils.copyProperties(cnOrder,cnOrderVO);
             cnOrderVO.setIsnow("1");
+            //医嘱用法
+            BdSupply bdSupply = bdSupplyService.getSupplyByCode(cnOrder.getCodeSupply());
+            cnOrderVO.setNameSupply(bdSupply.getName());
             list.add(cnOrderVO);
+            //频次
+            BdTermFreq bdTermFreq = bdTermFreqService.findByCode(cnOrder.getCodeFreq());
+            cnOrderVO.setNameFreq(bdTermFreq.getName());
         });
+        //医嘱类型
         List<BdOrdType> bdOrdTypeList = bdOrdTypeService.listBdOrdType();
         list.forEach(a->{
             bdOrdTypeList.forEach(b->{
@@ -99,6 +117,9 @@ public class CnOrderController {
             a.setKey(a.getPkCnord());
 
         });
+
+
+
         if(list != null && list.size()>0){
            new SortByOrdUtil().ordGroup(list);
         }

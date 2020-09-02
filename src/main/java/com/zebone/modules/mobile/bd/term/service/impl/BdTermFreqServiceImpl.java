@@ -19,4 +19,9 @@ public class BdTermFreqServiceImpl implements BdTermFreqService {
     public List<BdTermFreq> list() {
         return bdTermFreqRepository.findAll();
     }
+
+    @Override
+    public BdTermFreq findByCode(String code) {
+        return bdTermFreqRepository.findByCode(code);
+    }
 }

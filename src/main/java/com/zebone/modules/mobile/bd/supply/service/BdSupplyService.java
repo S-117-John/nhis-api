@@ -15,4 +15,6 @@ public interface BdSupplyService {
     @CacheRefresh(refresh = 1800, stopRefreshAfterLastAccess = 3600, timeUnit = TimeUnit.SECONDS)
     @CachePenetrationProtect
     List<BdSupply> listSupply();
+
+    BdSupply getSupplyByCode(String code);
 }

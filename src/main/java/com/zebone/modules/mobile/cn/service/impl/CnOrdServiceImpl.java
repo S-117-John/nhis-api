@@ -12,6 +12,7 @@ import com.zebone.common.entity.bd.ou.BdOuUser;
 import com.zebone.common.entity.bd.pd.BdPd;
 import com.zebone.common.entity.bd.pd.BdPdAs;
 import com.zebone.common.entity.bd.serialno.BdSerialno;
+import com.zebone.common.entity.bd.supply.BdSupply;
 import com.zebone.common.entity.cn.CnLabApply;
 import com.zebone.common.entity.cn.CnOrdAnti;
 import com.zebone.common.entity.cn.CnOrder;
@@ -22,6 +23,7 @@ import com.zebone.modules.mobile.bd.ord.repository.BdOrdAliasRepository;
 import com.zebone.modules.mobile.bd.ord.repository.BdOrdDeptRepository;
 import com.zebone.modules.mobile.bd.ou.repository.BdOuDeptRepository;
 import com.zebone.modules.mobile.bd.pd.repository.BdPdAsRepository;
+import com.zebone.modules.mobile.bd.supply.repositoory.BdSupplyRepository;
 import com.zebone.modules.mobile.cn.dao.CnOrderDao;
 import com.zebone.modules.mobile.cn.repository.CnLabApplyRepository;
 import com.zebone.modules.mobile.cn.repository.CnOrdAntiRepository;
@@ -87,6 +89,8 @@ public class CnOrdServiceImpl implements CnOrdService {
     @Autowired
     private BdDeptBusRepository bdDeptBusRepository;
 
+    @Autowired
+    private BdSupplyRepository bdSupplyRepository;
     /**
      * 查询已开立医嘱
      * @param pkPv

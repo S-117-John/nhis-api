@@ -15,4 +15,6 @@ public interface BdTermFreqService {
     @CacheRefresh(refresh = 1800, stopRefreshAfterLastAccess = 3600, timeUnit = TimeUnit.SECONDS)
     @CachePenetrationProtect
     List<BdTermFreq> list();
+
+    BdTermFreq findByCode(String code);
 }
