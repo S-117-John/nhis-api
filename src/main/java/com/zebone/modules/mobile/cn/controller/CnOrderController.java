@@ -96,11 +96,17 @@ public class CnOrderController {
             cnOrderVO.setIsnow("1");
             //医嘱用法
             BdSupply bdSupply = bdSupplyService.getSupplyByCode(cnOrder.getCodeSupply());
-            cnOrderVO.setNameSupply(bdSupply.getName());
+            if(bdSupply!=null){
+                cnOrderVO.setNameSupply(bdSupply.getName());
+            }
+
             list.add(cnOrderVO);
             //频次
             BdTermFreq bdTermFreq = bdTermFreqService.findByCode(cnOrder.getCodeFreq());
-            cnOrderVO.setNameFreq(bdTermFreq.getName());
+            if(bdTermFreq!=null){
+                cnOrderVO.setNameFreq(bdTermFreq.getName());
+            }
+
         });
         //医嘱类型
         List<BdOrdType> bdOrdTypeList = bdOrdTypeService.listBdOrdType();
