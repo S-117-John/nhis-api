@@ -40,4 +40,5 @@ public interface AppConstant {
     String APPLICATION_MOBILE_DRUG = "nhis/mobile/drug";
     String APPLICATION_MOBILE_BD_TERM = "nhis/mobile/bd/term";
     String APPLICATION_MOBILE_BD_SUPPLY = "nhis/mobile/bd/supply";
+    String APPLICATION_MOBILE_BD_OU_DEPT = "nhis/mobile/bd/ou/dept";
 }
