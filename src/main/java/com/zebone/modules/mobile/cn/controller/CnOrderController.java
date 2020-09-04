@@ -45,6 +45,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.*;
@@ -55,8 +56,11 @@ import java.util.stream.Collectors;
 @RequestMapping(AppConstant.APPLICATION_MOBILE_ORD)
 public class CnOrderController {
 
-    @Autowired
+    @Resource(name = "cnOrdService")
     private CnOrdService cnOrdService;
+
+    @Resource(name = "cnOrdTreatmentService")
+    private CnOrdService cnOrdTreatmentService;
 
     @Autowired
     private BdOrdTypeService bdOrdTypeService;
@@ -158,6 +162,8 @@ public class CnOrderController {
         String pkDeptExe = cnOrdService.pkDeptExe(codeDept);
         cnOrders.forEach(cnOrder -> {
             cnOrder.setPkDeptExec(pkDeptExe);
+            //就诊类型住院/
+            cnOrder.setEuPvtype("3");
         });
         cnOrdService.saveOrdCnOrder(cnOrders,saveType,user);
     }
@@ -297,6 +303,39 @@ public class CnOrderController {
     @GetMapping("exeDept")
     public List<BdOuDept> getExeDept(String deptCode){
         return cnOrdService.getExeDeptList(deptCode);
+    }
+
+
+    @ApiOperation(value = "保存治疗医嘱", notes = "保存治疗医嘱")
+    @PostMapping("saveTreatment")
+    public void saveTreatment(String ordList){
+        CnOrderParamVO cnOrderParamVO = GsonUtil.gson.fromJson(ordList,new TypeToken<CnOrderParamVO>(){}.getType());
+        if(cnOrderParamVO == null ){
+            return;
+        }
+        String code = cnOrderParamVO.getCode();
+        String codeIp = cnOrderParamVO.getCodeIp();
+        String saveType = cnOrderParamVO.getSaveType();
+        //科室编码
+        String codeDept = cnOrderParamVO.getCodeDept();
+        List<CnOrder> cnOrders = cnOrderParamVO.getCnOrdList();
+        //查询药品
+        List<String> bdPds = new ArrayList<>();
+        cnOrders.forEach(a->{bdPds.add(a.getPkOrd());});
+        //查询药品信息
+        List<Map<String,Object>> bdPdList = bdPdService.getBdPdAndBdOrdByPkPd(bdPds);
+        //查询医生信息
+        BdOuUser user = bdOuUserService.getUser(code);
+        //查询患者信息
+        PvEncounterVO pvEncounterVO = patientService.getPatientInfo(codeIp);
+        cnOrders = cnOrdService.setSaveCnOrder(cnOrders,bdPdList,pvEncounterVO,user);
+        String pkDeptExe = cnOrdService.pkDeptExe(codeDept);
+        cnOrders.forEach(cnOrder -> {
+            cnOrder.setPkDeptExec(pkDeptExe);
+            //就诊类型住院/
+            cnOrder.setEuPvtype("3");
+        });
+        cnOrdTreatmentService.saveOrdCnOrder(cnOrders,saveType,user);
     }
     
 }

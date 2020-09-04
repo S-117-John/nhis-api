@@ -53,7 +53,7 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 
-@Service
+@Service("cnOrdService")
 public class CnOrdServiceImpl implements CnOrdService {
 
     @Autowired
@@ -576,8 +576,8 @@ public class CnOrdServiceImpl implements CnOrdService {
 			cn.setNameEmpInput(user.getNameUser());
 			cn.setPkDept(pvEncounterVO.getPkDept());
 			cn.setPkDeptNs(pvEncounterVO.getPkDeptNs());
-			cn.setPkEmpOrd(user.getPkEmp());
-			cn.setNameEmpOrd(user.getNameUser());
+//			cn.setPkEmpOrd(user.getPkEmp());
+//			cn.setNameEmpOrd(user.getNameUser());
 			cn.setCreator(user.getPkEmp());
 			cn.setCreateTime(d);
 			cn.setDelFlag("0");
