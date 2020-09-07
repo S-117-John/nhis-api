@@ -291,12 +291,12 @@ public class CnOrderController {
         CnOrderParamVO cnOrderParamVO = GsonUtil.gson.fromJson(param,CnOrderParamVO.class);
         List<CnOrder> cnOrderList = cnOrderParamVO.getCnOrdList();
         //查询科室业务线
-        String pkDeptExe = cnOrdService.pkDeptExe(cnOrderParamVO.getCodeDept());
-        cnOrderList.forEach(cnOrder -> {
-            cnOrder.setPkDeptExec(pkDeptExe);
-        });
+//        String pkDeptExe = cnOrdService.pkDeptExe(cnOrderParamVO.getCodeDept());
+//        cnOrderList.forEach(cnOrder -> {
+//            cnOrder.setPkDeptExec(pkDeptExe);
+//        });
         cnOrdService.sign(cnOrderList);
-
+        cnOrdTreatmentService.sign(cnOrderList);
     }
 
     @ApiOperation(value = "获取执行科室", notes = "当前科室业务线对应执行科室")

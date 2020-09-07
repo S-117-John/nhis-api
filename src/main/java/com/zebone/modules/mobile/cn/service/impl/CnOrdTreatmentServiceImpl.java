@@ -139,6 +139,26 @@ public class CnOrdTreatmentServiceImpl implements CnOrdService {
 
     @Override
     public void sign(List<CnOrder> cnOrders) {
+        if(cnOrders!=null && cnOrders.size()>0){
+            cnOrders.forEach(cnOrder -> {
+                if("05".equals(cnOrder.getCodeOrdtype())){
+                    cnOrder.setFlagSign("1");
+                    cnOrder.setDateSign(new Date());
+                    cnOrder.setEuStatusOrd("1");
+                    cnOrder.setFlagErase("0");
+                    cnOrder.setFlagDoctor("1");//医生是1，护士是0
+                    cnOrder.setCreateTime(new Date());
+                    cnOrder.setFlagNote("0");//是否嘱托
+                    cnOrder.setFlagBl("1");//是否计费
+                    //非药品
+                    cnOrder.setFlagDurg("0");
+                    //特殊频次设置长期临时医嘱,ST\ONCE时为临时医嘱
+                    if("1049".equals(cnOrder.getCodeFreq())||"1012".equals(cnOrder.getCodeFreq())){
+                        cnOrder.setEuAlways("1");
+                    }
+                }
+            });
+        }
 
     }
 
