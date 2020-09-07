@@ -124,7 +124,7 @@ public class CnOrdTreatmentServiceImpl implements CnOrdService {
                 //非药品
                 cnOrder.setFlagDurg("0");
                 //特殊频次设置长期临时医嘱,ST\ONCE时为临时医嘱
-                if("1049".equals(cnOrder.getCodeFreq())||"1012".equals(cnOrder.getCodeFreq())){
+                if("146".equals(cnOrder.getCodeFreq())||"191".equals(cnOrder.getCodeFreq())){
                     cnOrder.setEuAlways("1");
                 }
             });
