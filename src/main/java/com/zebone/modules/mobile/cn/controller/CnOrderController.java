@@ -62,6 +62,9 @@ public class CnOrderController {
     @Resource(name = "cnOrdTreatmentService")
     private CnOrdService cnOrdTreatmentService;
 
+    @Resource(name = "cnOrdDrugServiceImpl")
+    private CnOrdService cnOrdDrugServiceImpl;
+
     @Autowired
     private BdOrdTypeService bdOrdTypeService;
 
@@ -329,13 +332,45 @@ public class CnOrderController {
         //查询患者信息
         PvEncounterVO pvEncounterVO = patientService.getPatientInfo(codeIp);
         cnOrders = cnOrdService.setSaveCnOrder(cnOrders,bdPdList,pvEncounterVO,user);
-        String pkDeptExe = cnOrdService.pkDeptExe(codeDept);
         cnOrders.forEach(cnOrder -> {
-            cnOrder.setPkDeptExec(pkDeptExe);
             //就诊类型住院/
             cnOrder.setEuPvtype("3");
         });
         cnOrdTreatmentService.saveOrdCnOrder(cnOrders,saveType,user);
+    }
+
+
+    @ApiOperation(value = "保存药品医嘱", notes = "保存药品医嘱")
+    @PostMapping("saveDrug")
+    public void saveDrug(String ordList){
+        CnOrderParamVO cnOrderParamVO = GsonUtil.gson.fromJson(ordList,new TypeToken<CnOrderParamVO>(){}.getType());
+        if(cnOrderParamVO == null ){
+            return;
+        }
+        //医生编码
+        String userCode = cnOrderParamVO.getCode();
+        //住院号
+        String codeIp = cnOrderParamVO.getCodeIp();
+        //科室编码
+        String codeDept = cnOrderParamVO.getCodeDept();
+        List<CnOrder> cnOrders = cnOrderParamVO.getCnOrdList();
+
+        //查询医生信息
+        BdOuUser user = bdOuUserService.getUser(userCode);
+        //查询患者信息
+        PvEncounterVO pvEncounterVO = patientService.getPatientInfo(codeIp);
+        String pkDeptExe = cnOrdService.pkDeptExe(codeDept);
+        cnOrders.forEach(cnOrder -> {
+            cnOrder.setPkDeptExec(pkDeptExe);
+            cnOrder.setPkPv(pvEncounterVO.getPkPv());
+            cnOrder.setPkPi(pvEncounterVO.getPkPi());
+            cnOrder.setPkEmpInput(user.getPkEmp());
+            cnOrder.setNameEmpInput(user.getNameUser());
+            cnOrder.setPkDept(pvEncounterVO.getPkDept());
+            cnOrder.setPkDeptNs(pvEncounterVO.getPkDeptNs());
+            cnOrder.setCreator(user.getPkEmp());
+        });
+        cnOrdDrugServiceImpl.save(cnOrders);
     }
     
 }

@@ -21,6 +21,7 @@ import com.zebone.modules.mobile.bd.dept.repository.BdDeptBuRepository;
 import com.zebone.modules.mobile.bd.dept.repository.BdDeptBusRepository;
 import com.zebone.modules.mobile.bd.ord.repository.BdOrdAliasRepository;
 import com.zebone.modules.mobile.bd.ord.repository.BdOrdDeptRepository;
+import com.zebone.modules.mobile.bd.ord.repository.BdOrdTypeRepository;
 import com.zebone.modules.mobile.bd.ou.repository.BdOuDeptRepository;
 import com.zebone.modules.mobile.bd.pd.repository.BdPdAsRepository;
 import com.zebone.modules.mobile.bd.supply.repositoory.BdSupplyRepository;
@@ -91,6 +92,9 @@ public class CnOrdServiceImpl implements CnOrdService {
 
     @Autowired
     private BdSupplyRepository bdSupplyRepository;
+
+    @Autowired
+    private BdOrdTypeRepository bdOrdTypeRepository;
     /**
      * 查询已开立医嘱
      * @param pkPv
@@ -197,7 +201,7 @@ public class CnOrdServiceImpl implements CnOrdService {
         //4、克隆药品属性
         listPd.forEach(bdPdAs -> {
             CnOrderVO cnOrderVO = new CnOrderVO();
-            cnOrderVO.setNameOrd(bdPdAs.getAlias());
+            cnOrderVO.setNameOrd(bdPdAs.getBdPd().getName());
             cnOrderVO.setKey(bdPdAs.getBdPd().getPkPd());
             cnOrderVO.setFlagDurg("1");
             //规格
@@ -205,6 +209,7 @@ public class CnOrdServiceImpl implements CnOrdService {
             cnOrderVO.setPkUnit(bdPdAs.getBdPd().getPkUnitPack());
             //价格
             cnOrderVO.setPrice(bdPdAs.getBdPd().getPrice().stripTrailingZeros().toString());
+            cnOrderVO.setCodeOrdType(bdOrdTypeRepository.findById(bdPdAs.getBdPd().getPkOrdtype()).get().getCode());
             cnOrderVOList.add(cnOrderVO);
         });
         //5、克隆非药品属性
@@ -674,10 +679,9 @@ public class CnOrdServiceImpl implements CnOrdService {
 	@Override
 	public void sign(List<CnOrder> cnOrders) {
 		List<String> ids = new ArrayList<>();
-		final String[] pkDeptExe = {""};
 		cnOrders.forEach(cnOrder -> {
 			ids.add(cnOrder.getPkCnord());
-			pkDeptExe[0] = cnOrder.getPkDeptExec();
+
 		});
 		List<CnOrder> cnOrderList = cnOrderRepository.findAllById(ids);
 		cnOrderList.forEach(cnOrder -> {
@@ -686,11 +690,7 @@ public class CnOrdServiceImpl implements CnOrdService {
 			cnOrder.setEuStatusOrd("1");
 			cnOrder.setFlagErase("0");
 			cnOrder.setFlagDoctor("1");//医生是1，护士是0
-			if("1".equals(cnOrder.getFlagDurg())){
-				cnOrder.setPkDeptExec(pkDeptExe[0]);
-			}
 		});
-
 		cnOrderRepository.saveAll(cnOrderList);
 	}
 

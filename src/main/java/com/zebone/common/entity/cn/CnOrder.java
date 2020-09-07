@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.gson.annotations.SerializedName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -107,6 +108,7 @@ public class CnOrder implements Serializable {
      * 医嘱名称
      */
     @ApiModelProperty("医嘱名称")
+    @SerializedName("name")
     private String nameOrd;
 
     /**
