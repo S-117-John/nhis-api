@@ -106,6 +106,12 @@ public class CnOrdTreatmentServiceImpl implements CnOrdService {
         return null;
     }
 
+    /**
+     * 保存医嘱
+     * @param cnOrders
+     * @param saveType
+     * @param user
+     */
     @Override
     public void saveOrdCnOrder(List<CnOrder> cnOrders, String saveType, BdOuUser user) {
         if(cnOrders!=null && cnOrders.size()>0){
@@ -114,8 +120,13 @@ public class CnOrdTreatmentServiceImpl implements CnOrdService {
                 cnOrder.setFlagErase("0");
                 cnOrder.setFlagNote("0");//是否嘱托
                 cnOrder.setFlagBl("1");//是否计费
+                cnOrder.setFlagDoctor("1");
                 //非药品
                 cnOrder.setFlagDurg("0");
+                //特殊频次设置长期临时医嘱,ST\ONCE时为临时医嘱
+                if("1049".equals(cnOrder.getCodeFreq())||"1012".equals(cnOrder.getCodeFreq())){
+                    cnOrder.setEuAlways("1");
+                }
             });
             cnOrderRepository.saveAll(cnOrders);
         }
