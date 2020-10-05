@@ -27,6 +27,7 @@ import com.zebone.modules.mobile.bd.pd.service.BdPdService;
 import com.zebone.modules.mobile.bd.pd.vo.BdPdVO;
 import com.zebone.modules.mobile.bd.supply.service.BdSupplyService;
 import com.zebone.modules.mobile.bd.term.service.BdTermFreqService;
+import com.zebone.modules.mobile.cn.model.CnOrderParam;
 import com.zebone.modules.mobile.cn.service.CnOrdService;
 import com.zebone.modules.mobile.cn.support.SortByOrdUtil;
 import com.zebone.modules.mobile.cn.vo.CnLabApplyVo;
@@ -34,6 +35,7 @@ import com.zebone.modules.mobile.cn.vo.CnOrderParamVO;
 import com.zebone.modules.mobile.cn.vo.CnOrderVO;
 import com.zebone.modules.mobile.cn.vo.CnRisApplyVo;
 import com.zebone.modules.mobile.common.constant.CnOrdConstant;
+import com.zebone.modules.mobile.common.listener.ResultListener;
 import com.zebone.modules.mobile.patient.service.PatientService;
 import com.zebone.modules.mobile.patient.vo.PvEncounterVO;
 
@@ -311,32 +313,25 @@ public class CnOrderController {
 
     @ApiOperation(value = "保存治疗医嘱", notes = "保存治疗医嘱")
     @PostMapping("saveTreatment")
-    public void saveTreatment(String ordList){
-        CnOrderParamVO cnOrderParamVO = GsonUtil.gson.fromJson(ordList,new TypeToken<CnOrderParamVO>(){}.getType());
-        if(cnOrderParamVO == null ){
-            return;
-        }
-        String code = cnOrderParamVO.getCode();
-        String codeIp = cnOrderParamVO.getCodeIp();
-        String saveType = cnOrderParamVO.getSaveType();
-        //科室编码
-        String codeDept = cnOrderParamVO.getCodeDept();
-        List<CnOrder> cnOrders = cnOrderParamVO.getCnOrdList();
-        //查询药品
-        List<String> bdPds = new ArrayList<>();
-        cnOrders.forEach(a->{bdPds.add(a.getPkOrd());});
-        //查询药品信息
-        List<Map<String,Object>> bdPdList = bdPdService.getBdPdAndBdOrdByPkPd(bdPds);
-        //查询医生信息
-        BdOuUser user = bdOuUserService.getUser(code);
-        //查询患者信息
-        PvEncounterVO pvEncounterVO = patientService.getPatientInfo(codeIp);
-        cnOrders = cnOrdService.setSaveCnOrder(cnOrders,bdPdList,pvEncounterVO,user);
-        cnOrders.forEach(cnOrder -> {
-            //就诊类型住院/
-            cnOrder.setEuPvtype("3");
+    public void saveTreatment(CnOrderParam cnOrderParam){
+
+        cnOrdTreatmentService.save(cnOrderParam, new ResultListener() {
+            @Override
+            public void success(Object object) {
+
+            }
+
+            @Override
+            public void error(Object object) {
+
+            }
+
+            @Override
+            public void exception(Object object) {
+
+            }
         });
-        cnOrdTreatmentService.saveOrdCnOrder(cnOrders,saveType,user);
+
     }
 
 

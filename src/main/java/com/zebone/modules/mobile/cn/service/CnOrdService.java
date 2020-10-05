@@ -13,6 +13,7 @@ import com.zebone.common.entity.cn.CnRisApply;
 import com.zebone.modules.mobile.cn.vo.CnLabApplyVo;
 import com.zebone.modules.mobile.cn.vo.CnOrderVO;
 import com.zebone.modules.mobile.cn.vo.CnRisApplyVo;
+import com.zebone.modules.mobile.common.listener.ResultListener;
 import com.zebone.modules.mobile.patient.vo.PvEncounterVO;
 import com.zebone.common.entity.bd.ou.BdOuDept;
 import com.zebone.common.entity.bd.ou.BdOuUser;
@@ -168,4 +169,7 @@ public interface CnOrdService {
     @CacheRefresh(refresh = 1800, stopRefreshAfterLastAccess = 3600, timeUnit = TimeUnit.SECONDS)
     @CachePenetrationProtect
     List<BdOuDept> getExeDeptList(String deptCode);
+
+
+    void save(Object object, ResultListener listener);
 }

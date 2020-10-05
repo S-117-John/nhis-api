@@ -34,6 +34,7 @@ import com.zebone.modules.mobile.cn.service.CnOrdService;
 import com.zebone.modules.mobile.cn.vo.CnLabApplyVo;
 import com.zebone.modules.mobile.cn.vo.CnOrderVO;
 import com.zebone.modules.mobile.cn.vo.CnRisApplyVo;
+import com.zebone.modules.mobile.common.listener.ResultListener;
 import com.zebone.modules.mobile.patient.vo.PvEncounterVO;
 
 import io.netty.util.internal.StringUtil;
@@ -770,5 +771,10 @@ public class CnOrdServiceImpl implements CnOrdService {
 		}
 
 		return deptList;
+	}
+
+	@Override
+	public void save(Object object, ResultListener listener) {
+
 	}
 }
