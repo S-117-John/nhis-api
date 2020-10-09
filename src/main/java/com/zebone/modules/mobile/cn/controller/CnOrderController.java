@@ -36,6 +36,7 @@ import com.zebone.modules.mobile.cn.vo.CnOrderVO;
 import com.zebone.modules.mobile.cn.vo.CnRisApplyVo;
 import com.zebone.modules.mobile.common.constant.CnOrdConstant;
 import com.zebone.modules.mobile.common.listener.ResultListener;
+import com.zebone.modules.mobile.common.model.Response;
 import com.zebone.modules.mobile.patient.service.PatientService;
 import com.zebone.modules.mobile.patient.vo.PvEncounterVO;
 
@@ -362,6 +363,33 @@ public class CnOrderController {
             cnOrder.setCreator(user.getPkEmp());
         });
         cnOrdDrugServiceImpl.save(cnOrders);
+    }
+
+
+    @ApiOperation(value = "保存签署药品医嘱", notes = "保存签署药品医嘱")
+    @PostMapping("saveAndSignDrug")
+    public Response<String> saveAndSignDrug(@RequestBody CnOrderParam cnOrderParam){
+        Response<String> response = new Response<>();
+        cnOrdDrugServiceImpl.saveAndSign(cnOrderParam, new ResultListener() {
+            @Override
+            public void success(Object object) {
+                response.setCode(200);
+                response.setMessage("签署成功");
+            }
+
+            @Override
+            public void error(Object object) {
+                response.setCode(500);
+                response.setMessage((String)object);
+            }
+
+            @Override
+            public void exception(Object object) {
+                response.setCode(500);
+                response.setMessage((String)object);
+            }
+        });
+        return response;
     }
     
 }

@@ -1,5 +1,6 @@
 package com.zebone.modules.mobile.cn.model;
 
+import com.zebone.common.entity.cn.CnOrder;
 import lombok.Data;
 
 import java.util.Date;
@@ -43,4 +44,10 @@ public class CnOrderParam {
     private List<String> stopOrderList;
 
     private String stopTime;
+
+    private List<String> saveOrderList;
+
+    private List<String> bdPdList;
+
+    private List<CnOrder> cnOrderList;
 }

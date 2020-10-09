@@ -10,6 +10,7 @@ import com.zebone.common.entity.cn.CnLabApply;
 import com.zebone.common.entity.cn.CnOrdAnti;
 import com.zebone.common.entity.cn.CnOrder;
 import com.zebone.common.entity.cn.CnRisApply;
+import com.zebone.modules.mobile.cn.model.CnOrderParam;
 import com.zebone.modules.mobile.cn.vo.CnLabApplyVo;
 import com.zebone.modules.mobile.cn.vo.CnOrderVO;
 import com.zebone.modules.mobile.cn.vo.CnRisApplyVo;
@@ -23,6 +24,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public interface CnOrdService {
+
+    void saveAndSign(CnOrderParam cnOrderParam,ResultListener resultListener);
 
     List<CnOrderVO> listPatientOrder(String pkPv);
 

@@ -54,6 +54,11 @@ public class CnOrdTreatmentServiceImpl implements CnOrdService {
     private BdTermFreqRepository bdTermFreqRepository;
 
     @Override
+    public void saveAndSign(CnOrderParam cnOrderParam, ResultListener resultListener) {
+
+    }
+
+    @Override
     public List<CnOrderVO> listPatientOrder(String pkPv) {
         return null;
     }

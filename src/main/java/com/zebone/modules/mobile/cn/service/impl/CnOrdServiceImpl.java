@@ -26,6 +26,7 @@ import com.zebone.modules.mobile.bd.ou.repository.BdOuDeptRepository;
 import com.zebone.modules.mobile.bd.pd.repository.BdPdAsRepository;
 import com.zebone.modules.mobile.bd.supply.repositoory.BdSupplyRepository;
 import com.zebone.modules.mobile.cn.dao.CnOrderDao;
+import com.zebone.modules.mobile.cn.model.CnOrderParam;
 import com.zebone.modules.mobile.cn.repository.CnLabApplyRepository;
 import com.zebone.modules.mobile.cn.repository.CnOrdAntiRepository;
 import com.zebone.modules.mobile.cn.repository.CnOrderRepository;
@@ -96,7 +97,13 @@ public class CnOrdServiceImpl implements CnOrdService {
 
     @Autowired
     private BdOrdTypeRepository bdOrdTypeRepository;
-    /**
+
+	@Override
+	public void saveAndSign(CnOrderParam cnOrderParam, ResultListener resultListener) {
+
+	}
+
+	/**
      * 查询已开立医嘱
      * @param pkPv
      * @return
