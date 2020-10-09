@@ -281,6 +281,8 @@ public class CnOrdTreatmentServiceImpl implements CnOrdService {
         //首日次数
         cnOrder.setFirstNum(cnOrderParam.getFirstNum());
         cnOrder.setPkDeptNs(pvEncounterVO.getPkDeptNs());
+        //停止核对标志
+        cnOrder.setFlagStopChk("0");
         cnOrderRepository.save(cnOrder);
     }
 }
