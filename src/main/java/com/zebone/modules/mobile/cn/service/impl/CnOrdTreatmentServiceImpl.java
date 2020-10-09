@@ -222,6 +222,7 @@ public class CnOrdTreatmentServiceImpl implements CnOrdService {
         cnOrder.setCodeOrdtype(bdOrd.getCodeOrdtype());
         Integer ordSn = OrdUtils.getSerialNo("CN_ORDER", "ORDSN", 1);
         cnOrder.setOrdsn(ordSn);
+        cnOrder.setOrdsnParent(ordSn);
         cnOrder.setPkOrd(bdOrd.getPkOrd());
         cnOrder.setCodeOrd(bdOrd.getCode());
         cnOrder.setNameOrd(bdOrd.getName());
@@ -279,6 +280,7 @@ public class CnOrdTreatmentServiceImpl implements CnOrdService {
         cnOrder.setDosage(cnOrderParam.getQuan());
         //首日次数
         cnOrder.setFirstNum(cnOrderParam.getFirstNum());
+        cnOrder.setPkDeptNs(pvEncounterVO.getPkDeptNs());
         cnOrderRepository.save(cnOrder);
     }
 }
