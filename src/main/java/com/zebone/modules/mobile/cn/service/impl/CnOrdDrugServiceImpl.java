@@ -93,7 +93,7 @@ public class CnOrdDrugServiceImpl implements CnOrdService {
                 cnOrder.setPkDeptNs(pvEncounterVO.getPkDeptNs());
                 cnOrder.setCreator(user.getPkEmp());
                 Integer ordsn = 0;
-                if(i ==1){
+                if(i ==0){
                     ordsn = getSerialNo("CN_ORDER", "ORDSN", 1);
                     cnOrder.setOrdsn(ordsn);
                     cnOrder.setOrdsnParent(ordsn);
@@ -173,7 +173,7 @@ public class CnOrdDrugServiceImpl implements CnOrdService {
             CnOrder cnOrder = cnOrders.get(i);
             cnOrder.setEuStatusOrd("0");
             Integer ordsn = 0;
-            if(i ==1){
+            if(i ==0){
                 ordsn = getSerialNo("CN_ORDER", "ORDSN", 1);
                 cnOrder.setOrdsn(ordsn);
                 cnOrder.setOrdsnParent(ordsn);
