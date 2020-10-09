@@ -295,13 +295,9 @@ public class CnOrderController {
     public void sign(String param){
         CnOrderParamVO cnOrderParamVO = GsonUtil.gson.fromJson(param,CnOrderParamVO.class);
         List<CnOrder> cnOrderList = cnOrderParamVO.getCnOrdList();
-        //查询科室业务线
-//        String pkDeptExe = cnOrdService.pkDeptExe(cnOrderParamVO.getCodeDept());
-//        cnOrderList.forEach(cnOrder -> {
-//            cnOrder.setPkDeptExec(pkDeptExe);
-//        });
-        cnOrdService.sign(cnOrderList);
-        cnOrdTreatmentService.sign(cnOrderList);
+        List<CnOrder> uncnSignList = cnOrderList.stream().filter(cnOrder -> "0".equals(cnOrder.getFlagSign())).collect(Collectors.toList());
+        cnOrdService.sign(uncnSignList);
+        cnOrdTreatmentService.sign(uncnSignList);
     }
 
     @ApiOperation(value = "获取执行科室", notes = "当前科室业务线对应执行科室")

@@ -667,8 +667,15 @@ public class CnOrdServiceImpl implements CnOrdService {
 		});
 		List<CnOrder> cnOrderList = cnOrderRepository.findAllById(ids);
 		cnOrderList.forEach(cnOrder -> {
-			cnOrder.setFlagStop("1");
-			cnOrder.setDateStop(new Date());
+			cnOrders.forEach(cnOrderChange -> {
+				if(cnOrder.getPkCnord().equals(cnOrderChange.getPkCnord())){
+					cnOrder.setFlagStop("1");
+					cnOrder.setDateStop(cnOrderChange.getDateStop());
+					cnOrder.setLastNum(cnOrderChange.getLastNum());
+					cnOrder.setFlagStopChk("0");
+				}
+			});
+
 		});
 		cnOrderRepository.saveAll(cnOrderList);
 	}

@@ -3,6 +3,7 @@ package com.zebone.modules.mobile.cn.model;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class CnOrderParam {
@@ -27,7 +28,6 @@ public class CnOrderParam {
      */
     private String pkOrd;
 
-
     private String euAlways;
 
     private String codeFreq;
@@ -39,4 +39,8 @@ public class CnOrderParam {
     private String dateStart;
 
     private Integer firstNum;
+
+    private List<String> stopOrderList;
+
+    private String stopTime;
 }
