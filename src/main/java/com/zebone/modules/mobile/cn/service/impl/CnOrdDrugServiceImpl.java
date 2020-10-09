@@ -108,6 +108,7 @@ public class CnOrdDrugServiceImpl implements CnOrdService {
             //是否计费
             cnOrder.setFlagBl("1");
             cnOrder.setFlagDoctor("1");
+            cnOrder.setFlagSign("0");
 
         }
         cnOrderRepository.saveAll(cnOrders);
