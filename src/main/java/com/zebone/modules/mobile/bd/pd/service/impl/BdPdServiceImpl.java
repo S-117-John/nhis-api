@@ -2,11 +2,13 @@ package com.zebone.modules.mobile.bd.pd.service.impl;
 
 import com.zebone.common.entity.bd.pd.BdPd;
 import com.zebone.common.entity.bd.pd.BdPdAs;
+import com.zebone.common.entity.bd.unit.BdUnit;
 import com.zebone.modules.mobile.bd.pd.dao.BdPdDao;
 import com.zebone.modules.mobile.bd.pd.repository.BdPdAsRepository;
 import com.zebone.modules.mobile.bd.pd.repository.BdPdRepository;
 import com.zebone.modules.mobile.bd.pd.service.BdPdService;
 import com.zebone.modules.mobile.bd.pd.vo.BdPdVO;
+import com.zebone.modules.mobile.bd.unit.repository.BdUnitRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,6 +32,9 @@ public class BdPdServiceImpl implements BdPdService {
     @Autowired
     private BdPdAsRepository bdPdAsRepository;
 
+    @Autowired
+    private BdUnitRepository bdUnitRepository;
+
     @Override
     public BdPdVO getBdPd(String pkPd) {
         Optional<BdPd> optionalBdPd = bdPdRepository.findById(pkPd);
@@ -39,7 +44,9 @@ public class BdPdServiceImpl implements BdPdService {
         BdPdVO bdPdVO = new BdPdVO();
         BdPd bdPd = optionalBdPd.get();
         BeanUtils.copyProperties(bdPd,bdPdVO);
-
+        String pUnit = bdPd.getPkUnitPack();
+        BdUnit bdUnit = bdUnitRepository.getOne(pUnit);
+        bdPdVO.setUnitPackName(bdUnit.getName());
         return bdPdVO;
     }
 
