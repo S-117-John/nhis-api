@@ -6,6 +6,7 @@ import com.zebone.common.entity.bd.ord.BdOrdDept;
 import com.zebone.common.entity.bd.ord.BdOrdRis;
 import com.zebone.common.entity.bd.ou.BdOuDept;
 import com.zebone.common.entity.bd.ou.BdOuUser;
+import com.zebone.common.entity.bd.serialno.BdSerialno;
 import com.zebone.common.entity.cn.CnOrdAnti;
 import com.zebone.common.entity.cn.CnOrder;
 import com.zebone.common.entity.cn.CnRisApply;
@@ -16,6 +17,7 @@ import com.zebone.modules.mobile.bd.ord.repository.BdOrdRisRepository;
 import com.zebone.modules.mobile.bd.ou.repository.BdOuDeptRepository;
 import com.zebone.modules.mobile.bd.ou.repository.BdOuUserRepository;
 import com.zebone.modules.mobile.bd.repository.BdDefdocRepository;
+import com.zebone.modules.mobile.cn.dao.CnOrderDao;
 import com.zebone.modules.mobile.cn.model.CnOrderParam;
 import com.zebone.modules.mobile.cn.repository.CnOrderRepository;
 import com.zebone.modules.mobile.cn.repository.CnRisApplyRepository;
@@ -67,6 +69,9 @@ public class CnOrdRisServiceImpl implements CnOrdService {
 
     @Autowired
     private CnRisApplyRepository cnRisApplyRepository;
+
+    @Autowired
+    private CnOrderDao cnOrderDao;
 
     @Override
     public void saveAndSign(CnOrderParam cnOrderParam, ResultListener resultListener) {
@@ -130,7 +135,26 @@ public class CnOrdRisServiceImpl implements CnOrdService {
 
     @Override
     public Integer getSerialNo(String tableName, String fieldName, int count) {
-        return null;
+        if(tableName==null) {
+            return 0;
+        }
+        Double sn = cnOrderDao.selectSn(tableName.toUpperCase(), fieldName.toUpperCase());
+        if(sn==null){
+            BdSerialno initSn = new BdSerialno();
+            initSn.setPkSerialno(UUID.randomUUID().toString());
+            initSn.setPkOrg("~                               ");
+            initSn.setNameTb(tableName.toUpperCase());
+            initSn.setNameFd(fieldName.toUpperCase());
+            initSn.setValInit((short)1000);
+            initSn.setVal((short)1000);
+            cnOrderDao.initSn(initSn);
+        }
+        int ret = -1;
+        int rs = cnOrderDao.updateSn(tableName.toUpperCase(), fieldName.toUpperCase(), count);
+        if(rs==1) {
+            ret = cnOrderDao.selectSn(tableName.toUpperCase(), fieldName.toUpperCase()).intValue()-count;
+        }
+        return ret;
     }
 
     @Override

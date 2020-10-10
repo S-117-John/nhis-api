@@ -142,6 +142,13 @@ public class CnOrdDrugServiceImpl implements CnOrdService {
                 cnOrder.setDateSign(new Date());
                 cnOrder.setEuStatusOrd("1");
                 cnOrder.setFlagDoctor("1");//医生是1，护士是0
+                cnOrder.setFlagStopChk("0");
+                cnOrder.setPkOrg(pvEncounterVO.getPkOrg());
+                cnOrder.setPkOrgExec(pvEncounterVO.getPkOrg());
+                cnOrder.setFlagBase("0");
+                cnOrder.setPkEmpOrd(user.getPkEmp());
+                cnOrder.setNameEmpOrd(user.getPkEmp());
+                cnOrder.setEuOrdtype("0");
             }
             cnOrderRepository.saveAll(cnOrderList);
             resultListener.success("SUCCESS");
@@ -220,6 +227,7 @@ public class CnOrdDrugServiceImpl implements CnOrdService {
             cnOrder.setFlagBl("1");
             cnOrder.setFlagDoctor("1");
             cnOrder.setFlagSign("0");
+            cnOrder.setFlagStopChk("0");
 
         }
         cnOrderRepository.saveAll(cnOrders);
