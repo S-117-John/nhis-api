@@ -181,8 +181,6 @@ public class CnOrdRisServiceImpl extends CnOrderBaseService implements CnOrdServ
             PvEncounterVO pvEncounterVO = patientService.getPatientInfo(cnOrderParam.getCodeIp());
             BdOrd bdOrd = bdOrdRepository.getOne(cnOrderParam.getPkOrd());
             BdOuUser bdOuUser = bdOuUserRepository.findByCodeUser(cnOrderParam.getDoctorCode());
-
-            cnOrder.setPkCnord(UUID.randomUUID().toString().replaceAll("-", ""));
             cnOrder.setOrdsn(orderSn);
             cnOrder.setOrdsnParent(orderSn);
             cnOrder.setInfantNo(0);
@@ -240,7 +238,8 @@ public class CnOrdRisServiceImpl extends CnOrderBaseService implements CnOrdServ
             cnOrder.setPkDept(pvEncounterVO.getPkDept());
             cnOrder.setNameEmpOrd(bdOuUser.getNameUser());
             cnOrder.setPkEmpOrd(bdOuUser.getPkEmp());
-            cnOrderRepository.save(cnOrder);
+            cnOrder.setQuan(Double.valueOf("1"));
+            cnOrder = cnOrderRepository.save(cnOrder);
 
             CnRisApply cnRisApply = new CnRisApply();
             cnRisApply.setPkOrg(pvEncounterVO.getPkOrg());
