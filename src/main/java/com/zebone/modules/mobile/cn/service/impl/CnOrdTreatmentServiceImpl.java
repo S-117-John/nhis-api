@@ -13,6 +13,7 @@ import com.zebone.modules.mobile.bd.term.repository.BdTermFreqRepository;
 import com.zebone.modules.mobile.cn.model.CnOrderParam;
 import com.zebone.modules.mobile.cn.repository.CnOrderRepository;
 import com.zebone.modules.mobile.cn.service.CnOrdService;
+import com.zebone.modules.mobile.cn.service.CnOrderBaseService;
 import com.zebone.modules.mobile.cn.vo.CnLabApplyVo;
 import com.zebone.modules.mobile.cn.vo.CnOrderVO;
 import com.zebone.modules.mobile.cn.vo.CnRisApplyVo;
@@ -34,7 +35,7 @@ import java.util.Map;
  * 治疗医嘱实现
  */
 @Service("cnOrdTreatmentService")
-public class CnOrdTreatmentServiceImpl implements CnOrdService {
+public class CnOrdTreatmentServiceImpl extends CnOrderBaseService implements CnOrdService {
 
     @Autowired
     private PatientService patientService;
@@ -73,20 +74,10 @@ public class CnOrdTreatmentServiceImpl implements CnOrdService {
 
     }
 
-    @Override
-    public CnOrderVO getCnOrderDetail(String pkCnord) {
-        return null;
-    }
 
-    @Override
-    public List<CnOrderVO> search(String spCode) {
-        return null;
-    }
 
-    @Override
-    public Integer checkStopOrd(String pkCnord) {
-        return null;
-    }
+
+
 
     @Override
     public List<CnOrderVO> queryOrdStopListByPk(String pkCnord) {
@@ -113,10 +104,7 @@ public class CnOrdTreatmentServiceImpl implements CnOrdService {
         return null;
     }
 
-    @Override
-    public Integer getSerialNo(String tableName, String fieldName, int count) {
-        return null;
-    }
+
 
     @Override
     public List<CnOrdAnti> saveOrdAnti(List<CnOrder> ordList, String pkOrg) {
@@ -220,7 +208,7 @@ public class CnOrdTreatmentServiceImpl implements CnOrdService {
         cnOrder.setPkPv(pvEncounterVO.getPkPv());
         cnOrder.setPkPi(pvEncounterVO.getPkPi());
         cnOrder.setCodeOrdtype(bdOrd.getCodeOrdtype());
-        Integer ordSn = OrdUtils.getSerialNo("CN_ORDER", "ORDSN", 1);
+        Integer ordSn = getSerialNo("CN_ORDER", "ORDSN", 1);
         cnOrder.setOrdsn(ordSn);
         cnOrder.setOrdsnParent(ordSn);
         cnOrder.setPkOrd(bdOrd.getPkOrd());

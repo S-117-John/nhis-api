@@ -18,6 +18,7 @@ import com.zebone.modules.mobile.cn.dao.CnOrderDao;
 import com.zebone.modules.mobile.cn.model.CnOrderParam;
 import com.zebone.modules.mobile.cn.repository.CnOrderRepository;
 import com.zebone.modules.mobile.cn.service.CnOrdService;
+import com.zebone.modules.mobile.cn.service.CnOrderBaseService;
 import com.zebone.modules.mobile.cn.vo.CnLabApplyVo;
 import com.zebone.modules.mobile.cn.vo.CnOrderVO;
 import com.zebone.modules.mobile.cn.vo.CnRisApplyVo;
@@ -36,7 +37,7 @@ import javax.persistence.criteria.Root;
 import java.util.*;
 
 @Service("cnOrdDrugServiceImpl")
-public class CnOrdDrugServiceImpl implements CnOrdService {
+public class CnOrdDrugServiceImpl extends CnOrderBaseService implements CnOrdService {
 
     @Autowired
     private CnOrderDao cnOrderDao;
@@ -81,7 +82,7 @@ public class CnOrdDrugServiceImpl implements CnOrdService {
 
             List<CnOrder> cnOrderList = cnOrderParam.getCnOrderList();
             Date date = new Date();
-
+            Integer ordsn = getSerialNo("CN_ORDER", "ORDSN", 1);
             for (int i = 0; i < cnOrderList.size(); i++) {
                 CnOrder cnOrder = cnOrderList.get(i);
                 cnOrder.setPkDeptExec(pkDeptExe);
@@ -94,9 +95,7 @@ public class CnOrdDrugServiceImpl implements CnOrdService {
                 cnOrder.setPkDept(pvEncounterVO.getPkDept());
                 cnOrder.setPkDeptNs(pvEncounterVO.getPkDeptNs());
                 cnOrder.setCreator(user.getPkEmp());
-                Integer ordsn = 0;
                 if(i ==0){
-                    ordsn = getSerialNo("CN_ORDER", "ORDSN", 1);
                     cnOrder.setOrdsn(ordsn);
                     cnOrder.setOrdsnParent(ordsn);
                 }else{
@@ -237,20 +236,9 @@ public class CnOrdDrugServiceImpl implements CnOrdService {
         cnOrderRepository.saveAll(cnOrders);
     }
 
-    @Override
-    public CnOrderVO getCnOrderDetail(String pkCnord) {
-        return null;
-    }
 
-    @Override
-    public List<CnOrderVO> search(String spCode) {
-        return null;
-    }
 
-    @Override
-    public Integer checkStopOrd(String pkCnord) {
-        return null;
-    }
+
 
     @Override
     public List<CnOrderVO> queryOrdStopListByPk(String pkCnord) {
@@ -277,29 +265,6 @@ public class CnOrdDrugServiceImpl implements CnOrdService {
         return null;
     }
 
-    @Override
-    public Integer getSerialNo(String tableName, String fieldName, int count) {
-        if(tableName==null) {
-            return 0;
-        }
-        Double sn = cnOrderDao.selectSn(tableName.toUpperCase(), fieldName.toUpperCase());
-        if(sn==null){
-            BdSerialno initSn = new BdSerialno();
-            initSn.setPkSerialno(UUID.randomUUID().toString());
-            initSn.setPkOrg("~                               ");
-            initSn.setNameTb(tableName.toUpperCase());
-            initSn.setNameFd(fieldName.toUpperCase());
-            initSn.setValInit((short)1000);
-            initSn.setVal((short)1000);
-            cnOrderDao.initSn(initSn);
-        }
-        int ret = -1;
-        int rs = cnOrderDao.updateSn(tableName.toUpperCase(), fieldName.toUpperCase(), count);
-        if(rs==1) {
-            ret = cnOrderDao.selectSn(tableName.toUpperCase(), fieldName.toUpperCase()).intValue()-count;
-        }
-        return ret;
-    }
 
     @Override
     public List<CnOrdAnti> saveOrdAnti(List<CnOrder> ordList, String pkOrg) {
@@ -399,7 +364,7 @@ public class CnOrdDrugServiceImpl implements CnOrdService {
 
             List<CnOrder> cnOrderList = cnOrderParam.getCnOrderList();
             Date date = new Date();
-
+            Integer ordsn = getSerialNo("CN_ORDER", "ORDSN", 1);
             for (int i = 0; i < cnOrderList.size(); i++) {
                 CnOrder cnOrder = cnOrderList.get(i);
                 cnOrder.setPkDeptExec(pkDeptExe);
@@ -412,9 +377,8 @@ public class CnOrdDrugServiceImpl implements CnOrdService {
                 cnOrder.setPkDept(pvEncounterVO.getPkDept());
                 cnOrder.setPkDeptNs(pvEncounterVO.getPkDeptNs());
                 cnOrder.setCreator(user.getPkEmp());
-                Integer ordsn = 0;
+
                 if(i ==0){
-                    ordsn = getSerialNo("CN_ORDER", "ORDSN", 1);
                     cnOrder.setOrdsn(ordsn);
                     cnOrder.setOrdsnParent(ordsn);
                 }else{

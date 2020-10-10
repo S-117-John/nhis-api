@@ -22,6 +22,7 @@ import com.zebone.modules.mobile.cn.model.CnOrderParam;
 import com.zebone.modules.mobile.cn.repository.CnOrderRepository;
 import com.zebone.modules.mobile.cn.repository.CnRisApplyRepository;
 import com.zebone.modules.mobile.cn.service.CnOrdService;
+import com.zebone.modules.mobile.cn.service.CnOrderBaseService;
 import com.zebone.modules.mobile.cn.vo.CnLabApplyVo;
 import com.zebone.modules.mobile.cn.vo.CnOrderVO;
 import com.zebone.modules.mobile.cn.vo.CnRisApplyVo;
@@ -38,7 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service("cnOrdRisServiceImpl")
-public class CnOrdRisServiceImpl implements CnOrdService {
+public class CnOrdRisServiceImpl extends CnOrderBaseService implements CnOrdService {
 
     @Autowired
     private BdOrdRepository bdOrdRepository;
@@ -93,20 +94,10 @@ public class CnOrdRisServiceImpl implements CnOrdService {
 
     }
 
-    @Override
-    public CnOrderVO getCnOrderDetail(String pkCnord) {
-        return null;
-    }
 
-    @Override
-    public List<CnOrderVO> search(String spCode) {
-        return null;
-    }
 
-    @Override
-    public Integer checkStopOrd(String pkCnord) {
-        return null;
-    }
+
+
 
     @Override
     public List<CnOrderVO> queryOrdStopListByPk(String pkCnord) {
@@ -133,29 +124,7 @@ public class CnOrdRisServiceImpl implements CnOrdService {
         return null;
     }
 
-    @Override
-    public Integer getSerialNo(String tableName, String fieldName, int count) {
-        if(tableName==null) {
-            return 0;
-        }
-        Double sn = cnOrderDao.selectSn(tableName.toUpperCase(), fieldName.toUpperCase());
-        if(sn==null){
-            BdSerialno initSn = new BdSerialno();
-            initSn.setPkSerialno(UUID.randomUUID().toString());
-            initSn.setPkOrg("~                               ");
-            initSn.setNameTb(tableName.toUpperCase());
-            initSn.setNameFd(fieldName.toUpperCase());
-            initSn.setValInit((short)1000);
-            initSn.setVal((short)1000);
-            cnOrderDao.initSn(initSn);
-        }
-        int ret = -1;
-        int rs = cnOrderDao.updateSn(tableName.toUpperCase(), fieldName.toUpperCase(), count);
-        if(rs==1) {
-            ret = cnOrderDao.selectSn(tableName.toUpperCase(), fieldName.toUpperCase()).intValue()-count;
-        }
-        return ret;
-    }
+
 
     @Override
     public List<CnOrdAnti> saveOrdAnti(List<CnOrder> ordList, String pkOrg) {

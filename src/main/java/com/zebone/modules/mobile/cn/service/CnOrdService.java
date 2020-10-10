@@ -34,26 +34,6 @@ public interface CnOrdService {
     void save(List<CnOrder> cnOrders);
 
     /**
-     * 医嘱详情
-     * @param pkCnord
-     * @return
-     */
-    CnOrderVO getCnOrderDetail(String pkCnord);
-
-    /**
-     * 检索医嘱
-     * @param spCode
-     * @return
-     */
-    List<CnOrderVO> search(String spCode);
-    
-    /**
-     * 检查是否可以停嘱
-     * @param pkCnord
-     * @return
-     */
-    Integer checkStopOrd(String pkCnord);
-    /**
      * 查询停嘱列表
      * @param pkCnord
      * @return
@@ -86,14 +66,7 @@ public interface CnOrdService {
      */
     Integer delOrd(String pkCnord);
 
-    /**
-     * 生成医嘱号
-     * @param tableName
-     * @param fieldName
-     * @param count
-     * @return
-     */
-    Integer getSerialNo(String tableName, String fieldName, int count);
+
 
 /*
     *//**

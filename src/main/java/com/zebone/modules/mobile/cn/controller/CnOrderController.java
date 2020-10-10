@@ -29,6 +29,7 @@ import com.zebone.modules.mobile.bd.supply.service.BdSupplyService;
 import com.zebone.modules.mobile.bd.term.service.BdTermFreqService;
 import com.zebone.modules.mobile.cn.model.CnOrderParam;
 import com.zebone.modules.mobile.cn.service.CnOrdService;
+import com.zebone.modules.mobile.cn.service.impl.CnOrdServiceImpl;
 import com.zebone.modules.mobile.cn.support.SortByOrdUtil;
 import com.zebone.modules.mobile.cn.vo.CnLabApplyVo;
 import com.zebone.modules.mobile.cn.vo.CnOrderParamVO;
@@ -61,7 +62,7 @@ import java.util.stream.Collectors;
 public class CnOrderController {
 
     @Resource(name = "cnOrdService")
-    private CnOrdService cnOrdService;
+    private CnOrdServiceImpl cnOrdService;
 
     @Resource(name = "cnOrdTreatmentService")
     private CnOrdService cnOrdTreatmentService;
