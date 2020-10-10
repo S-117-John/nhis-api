@@ -348,35 +348,28 @@ public class CnOrderController {
 
     @ApiOperation(value = "保存药品医嘱", notes = "保存药品医嘱")
     @PostMapping("saveDrug")
-    public void saveDrug(String ordList){
-        CnOrderParamVO cnOrderParamVO = GsonUtil.gson.fromJson(ordList,new TypeToken<CnOrderParamVO>(){}.getType());
-        if(cnOrderParamVO == null ){
-            return;
-        }
-        //医生编码
-        String userCode = cnOrderParamVO.getCode();
-        //住院号
-        String codeIp = cnOrderParamVO.getCodeIp();
-        //科室编码
-        String codeDept = cnOrderParamVO.getCodeDept();
-        List<CnOrder> cnOrders = cnOrderParamVO.getCnOrdList();
+    public Response<String> saveDrug(@RequestBody CnOrderParam cnOrderParam){
+        Response<String> response = new Response<>();
+        cnOrdDrugServiceImpl.save(cnOrderParam, new ResultListener() {
+            @Override
+            public void success(Object object) {
+                response.setCode(200);
+                response.setMessage("保存成功");
+            }
 
-        //查询医生信息
-        BdOuUser user = bdOuUserService.getUser(userCode);
-        //查询患者信息
-        PvEncounterVO pvEncounterVO = patientService.getPatientInfo(codeIp);
-        String pkDeptExe = cnOrdService.pkDeptExe(codeDept);
-        cnOrders.forEach(cnOrder -> {
-            cnOrder.setPkDeptExec(pkDeptExe);
-            cnOrder.setPkPv(pvEncounterVO.getPkPv());
-            cnOrder.setPkPi(pvEncounterVO.getPkPi());
-            cnOrder.setPkEmpInput(user.getPkEmp());
-            cnOrder.setNameEmpInput(user.getNameUser());
-            cnOrder.setPkDept(pvEncounterVO.getPkDept());
-            cnOrder.setPkDeptNs(pvEncounterVO.getPkDeptNs());
-            cnOrder.setCreator(user.getPkEmp());
+            @Override
+            public void error(Object object) {
+                response.setCode(500);
+                response.setMessage((String)object);
+            }
+
+            @Override
+            public void exception(Object object) {
+                response.setCode(500);
+                response.setMessage((String)object);
+            }
         });
-        cnOrdDrugServiceImpl.save(cnOrders);
+        return response;
     }
 
 

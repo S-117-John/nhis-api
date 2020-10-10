@@ -87,7 +87,9 @@ public class CnOrdDrugServiceImpl implements CnOrdService {
                 cnOrder.setPkDeptExec(pkDeptExe);
                 cnOrder.setPkPv(pvEncounterVO.getPkPv());
                 cnOrder.setPkPi(pvEncounterVO.getPkPi());
+                //录入人主键
                 cnOrder.setPkEmpInput(user.getPkEmp());
+                //录入人姓名
                 cnOrder.setNameEmpInput(user.getNameUser());
                 cnOrder.setPkDept(pvEncounterVO.getPkDept());
                 cnOrder.setPkDeptNs(pvEncounterVO.getPkDeptNs());
@@ -146,8 +148,10 @@ public class CnOrdDrugServiceImpl implements CnOrdService {
                 cnOrder.setPkOrg(pvEncounterVO.getPkOrg());
                 cnOrder.setPkOrgExec(pvEncounterVO.getPkOrg());
                 cnOrder.setFlagBase("0");
+                //开立医生主键
                 cnOrder.setPkEmpOrd(user.getPkEmp());
-                cnOrder.setNameEmpOrd(user.getPkEmp());
+                //开立医生姓名
+                cnOrder.setNameEmpOrd(user.getNameEmp());
                 cnOrder.setEuOrdtype("0");
             }
             cnOrderRepository.saveAll(cnOrderList);
@@ -378,7 +382,101 @@ public class CnOrdDrugServiceImpl implements CnOrdService {
      */
     @Override
     public void save(Object object, ResultListener listener) {
+        try{
+            CnOrderParam cnOrderParam = (CnOrderParam) object;
+            //医生编码
+            String userCode = cnOrderParam.getDoctorCode();
+            //住院号
+            String codeIp = cnOrderParam.getCodeIp();
+            //科室编码
+            String codeDept = cnOrderParam.getCodeDept();
+            List<String> pkCnOrders = cnOrderParam.getSaveOrderList();
+            //查询医生信息
+            BdOuUser user = bdOuUserRepository.findByCodeUser(userCode);
+            //查询患者信息
+            PvEncounterVO pvEncounterVO = patientService.getPatientInfo(codeIp);
+            String pkDeptExe = pkDeptExe(codeDept);
 
+            List<CnOrder> cnOrderList = cnOrderParam.getCnOrderList();
+            Date date = new Date();
+
+            for (int i = 0; i < cnOrderList.size(); i++) {
+                CnOrder cnOrder = cnOrderList.get(i);
+                cnOrder.setPkDeptExec(pkDeptExe);
+                cnOrder.setPkPv(pvEncounterVO.getPkPv());
+                cnOrder.setPkPi(pvEncounterVO.getPkPi());
+                //录入人主键
+                cnOrder.setPkEmpInput(user.getPkEmp());
+                //录入人姓名
+                cnOrder.setNameEmpInput(user.getNameUser());
+                cnOrder.setPkDept(pvEncounterVO.getPkDept());
+                cnOrder.setPkDeptNs(pvEncounterVO.getPkDeptNs());
+                cnOrder.setCreator(user.getPkEmp());
+                Integer ordsn = 0;
+                if(i ==0){
+                    ordsn = getSerialNo("CN_ORDER", "ORDSN", 1);
+                    cnOrder.setOrdsn(ordsn);
+                    cnOrder.setOrdsnParent(ordsn);
+                }else{
+                    cnOrder.setOrdsn(getSerialNo("CN_ORDER", "ORDSN", 1));
+                    cnOrder.setOrdsnParent(ordsn);
+                }
+                cnOrder.setTs(date);
+                cnOrder.setDateEnter(date);
+                cnOrder.setOrdsnChk(cnOrder.getOrdsn());
+                cnOrder.setCreateTime(date);
+                cnOrder.setDelFlag("0");
+                cnOrder.setTs(date);
+                BdPd bdPd = bdPdRepository.getOne(cnOrder.getPkOrd());
+                BdOrdType bdOrdType = bdOrdTypeRepository.getOne(bdPd.getPkOrdtype());
+                cnOrder.setCodeOrdtype(bdOrdType.getCode());
+                cnOrder.setCodeOrd(bdPd.getCode());
+                cnOrder.setNameOrd(bdPd.getName());
+                cnOrder.setSpec(bdPd.getSpec());
+                cnOrder.setPkUnitDos(bdPd.getPkUnitMin());
+                if(bdPd.getPackSize()!= null&& Double.valueOf(bdPd.getPackSize())!=0 &&
+                        "0".equals(cnOrder.getEuAlways())&&
+                        !StringUtil.isNullOrEmpty(bdPd.getPkPd())){
+                    double execTimes = 0;
+                    if("0".equals(bdPd.getEuMuputype())){//按次取整
+                        cnOrder.setQuanCg(Math.floor(Double.valueOf(bdPd.getPackSize())/(Double.valueOf(bdPd.getPackSize()) > 1 ? 1 : Double.valueOf(bdPd.getPackSize())))*execTimes);
+                    }else{ //按批取整
+                        cnOrder.setQuanCg(Math.floor(Double.valueOf(bdPd.getPackSize())/(Double.valueOf(bdPd.getPackSize()) > 1 ? 1 : Double.valueOf(bdPd.getPackSize())))*execTimes);
+                    }
+                }
+                cnOrder.setPackSize(Double.valueOf(bdPd.getPackSize()==null?"0":bdPd.getPackSize().toString()));
+                cnOrder.setPriceCg(Double.valueOf(bdPd.getPrice()==null?"0":bdPd.getPrice().toString()));
+                if(cnOrder.getFirstNum() != null &&cnOrder.getFirstNum()>0){
+                    cnOrder.setFlagFirst("1");
+                }else{
+                    cnOrder.setFlagFirst("0");
+                }
+                cnOrder.setFlagDurg("1");
+                cnOrder.setEuPvtype("3");
+                cnOrder.setFlagErase("0");
+                //是否嘱托
+                cnOrder.setFlagNote("0");
+                //是否计费
+                cnOrder.setFlagBl("1");
+                cnOrder.setFlagSign("0");
+                cnOrder.setDateSign(null);
+                cnOrder.setEuStatusOrd("1");
+                cnOrder.setFlagDoctor("1");//医生是1，护士是0
+                cnOrder.setFlagStopChk("0");
+                cnOrder.setPkOrg(pvEncounterVO.getPkOrg());
+                cnOrder.setPkOrgExec(pvEncounterVO.getPkOrg());
+                cnOrder.setFlagBase("0");
+                //开立医生主键
+                cnOrder.setPkEmpOrd(user.getPkEmp());
+                //开立医生姓名
+                cnOrder.setNameEmpOrd(user.getNameEmp());
+                cnOrder.setEuOrdtype("0");
+            }
+            cnOrderRepository.saveAll(cnOrderList);
+            listener.success("SUCCESS");
+        }catch (Exception e){
+            listener.exception(e.getMessage());
+        }
     }
 
     @Override
