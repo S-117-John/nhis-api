@@ -44,7 +44,7 @@ public class BdPdServiceImpl implements BdPdService {
         BdPdVO bdPdVO = new BdPdVO();
         BdPd bdPd = optionalBdPd.get();
         BeanUtils.copyProperties(bdPd,bdPdVO);
-        String pUnit = bdPd.getPkUnitPack();
+        String pUnit = bdPd.getPkUnitDef();
         BdUnit bdUnit = bdUnitRepository.getOne(pUnit);
         bdPdVO.setUnitPackName(bdUnit.getName());
         return bdPdVO;
