@@ -7,6 +7,7 @@ import com.zebone.common.entity.bd.ou.BdOuDept;
 import com.zebone.common.entity.bd.ou.BdOuUser;
 import com.zebone.common.entity.bd.pd.BdPd;
 import com.zebone.common.entity.bd.serialno.BdSerialno;
+import com.zebone.common.entity.bd.term.BdTermFreq;
 import com.zebone.common.entity.cn.CnOrdAnti;
 import com.zebone.common.entity.cn.CnOrder;
 import com.zebone.modules.mobile.bd.dept.repository.BdDeptBuRepository;
@@ -14,6 +15,7 @@ import com.zebone.modules.mobile.bd.dept.repository.BdDeptBusRepository;
 import com.zebone.modules.mobile.bd.ord.repository.BdOrdTypeRepository;
 import com.zebone.modules.mobile.bd.ou.repository.BdOuUserRepository;
 import com.zebone.modules.mobile.bd.pd.repository.BdPdRepository;
+import com.zebone.modules.mobile.bd.term.repository.BdTermFreqRepository;
 import com.zebone.modules.mobile.cn.dao.CnOrderDao;
 import com.zebone.modules.mobile.cn.model.CnOrderParam;
 import com.zebone.modules.mobile.cn.repository.CnOrderRepository;
@@ -62,6 +64,10 @@ public class CnOrdDrugServiceImpl extends CnOrderBaseService implements CnOrdSer
 
     @Autowired
     private BdDeptBuRepository bdDeptBuRepository;
+
+    @Autowired
+    private BdTermFreqRepository bdTermFreqRepository;
+
 
     @Override
     public void saveAndSign(CnOrderParam cnOrderParam, ResultListener resultListener) {
@@ -152,6 +158,10 @@ public class CnOrdDrugServiceImpl extends CnOrderBaseService implements CnOrdSer
                 //开立医生姓名
                 cnOrder.setNameEmpOrd(user.getNameEmp());
                 cnOrder.setEuOrdtype("0");
+                BdTermFreq bdTermFreq = bdTermFreqRepository.findByCode(cnOrder.getCodeFreq());
+                if("st".equalsIgnoreCase(bdTermFreq.getName())||"once".equalsIgnoreCase(bdTermFreq.getName())){
+                    cnOrder.setEuAlways("1");
+                }
             }
             cnOrderRepository.saveAll(cnOrderList);
             resultListener.success("SUCCESS");
@@ -435,6 +445,10 @@ public class CnOrdDrugServiceImpl extends CnOrderBaseService implements CnOrdSer
                 //开立医生姓名
                 cnOrder.setNameEmpOrd(user.getNameEmp());
                 cnOrder.setEuOrdtype("0");
+                BdTermFreq bdTermFreq = bdTermFreqRepository.findByCode(cnOrder.getCodeFreq());
+                if("st".equalsIgnoreCase(bdTermFreq.getName())||"once".equalsIgnoreCase(bdTermFreq.getName())){
+                    cnOrder.setEuAlways("1");
+                }
             }
             cnOrderRepository.saveAll(cnOrderList);
             listener.success("SUCCESS");
