@@ -132,7 +132,7 @@ public abstract class CnOrderBaseService {
             cnOrderVO.setFlagDurg("1");
             //规格
             cnOrderVO.setSpec(bdPdAs.getBdPd().getSpec());
-            cnOrderVO.setPkUnit(bdPdAs.getBdPd().getPkUnitPack());
+            cnOrderVO.setPkUnit(bdPdAs.getBdPd().getPkUnitDef());
             //价格
             cnOrderVO.setPrice(bdPdAs.getBdPd().getPrice().stripTrailingZeros().toString());
             cnOrderVO.setCodeOrdType(bdOrdTypeRepository.findById(bdPdAs.getBdPd().getPkOrdtype()).get().getCode());
