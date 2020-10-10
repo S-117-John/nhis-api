@@ -50,4 +50,29 @@ public class CnOrderParam {
     private List<String> bdPdList;
 
     private List<CnOrder> cnOrderList;
+
+    /**
+     * 申请单号
+     */
+    private String codeApply;
+
+    /**
+     * 检查部位
+     */
+    private String descBody;
+
+    /**
+     * 检查目的
+     */
+    private String purpose;
+
+    /**
+     * 病情描述
+     */
+    private String noteDise;
+
+    /**
+     * 注意事项
+     */
+    private String note;
 }

@@ -63,4 +63,6 @@ public class CnOrderVO extends CnOrder {
     private String sign;
 
 
+    private String nameType;
+
 }

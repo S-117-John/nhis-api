@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * BD_ORD_DEPT
@@ -13,6 +14,7 @@ import javax.persistence.Id;
  */
 @Data
 @Entity
+@Table(name = "BD_ORD_DEPT")
 public class BdOrdDept implements Serializable {
 
     @Id

@@ -285,4 +285,9 @@ public class CnOrdTreatmentServiceImpl implements CnOrdService {
         cnOrder.setFlagStopChk("0");
         cnOrderRepository.save(cnOrder);
     }
+
+    @Override
+    public void getOne(String id, ResultListener listener) {
+
+    }
 }

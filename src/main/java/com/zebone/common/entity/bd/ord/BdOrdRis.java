@@ -4,12 +4,20 @@ import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * BD_ORD_RIS
+ * 医嘱-检查项目定义
  * @author 
  */
 @Data
+@Entity
+@Table(name = "BD_ORD_RIS")
 public class BdOrdRis implements Serializable {
+    @Id
     private String pkOrdris;
 
     private String pkOrg;

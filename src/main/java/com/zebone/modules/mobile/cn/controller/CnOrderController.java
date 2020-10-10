@@ -46,6 +46,7 @@ import io.swagger.annotations.ApiOperation;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -67,6 +68,9 @@ public class CnOrderController {
 
     @Resource(name = "cnOrdDrugServiceImpl")
     private CnOrdService cnOrdDrugServiceImpl;
+
+    @Resource(name = "cnOrdRisServiceImpl")
+    private CnOrdService cnOrdRisServiceImpl;
 
     @Autowired
     private BdOrdTypeService bdOrdTypeService;
@@ -270,18 +274,28 @@ public class CnOrderController {
 	}
 
 	@ApiOperation(value = "保存检查申请", notes = "保存检查申请")
-    @PostMapping("saveRisApplyList")
-    public void saveRisApplyList(String param) throws IllegalAccessException, InvocationTargetException{
-    	Gson gson = new Gson();
-        CnOrderParamVO cnOrderParamVO = GsonUtil.gson.fromJson(param,new TypeToken<CnOrderParamVO>(){}.getType());
-		List<CnRisApplyVo> saveRisList =cnOrderParamVO.getRisApplyList();
-		if(saveRisList.size()<=0) {
-            return;
-        }
-		BdOuUser user=bdOuUserService.getUser(cnOrderParamVO.getCode());
-		BdOuDept dept=bdOuUserService.getDept(cnOrderParamVO.getCodeDept());
-		PvEncounterVO pvEncounterVO = patientService.getPatientInfo(cnOrderParamVO.getCodeIp());
-		cnOrdService.saveRisApplyList(user, saveRisList,pvEncounterVO,dept);  
+    @PostMapping("saveRisApply")
+    public Response<String> saveRisApply(CnOrderParam cnOrderParam){
+        Response<String> response = new Response<>();
+        cnOrdRisServiceImpl.save(cnOrderParam, new ResultListener() {
+            @Override
+            public void success(Object object) {
+                response.setCode(200);
+            }
+
+            @Override
+            public void error(Object object) {
+                response.setCode(500);
+                response.setMessage((String)object);
+            }
+
+            @Override
+            public void exception(Object object) {
+                response.setCode(500);
+                response.setMessage((String)object);
+            }
+        });
+        return response;
 	}
 
     @ApiOperation(value = "停止医嘱", notes = "停止医嘱（批量）")
@@ -391,5 +405,32 @@ public class CnOrderController {
         });
         return response;
     }
-    
+
+
+    @GetMapping("ris/info")
+    @ApiOperation(value = "获取检查项信息", notes = "获取检查项信息")
+    public Response<CnOrderVO> getRisInfo(String pkOrd){
+        Response<CnOrderVO> response = new Response<>();
+        cnOrdRisServiceImpl.getOne(pkOrd, new ResultListener() {
+            @Override
+            public void success(Object object) {
+                response.setCode(200);
+                response.setData((CnOrderVO)object);
+                response.setMessage("SUCCESS");
+            }
+
+            @Override
+            public void error(Object object) {
+                response.setCode(500);
+                response.setMessage((String) object);
+            }
+
+            @Override
+            public void exception(Object object) {
+                response.setCode(500);
+                response.setMessage((String) object);
+            }
+        });
+        return response;
+    }
 }

@@ -175,4 +175,6 @@ public interface CnOrdService {
 
 
     void save(Object object, ResultListener listener);
+
+    void getOne(String id,ResultListener listener);
 }

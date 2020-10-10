@@ -420,6 +420,7 @@ public class CnOrdServiceImpl implements CnOrdService {
 			orderVO.setNameEmpInput(user.getNameUser());
 			orderVO.setNameEmpOrd(user.getNameUser());
 			orderVO.setPkEmpOrd(user.getPkEmp());
+			orderVO.setEuAlways("1");
 			newOrdList.add(orderVO);
 			signCnOrder.add(orderVO);
 		}
@@ -789,6 +790,11 @@ public class CnOrdServiceImpl implements CnOrdService {
 
 	@Override
 	public void save(Object object, ResultListener listener) {
+
+	}
+
+	@Override
+	public void getOne(String id, ResultListener listener) {
 
 	}
 }

@@ -372,4 +372,9 @@ public class CnOrdDrugServiceImpl implements CnOrdService {
     public void save(Object object, ResultListener listener) {
 
     }
+
+    @Override
+    public void getOne(String id, ResultListener listener) {
+
+    }
 }
