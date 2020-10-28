@@ -73,6 +73,10 @@ public class CnOrderController {
     @Resource(name = "cnOrdRisServiceImpl")
     private CnOrdService cnOrdRisServiceImpl;
 
+    @Resource(name = "cnOrdLisServiceImpl")
+    private CnOrdService cnOrdLisServiceImpl;
+
+
     @Autowired
     private BdOrdTypeService bdOrdTypeService;
 
@@ -423,6 +427,59 @@ public class CnOrderController {
             public void exception(Object object) {
                 response.setCode(500);
                 response.setMessage((String) object);
+            }
+        });
+        return response;
+    }
+
+    @GetMapping("lis/info")
+    @ApiOperation(value = "获取检验项信息", notes = "获取检验项信息")
+    public Response<CnOrderVO> getLisInfo(String pkOrd){
+        Response<CnOrderVO> response = new Response<>();
+        cnOrdLisServiceImpl.getOne(pkOrd, new ResultListener() {
+            @Override
+            public void success(Object object) {
+                response.setCode(200);
+                response.setData((CnOrderVO)object);
+                response.setMessage("SUCCESS");
+            }
+
+            @Override
+            public void error(Object object) {
+                response.setCode(500);
+                response.setMessage((String) object);
+            }
+
+            @Override
+            public void exception(Object object) {
+                response.setCode(500);
+                response.setMessage((String) object);
+            }
+        });
+        return response;
+    }
+
+
+    @ApiOperation(value = "保存检验申请", notes = "保存检验申请")
+    @PostMapping("saveLisApply")
+    public Response<String> saveLisApply(CnOrderParam cnOrderParam){
+        Response<String> response = new Response<>();
+        cnOrdLisServiceImpl.save(cnOrderParam, new ResultListener() {
+            @Override
+            public void success(Object object) {
+                response.setCode(200);
+            }
+
+            @Override
+            public void error(Object object) {
+                response.setCode(500);
+                response.setMessage((String)object);
+            }
+
+            @Override
+            public void exception(Object object) {
+                response.setCode(500);
+                response.setMessage((String)object);
             }
         });
         return response;

@@ -8,4 +8,5 @@ import java.util.List;
 public interface BdDefdocRepository extends JpaRepository<BdDefdoc,String> {
 
     List<BdDefdoc> findByCodeAndCodeDefdoclist(String code,String codeDefDocList);
+    List<BdDefdoc> findByCodeDefdoclist(String code);
 }

@@ -65,4 +65,8 @@ public class CnOrderVO extends CnOrder {
 
     private String nameType;
 
+    /**
+     * 标本类型
+     */
+    private String specimenType;
 }

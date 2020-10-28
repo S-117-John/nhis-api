@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface BdTermFreqRepository extends JpaRepository<BdTermFreq,String> {
 
     BdTermFreq findByCode(String code);
+
+    BdTermFreq findByName(String name);
 }

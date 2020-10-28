@@ -4,12 +4,19 @@ import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * BD_ORD_LAB
  * @author 
  */
 @Data
+@Entity
+@Table(name = "BD_ORD_LAB")
 public class BdOrdLab implements Serializable {
+    @Id
     private String pkOrdlab;
 
     private String pkOrg;
