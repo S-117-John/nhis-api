@@ -274,8 +274,20 @@ private BdTermFreqRepository bdTermFreqRepository;
             Integer orderSn = getSerialNo("CN_ORDER", "ORDSN", 1);
             CnOrder cnOrder = new CnOrder();
             PvEncounterVO pvEncounterVO = patientService.getPatientInfo(cnOrderParam.getCodeIp());
+            if(pvEncounterVO==null){
+                listener.error(String.format("根据住院号:%s未查询到就诊信息",cnOrderParam.getCodeIp()));
+                return;
+            }
             BdOrd bdOrd = bdOrdRepository.getOne(cnOrderParam.getPkOrd());
+            if(bdOrd==null){
+                listener.error(String.format("根据医嘱项目主键:%s未查询到医嘱项目信息",cnOrderParam.getPkOrd()));
+                return;
+            }
             BdOuUser bdOuUser = bdOuUserRepository.findByCodeUser(cnOrderParam.getDoctorCode());
+            if(bdOuUser==null){
+                listener.error(String.format("根据医生工号:%s未查询到医生信息",cnOrderParam.getDoctorCode()));
+                return;
+            }
             cnOrder.setOrdsn(orderSn);
             cnOrder.setOrdsnParent(orderSn);
             cnOrder.setInfantNo(0);
@@ -336,6 +348,12 @@ private BdTermFreqRepository bdTermFreqRepository;
             cnOrder.setQuan(Double.valueOf("1"));
 
             BdTermFreq bdTermFreq = bdTermFreqRepository.findByName("ONCE");
+
+            if(bdTermFreq==null){
+                listener.error(String.format("根据频次名称ONCE未查询到频次信息"));
+                return;
+            }
+
             cnOrder.setCodeFreq(bdTermFreq.getCode());
 
             cnOrder = cnOrderRepository.save(cnOrder);
