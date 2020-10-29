@@ -350,6 +350,9 @@ private BdTermFreqRepository bdTermFreqRepository;
             BdTermFreq bdTermFreq = bdTermFreqRepository.findByName("ONCE");
 
             if(bdTermFreq==null){
+                bdTermFreq = bdTermFreqRepository.findByName("once");
+            }
+            if(bdTermFreq==null){
                 listener.error(String.format("根据频次名称ONCE未查询到频次信息"));
                 return;
             }
