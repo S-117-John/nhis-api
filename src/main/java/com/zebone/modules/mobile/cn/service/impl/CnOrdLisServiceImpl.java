@@ -297,7 +297,7 @@ private BdTermFreqRepository bdTermFreqRepository;
             cnOrder.setCodeOrd(bdOrd.getCode());
             cnOrder.setNameOrd(bdOrd.getName());
             cnOrder.setPkDeptNs(pvEncounterVO.getPkDeptNs());
-            cnOrder.setFlagBl("0");
+            cnOrder.setFlagBl("1");
             cnOrder.setFlagErase("0");
             cnOrder.setTs(d);
             if(StringUtils.isEmpty(cnOrderParam.getDateStart())){
@@ -341,11 +341,13 @@ private BdTermFreqRepository bdTermFreqRepository;
             cnOrder.setFlagEmer("0");
             cnOrder.setPkOrgExec(pvEncounterVO.getPkOrg());
             cnOrder.setPkDeptExec(cnOrderParam.getPkDeptExec());
-            cnOrder.setOrdsnChk(cnOrder.getOrdsn());
+
             cnOrder.setPkDept(pvEncounterVO.getPkDept());
             cnOrder.setNameEmpOrd(bdOuUser.getNameUser());
             cnOrder.setPkEmpOrd(bdOuUser.getPkEmp());
             cnOrder.setQuan(Double.valueOf("1"));
+            cnOrder.setDateEnter(new Date());
+            cnOrder.setEuIntern("0");
 
             BdTermFreq bdTermFreq = bdTermFreqRepository.findByName("ONCE");
 
