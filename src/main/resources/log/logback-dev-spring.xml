@@ -16,7 +16,7 @@
  * -->
 <configuration scan="true" scanPeriod="60 seconds">
 
-    <property name="log.path" value="D:/nhislog" />
+    <property name="log.path" value="./nhislog" />
 
     <!-- 彩色日志依赖的渲染类 -->
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />

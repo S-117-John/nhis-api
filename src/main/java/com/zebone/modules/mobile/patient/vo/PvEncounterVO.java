@@ -23,7 +23,7 @@ public class PvEncounterVO extends PvEncounter {
         if(!StringUtils.isEmpty(type)){
             if("02".equals(type)){
                 return "男";
-            }else if("01".equals(type)){
+            }else if("03".equals(type)){
                 return "女";
             }
         }
