@@ -7,6 +7,6 @@ import com.zebone.modules.mobile.patient.vo.PvEncounterVO;
 
 public interface PatientService {
 
-    @Cached(expire = 3600, cacheType = CacheType.REMOTE)
+
     PvEncounterVO getPatientInfo(String code);
 }
