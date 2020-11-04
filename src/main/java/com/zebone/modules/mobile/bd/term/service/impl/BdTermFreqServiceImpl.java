@@ -22,7 +22,13 @@ public class BdTermFreqServiceImpl implements BdTermFreqService {
 
     @Override
     public BdTermFreq findByCode(String code) {
-        BdTermFreq bdTermFreq = bdTermFreqRepository.findByCode(code);
+        BdTermFreq bdTermFreq = null;
+        try{
+            bdTermFreq = bdTermFreqRepository.findByCode(code);
+        }catch (Exception e){
+
+        }
+
         return bdTermFreq;
     }
 }
