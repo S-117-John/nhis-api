@@ -8,4 +8,6 @@ import java.util.List;
 public interface PvEncounterRepository extends JpaRepository<PvEncounter,String> {
 
     List<PvEncounter> findByPkPi(String pkPi);
+
+    PvEncounter findByCodePv(String codePv);
 }

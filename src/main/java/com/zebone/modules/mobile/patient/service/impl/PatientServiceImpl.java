@@ -46,14 +46,19 @@ public class PatientServiceImpl implements PatientService {
     @Autowired
     private BdOuDeptRepository bdOuDeptRepository;
 
+
+
     @Override
     public PvEncounterVO getPatientInfo(String code) {
 
+        PvEncounter pvEncounter = pvEncounterRepository.findByCodePv(code);
+
         //获取患者基本信息
-        List<PiMaster> piMasters = piMasterRepository.findByCodeIp(code);
-        if(piMasters.size()>0){
+        Optional<PiMaster> optionalPiMaster = piMasterRepository.findById(pvEncounter.getPkPi());
+        PiMaster piMaster = optionalPiMaster.get();
+        if(piMaster!=null){
             PiMasterVO piMasterVO = new PiMasterVO();
-            BeanUtils.copyProperties(piMasters.get(0),piMasterVO);
+            BeanUtils.copyProperties(piMaster,piMasterVO);
 
             //获取就诊信息
             List<PvEncounter> pvEncounters = pvEncounterRepository.findByPkPi(piMasterVO.getPkPi());

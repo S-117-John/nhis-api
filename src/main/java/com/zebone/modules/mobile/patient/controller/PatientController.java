@@ -25,7 +25,7 @@ public class PatientController {
     private R<PvEncounterVO> getPatientInfo(String code){
 
         if(StringUtils.isEmpty(code)){
-            return R.fail("患者主键为空");
+            return R.fail("未获取到患者就诊编码");
         }
         PvEncounterVO pvEncounterVO = patientService.getPatientInfo(code);
         if(pvEncounterVO==null){
