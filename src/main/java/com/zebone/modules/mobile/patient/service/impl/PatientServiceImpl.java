@@ -28,8 +28,7 @@ import java.util.stream.Collectors;
 @Service
 public class PatientServiceImpl implements PatientService {
 
-    @Autowired
-    private PvEncounterDao pvEncounterDao;
+
 
     @Autowired
     private PiCateRepository piCateRepository;
@@ -61,41 +60,38 @@ public class PatientServiceImpl implements PatientService {
             BeanUtils.copyProperties(piMaster,piMasterVO);
 
             //获取就诊信息
-            List<PvEncounter> pvEncounters = pvEncounterRepository.findByPkPi(piMasterVO.getPkPi());
-            if(pvEncounters.size()>0){
-                PvEncounterVO pvEncounterVO = new PvEncounterVO();
-                BeanUtils.copyProperties(pvEncounters.get(0),pvEncounterVO);
+            PvEncounterVO pvEncounterVO = new PvEncounterVO();
+            BeanUtils.copyProperties(pvEncounter,pvEncounterVO);
 
-                pvEncounterVO.setPiMaster(piMasterVO);
+            pvEncounterVO.setPiMaster(piMasterVO);
 
-                //获取患者类型
-                PiCate piCate = piCateRepository.getOne(piMasterVO.getPkPicate());
-                PiCateVO piCateVO = new PiCateVO();
-                BeanUtils.copyProperties(piCate,piCateVO);
-                piMasterVO.setPiCate(piCateVO);
+            //获取患者类型
+            PiCate piCate = piCateRepository.getOne(piMasterVO.getPkPicate());
+            PiCateVO piCateVO = new PiCateVO();
+            BeanUtils.copyProperties(piCate,piCateVO);
+            piMasterVO.setPiCate(piCateVO);
 
-                //获取诊断记录
-                List<PvDiag> pvDiagList = pvDiagRepository.findByPkPvOrderByDateDiagDesc(pvEncounterVO.getPkPv());
-                if(pvDiagList.size()>0){
-                    //筛选主诊断记录
-                    List<PvDiag> diagList = pvDiagList.stream().filter(a->"1".equals(a.getFlagMaj())).collect(Collectors.toList());
-                    if(diagList.size()>0){
-                        pvEncounterVO.setDiagName(diagList.get(0).getNameDiag());
-                    }else{
-                        pvEncounterVO.setDiagName(pvDiagList.get(0).getNameDiag());
-                    }
+            //获取诊断记录
+            List<PvDiag> pvDiagList = pvDiagRepository.findByPkPvOrderByDateDiagDesc(pvEncounterVO.getPkPv());
+            if(pvDiagList.size()>0){
+                //筛选主诊断记录
+                List<PvDiag> diagList = pvDiagList.stream().filter(a->"1".equals(a.getFlagMaj())).collect(Collectors.toList());
+                if(diagList.size()>0){
+                    pvEncounterVO.setDiagName(diagList.get(0).getNameDiag());
+                }else{
+                    pvEncounterVO.setDiagName(pvDiagList.get(0).getNameDiag());
                 }
-
-                if(!StringUtils.isEmpty(pvEncounterVO.getPkDept())){
-                    Optional<BdOuDept> optional = bdOuDeptRepository.findById(pvEncounterVO.getPkDept());
-                    if(optional.isPresent()){
-                        pvEncounterVO.setDeptName(optional.get().getNameDept());
-                    }
-                }
-
-
-                return pvEncounterVO;
             }
+
+            if(!StringUtils.isEmpty(pvEncounterVO.getPkDept())){
+                Optional<BdOuDept> optional = bdOuDeptRepository.findById(pvEncounterVO.getPkDept());
+                if(optional.isPresent()){
+                    pvEncounterVO.setDeptName(optional.get().getNameDept());
+                }
+            }
+
+
+            return pvEncounterVO;
         }
 
         return null;
