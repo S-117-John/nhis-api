@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
@@ -45,8 +46,11 @@ public class BdPdServiceImpl implements BdPdService {
         BdPd bdPd = optionalBdPd.get();
         BeanUtils.copyProperties(bdPd,bdPdVO);
         String pUnit = bdPd.getPkUnitDef();
-        BdUnit bdUnit = bdUnitRepository.getOne(pUnit);
-        bdPdVO.setUnitPackName(bdUnit.getName());
+        if(!StringUtils.isEmpty(pUnit)){
+            BdUnit bdUnit = bdUnitRepository.getOne(pUnit);
+            bdPdVO.setUnitPackName(bdUnit.getName());
+        }
+
         return bdPdVO;
     }
 
